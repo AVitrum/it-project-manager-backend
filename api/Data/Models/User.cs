@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using api.Data.SubModels;
 
 namespace api.Data.Models;
 
@@ -17,6 +19,7 @@ public class User
     [EmailAddress(ErrorMessage = "Invalid Email Address")]
     public string Email { get; set; }
     
-    
     public string PasswordHash { get; set; }
+    
+    public ICollection<UserTeam> UserTeams { get; set; }
 }

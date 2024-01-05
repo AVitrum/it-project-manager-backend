@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using api.Context;
-using api.Data.DTOs;
 using api.Data.Models;
+using api.Data.SubModels;
 using api.Services.Interfaces;
 
 namespace api.Services.Implementations;
@@ -24,7 +24,13 @@ public class UserService : IUserService
         _dbContext.SaveChanges();
     }
 
-    public User GetUserByUsername(string username)
+    public User GetById(long id)
+    {
+        return _dbContext.Users.FirstOrDefault(x => x.Id.Equals(id)) 
+               ?? throw new ArgumentException("User not found");
+    }
+    
+    public User GetByUsername(string username)
     {
         return _dbContext.Users.FirstOrDefault(x => x.Username.Equals(username)) 
                ?? throw new ArgumentException("User not found");

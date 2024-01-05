@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using api.Data.Models;
 
-namespace api.Data.DTOs;
+namespace api.Data.Requests;
 
-public class UserCreationDto
+public class UserCreationRequest
 {
     [Required(ErrorMessage = "Username is required.")]
     public string Username { get; set; } = string.Empty;
@@ -18,13 +18,13 @@ public class UserCreationDto
         ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
     public string Password { get; set; } = string.Empty;
     
-    public static User UserCreationDtoToUser(UserCreationDto userCreationDto)
+    public static User UserCreationRequestToUser(UserCreationRequest userCreationRequest)
     {
         return new User
         {
-            Username = userCreationDto.Username,
-            Email = userCreationDto.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreationDto.Password)
+            Username = userCreationRequest.Username,
+            Email = userCreationRequest.Email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreationRequest.Password)
         };
     } 
 }

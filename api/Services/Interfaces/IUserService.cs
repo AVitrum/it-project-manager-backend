@@ -5,6 +5,7 @@ namespace api.Services.Interfaces;
 public interface IUserService
 {
     void CreateUser(User user);
-    User GetUserByUsername(string username);
+    User GetById(long id);
+    User GetByUsername(string username);
     string GetName();
 }

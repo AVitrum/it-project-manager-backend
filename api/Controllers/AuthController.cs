@@ -1,8 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using api.Data.DTOs;
 using api.Data.Models;
+using api.Data.Requests;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +31,7 @@ namespace api.Controllers;
         }
 
         [HttpPost("register")]
-        public ActionResult<string> Register(UserCreationDto request)
+        public ActionResult<string> Register(UserCreationRequest request)
         {
             if (request.Equals(null) || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Username))
             {
@@ -40,7 +40,7 @@ namespace api.Controllers;
 
             try
             {
-                _userService.CreateUser(UserCreationDto.UserCreationDtoToUser(request));
+                _userService.CreateUser(UserCreationRequest.UserCreationRequestToUser(request));
                 return Ok("Registered");
             }
             catch (DbUpdateException ex)
@@ -55,7 +55,7 @@ namespace api.Controllers;
 
 
         [HttpPost("login")]
-        public ActionResult<User> Login(UserCreationDto request)
+        public ActionResult<User> Login(UserLoginRequest request)
         {
             if (request.Equals(null))
             {
@@ -64,7 +64,7 @@ namespace api.Controllers;
 
             try
             {
-                var user = _userService.GetUserByUsername(request.Username);
+                var user = _userService.GetByUsername(request.Username);
                 if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 {
                     return BadRequest("Wrong password.");
