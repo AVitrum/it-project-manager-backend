@@ -1,7 +1,7 @@
+using System.Security.Authentication;
 using System.Security.Claims;
 using api.Context;
 using api.Data.Models;
-using api.Data.SubModels;
 using api.Services.Interfaces;
 
 namespace api.Services.Implementations;
@@ -36,13 +36,13 @@ public class UserService : IUserService
                ?? throw new ArgumentException("User not found");
     }
 
-    public string GetName()
+    public User GetFromToken()
     {
-        var result = string.Empty;
         if(_httpContextAccessor.HttpContext is not null)
         {
-            result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            return GetByUsername(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name) 
+                                 ?? throw new AuthenticationException("Wrong token"));
         }
-        return result;
+        return null!;
     }
 }

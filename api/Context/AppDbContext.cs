@@ -22,6 +22,10 @@ public class AppDbContext : DbContext
             .HasIndex(u => u.Email)
             .IsUnique();
 
+        modelBuilder.Entity<Team>()
+            .HasIndex(t => t.Name)
+            .IsUnique();
+
         modelBuilder.Entity<UserTeam>()
             .HasKey(ut => new { ut.UserId, ut.TeamId });
 

@@ -1,9 +1,11 @@
-using api.Data.Models;
+using System.Security.Authentication;
+using api.Data.Enums;
 using api.Data.Requests;
 using api.Data.Responses;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers;
 
@@ -24,18 +26,49 @@ public class TeamController : ControllerBase
     [HttpPost("create")]
     public ActionResult Create(TeamCreationRequest request)
     {
-        _teamService.Create(request);
-        return Ok("Created");
+        try
+        {
+            _teamService.Create(request, _userService.GetFromToken());
+            return Ok("Created");
+        }
+        catch (AuthenticationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (DbUpdateException ex)
+        {
+            var innerException = ex.InnerException;
+
+            return innerException is Npgsql.PostgresException { SqlState: "23505" } 
+                ? Conflict("A team with this name already exists.") 
+                : StatusCode(500, "Database error occurred.");
+        }
     }
 
     [HttpPost("{teamId:long}/{userId:long}")]
     public ActionResult AddUser(long teamId, long userId)
     {
         var team = _teamService.Get(teamId);
-        var user = _userService.GetById(userId);
 
-        var added = _teamService.AddUser(user, team);
-        return added ? Ok("Added") : BadRequest("Error");
+        try
+        {
+            if (_teamService.HasPermission(_userService.GetFromToken(), team))
+            {
+                var target = _userService.GetById(userId);
+                var added = _teamService.AddUser(target, team, UserRole.Regular);
+                return added ? Ok("Added.") : BadRequest("Cannot add the user.");
+            }
+        }
+        catch (AuthenticationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (ArgumentException e)
+        {
+            return BadRequest(e.Message);
+        }
+        
+        return BadRequest("Server error.");
     }
 
     [HttpGet("{teamId:long}")]
@@ -50,6 +83,6 @@ public class TeamController : ControllerBase
         {
             BadRequest(e.Message);
         }
-        return BadRequest("Server error");;
+        return BadRequest("Server error.");
     }
 }

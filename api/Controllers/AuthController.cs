@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using api.Data.Models;
 using api.Data.Requests;
+using api.Data.Responses;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +25,10 @@ namespace api.Controllers;
             _userService = userService;
         }
 
-        [HttpGet, Authorize]
-        public ActionResult<string> GetMyName()
+        [HttpGet("info"), Authorize]
+        public ActionResult<UserInfoResponse> Info()
         {
-            return Ok(_userService.GetName());
+            return Ok(UserInfoResponse.UserToUserInfoResponse(_userService.GetFromToken()));
         }
 
         [HttpPost("register")]
@@ -35,13 +36,13 @@ namespace api.Controllers;
         {
             if (request.Equals(null) || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Username))
             {
-                return BadRequest("Email and Username are required.");
+                return BadRequest("Email and Username are required!");
             }
 
             try
             {
                 _userService.CreateUser(UserCreationRequest.UserCreationRequestToUser(request));
-                return Ok("Registered");
+                return Ok("Registered!");
             }
             catch (DbUpdateException ex)
             {
@@ -59,7 +60,7 @@ namespace api.Controllers;
         {
             if (request.Equals(null))
             {
-                return BadRequest("User not found");
+                return BadRequest("User not found.");
             }
 
             try
@@ -85,6 +86,7 @@ namespace api.Controllers;
         {
             var claims = new List<Claim> {
                 new(ClaimTypes.Name, user.Username),
+                new(ClaimTypes.Email, user.Email),
                 new(ClaimTypes.Role, "Admin"),
                 new(ClaimTypes.Role, "User"),
             };
