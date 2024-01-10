@@ -8,15 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Services.Implementations;
 
-public class TeamService : ITeamService
+public class TeamService(AppDbContext dbContext) : ITeamService
 {
-    private readonly AppDbContext _dbContext;
-
-    public TeamService(AppDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public void Create(TeamCreationRequest request, User user)
     {
         var team = new Team
@@ -24,8 +17,8 @@ public class TeamService : ITeamService
             Name = request.Name
         };
 
-        _dbContext.Teams.Add(team);
-        _dbContext.SaveChanges();
+        dbContext.Teams.Add(team);
+        dbContext.SaveChanges();
 
         var userTeam = new UserTeam 
         {
@@ -34,18 +27,9 @@ public class TeamService : ITeamService
             Role = UserRole.Manager
         };
 
-        _dbContext.UserTeams.Add(userTeam);
-        _dbContext.SaveChanges();
+        dbContext.UserTeams.Add(userTeam);
+        dbContext.SaveChanges();
     }
-
-    public Team Get(long id)
-    {
-        return _dbContext.Teams
-                   .Include(t => t.UserTeams) 
-                   .ThenInclude(ut => ut.User) 
-                   .FirstOrDefault(t => t.Id == id)
-               ?? throw new ArgumentException("Team not found");
-    }    
 
     public bool AddUser(User user, Team team, UserRole role)
     {
@@ -59,10 +43,20 @@ public class TeamService : ITeamService
             Role = role
         };
 
-        _dbContext.UserTeams.Add(userTeam);
-        _dbContext.SaveChanges();
+        dbContext.UserTeams.Add(userTeam);
+        dbContext.SaveChanges();
         return true;
     }
+    
+    public Team Get(long id)
+    {
+        return dbContext.Teams
+                   .Include(t => t.UserTeams) 
+                   .ThenInclude(ut => ut.User)
+                   .ThenInclude(u => u.AdditionalInfo)
+                   .FirstOrDefault(t => t.Id == id)
+               ?? throw new ArgumentException("Team not found");
+    }  
 
     public bool HasPermission(User user, Team team)
     {
@@ -72,7 +66,7 @@ public class TeamService : ITeamService
 
     private UserTeam? FindByUserAndTeam(User user, Team team)
     {
-        var userTeam = _dbContext.UserTeams
+        var userTeam = dbContext.UserTeams
             .FirstOrDefault(ut => ut.UserId == user.Id && ut.TeamId == team.Id);
         return userTeam;
     }

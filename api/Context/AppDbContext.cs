@@ -4,39 +4,44 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Context;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-    
     public DbSet<User> Users { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<UserTeam> UserTeams { get; set; }
+    public DbSet<AdditionalUserInfo> AdditionalUserInfos { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
-            .HasIndex(u => u.Username)
+            .HasIndex(e => e.Username)
             .IsUnique();
 
         modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
+            .HasIndex(e => e.Email)
             .IsUnique();
 
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.AdditionalInfo)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .IsRequired();
+        
         modelBuilder.Entity<Team>()
-            .HasIndex(t => t.Name)
+            .HasIndex(e => e.Name)
             .IsUnique();
 
         modelBuilder.Entity<UserTeam>()
-            .HasKey(ut => new { ut.UserId, ut.TeamId });
+            .HasKey(e => new { e.UserId, e.TeamId });
 
         modelBuilder.Entity<UserTeam>()
-            .HasOne(ut => ut.User)
-            .WithMany(u => u.UserTeams)
-            .HasForeignKey(ut => ut.UserId);
+            .HasOne(e => e.User)
+            .WithMany(e => e.UserTeams)
+            .HasForeignKey(e => e.UserId);
 
         modelBuilder.Entity<UserTeam>()
-            .HasOne(ut => ut.Team)
-            .WithMany(t => t.UserTeams)
-            .HasForeignKey(ut => ut.TeamId);
+            .HasOne(e => e.Team)
+            .WithMany(e => e.UserTeams)
+            .HasForeignKey(e => e.TeamId);
     }
 }

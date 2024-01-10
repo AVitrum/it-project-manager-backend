@@ -12,23 +12,14 @@ namespace api.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class TeamController : ControllerBase
+public class TeamController(ITeamService teamService, IUserService userService) : ControllerBase
 {
-    private readonly ITeamService _teamService;
-    private readonly IUserService _userService;
-
-    public TeamController(ITeamService teamService, IUserService userService)
-    {
-        _teamService = teamService;
-        _userService = userService;
-    }
-
     [HttpPost("create")]
     public ActionResult Create(TeamCreationRequest request)
     {
         try
         {
-            _teamService.Create(request, _userService.GetFromToken());
+            teamService.Create(request, userService.GetFromToken());
             return Ok("Created");
         }
         catch (AuthenticationException e)
@@ -48,14 +39,14 @@ public class TeamController : ControllerBase
     [HttpPost("{teamId:long}/{userId:long}")]
     public ActionResult AddUser(long teamId, long userId)
     {
-        var team = _teamService.Get(teamId);
+        var team = teamService.Get(teamId);
 
         try
         {
-            if (_teamService.HasPermission(_userService.GetFromToken(), team))
+            if (teamService.HasPermission(userService.GetFromToken(), team))
             {
-                var target = _userService.GetById(userId);
-                var added = _teamService.AddUser(target, team, UserRole.Regular);
+                var target = userService.GetById(userId);
+                var added = teamService.AddUser(target, team, UserRole.Regular);
                 return added ? Ok("Added.") : BadRequest("Cannot add the user.");
             }
         }
@@ -76,13 +67,12 @@ public class TeamController : ControllerBase
     {
         try 
         {
-             var team = _teamService.Get(teamId);
+             var team = teamService.Get(teamId);
              return Ok(TeamResponse.TeamToTeamResponse(team));
         }
         catch(ArgumentException e)
         {
-            BadRequest(e.Message);
+            return BadRequest(e.Message);
         }
-        return BadRequest("Server error.");
     }
 }

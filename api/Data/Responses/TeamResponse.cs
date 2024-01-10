@@ -1,23 +1,21 @@
 using api.Data.Models;
 
-namespace api.Data.Responses
+namespace api.Data.Responses;
+
+public class TeamResponse
 {
-    public class TeamResponse
+    public required string Name { get; set; }
+    public required List<UserTeamResponse?> Users { get; set; }
+
+    public static TeamResponse TeamToTeamResponse(Team team)
     {
-        public string? Name { get; set; }
-        public IEnumerable<UserInfoResponse>? Users { get; set; }
+        var userInfoResponse = team.UserTeams
+            .Select(UserTeamResponse.UserTeamToUserTeamResponse).ToList();
 
-        public static TeamResponse TeamToTeamResponse(Team team)
+        return new TeamResponse()
         {
-            var userInfoResponse = team.UserTeams
-                .Select(ut => ut.User).ToList()
-                .Select(UserInfoResponse.UserToUserInfoResponse).ToList();
-
-            return new TeamResponse()
-            {
-                Name = team.Name,
-                Users = userInfoResponse
-            };
-        }
+            Name = team.Name,
+            Users = userInfoResponse!
+        };
     }
 }

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 using api.Data.SubModels;
 
 namespace api.Data.Models;
@@ -21,5 +20,6 @@ public class User
     
     public string PasswordHash { get; set; }
     
+    public ICollection<AdditionalUserInfo> AdditionalInfo { get; set; }
     public ICollection<UserTeam> UserTeams { get; set; }
 }

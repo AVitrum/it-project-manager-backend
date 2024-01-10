@@ -1,21 +1,26 @@
 using api.Data.Models;
+using api.Data.SubModels;
 
-namespace api.Data.Responses
+namespace api.Data.Responses;
+
+public class UserInfoResponse
 {
-    public class UserInfoResponse
-    {
-        public long Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
+    public required long Id { get; set; }
+    public required string Username { get; set; }
+    public required string Email { get; set; }
+    public required ICollection<AdditionalUserInfoResponse> InfoResponses { get; set; }
 
-        public static UserInfoResponse? UserToUserInfoResponse(User user)
+    public static UserInfoResponse UserToUserInfoResponse(User user)
+    {
+        var infoResponses =
+            user.AdditionalInfo.Select(AdditionalUserInfoResponse.ToResponse).ToList();
+        
+        return new UserInfoResponse
         {
-            return new UserInfoResponse
-            {
-                Id = user.Id,
-                Username = user.Username,
-                Email = user.Email
-            };
-        }
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            InfoResponses = infoResponses
+        };
     }
 }

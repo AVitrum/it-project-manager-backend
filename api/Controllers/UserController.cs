@@ -1,9 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using api.Data.Models;
 using api.Data.Requests;
 using api.Data.Responses;
+using api.Data.SubModels;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,21 +16,35 @@ namespace api.Controllers;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class UserController(IConfiguration configuration, IUserService userService) : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly IUserService _userService;
-
-        public AuthController(IConfiguration configuration, IUserService userService)
-        {
-            _configuration = configuration;
-            _userService = userService;
-        }
-
         [HttpGet("info"), Authorize]
         public ActionResult<UserInfoResponse> Info()
         {
-            return Ok(UserInfoResponse.UserToUserInfoResponse(_userService.GetFromToken()));
+            return Ok(UserInfoResponse.UserToUserInfoResponse(userService.GetFromToken()));
+        }
+
+        [HttpPut("addInfo"), Authorize]
+        public ActionResult<string> AddInfo(AddInfoRequest request)
+        {
+            try
+            {
+                var user = userService.GetFromToken();
+
+                var additionalUserInfo = new AdditionalUserInfo
+                {
+                    UserId = user.Id,
+                    Type = request.Type,
+                    Info = request.Info,
+                };
+
+                userService.AddInfo(additionalUserInfo);
+                return "Added";
+            }
+            catch (AuthenticationException e)
+            {
+                return e.Message;
+            }
         }
 
         [HttpPost("register")]
@@ -41,7 +57,7 @@ namespace api.Controllers;
 
             try
             {
-                _userService.CreateUser(UserCreationRequest.UserCreationRequestToUser(request));
+                userService.CreateUser(UserCreationRequest.UserCreationRequestToUser(request));
                 return Ok("Registered!");
             }
             catch (DbUpdateException ex)
@@ -65,7 +81,7 @@ namespace api.Controllers;
 
             try
             {
-                var user = _userService.GetByUsername(request.Username);
+                var user = userService.GetByUsername(request.Username);
                 if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 {
                     return BadRequest("Wrong password.");
@@ -76,10 +92,8 @@ namespace api.Controllers;
             }
             catch (ArgumentException e)
             {
-                BadRequest(e.Message);
+                return BadRequest(e.Message);
             }
-
-            return StatusCode(500, "Something went wrong");
         }
 
         private string CreateToken(User user)
@@ -92,7 +106,7 @@ namespace api.Controllers;
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value!));
+                configuration.GetSection("AppSettings:Token").Value!));
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
