@@ -3,6 +3,7 @@ using api.Data.Enums;
 using api.Data.Models;
 using api.Data.Requests;
 using api.Data.SubModels;
+using api.Exceptions;
 using api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,11 +52,11 @@ public class TeamService(AppDbContext dbContext) : ITeamService
     public Team Get(long id)
     {
         return dbContext.Teams
-                   .Include(t => t.UserTeams) 
-                   .ThenInclude(ut => ut.User)
-                   .ThenInclude(u => u.AdditionalInfo)
-                   .FirstOrDefault(t => t.Id == id)
-               ?? throw new ArgumentException("Team not found");
+                   .Include(e => e.UserTeams) 
+                   .ThenInclude(e => e.User)
+                   .ThenInclude(e => e.AdditionalInfo)
+                   .FirstOrDefault(e => e.Id == id)
+               ?? throw new EntityNotFoundException(new Team().GetType().Name);
     }  
 
     public bool HasPermission(User user, Team team)
@@ -67,7 +68,7 @@ public class TeamService(AppDbContext dbContext) : ITeamService
     private UserTeam? FindByUserAndTeam(User user, Team team)
     {
         var userTeam = dbContext.UserTeams
-            .FirstOrDefault(ut => ut.UserId == user.Id && ut.TeamId == team.Id);
+            .FirstOrDefault(e => e.UserId == user.Id && e.TeamId == team.Id);
         return userTeam;
     }
     

@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
 using api.Data.Models;
@@ -9,7 +8,6 @@ using api.Data.SubModels;
 using api.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace api.Controllers;
@@ -27,24 +25,17 @@ namespace api.Controllers;
         [HttpPut("addInfo"), Authorize]
         public ActionResult<string> AddInfo(AddInfoRequest request)
         {
-            try
-            {
-                var user = userService.GetFromToken();
+            var user = userService.GetFromToken();
 
-                var additionalUserInfo = new AdditionalUserInfo
-                {
-                    UserId = user.Id,
-                    Type = request.Type,
-                    Info = request.Info,
-                };
-
-                userService.AddInfo(additionalUserInfo);
-                return "Added";
-            }
-            catch (AuthenticationException e)
+            var additionalUserInfo = new AdditionalUserInfo
             {
-                return e.Message;
-            }
+                UserId = user.Id,
+                Type = request.Type,
+                Info = request.Info,
+            };
+
+            userService.AddInfo(additionalUserInfo);
+            return "Added";
         }
 
         [HttpPost("register")]
@@ -55,45 +46,22 @@ namespace api.Controllers;
                 return BadRequest("Email and Username are required!");
             }
 
-            try
-            {
-                userService.CreateUser(UserCreationRequest.UserCreationRequestToUser(request));
-                return Ok("Registered!");
-            }
-            catch (DbUpdateException ex)
-            {
-                var innerException = ex.InnerException;
-
-                return innerException is Npgsql.PostgresException { SqlState: "23505" } 
-                    ? Conflict("Email or Username already exists.") 
-                    : StatusCode(500, "Database error occurred.");
-            }
+            userService.CreateUser(UserCreationRequest.UserCreationRequestToUser(request));
+            return Ok("Registered!");
         }
-
 
         [HttpPost("login")]
         public ActionResult<User> Login(UserLoginRequest request)
         {
-            if (request.Equals(null))
+            var user = userService.GetByUsername(request.Username);
+            
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                return BadRequest("User not found.");
+                return BadRequest("Wrong password.");
             }
 
-            try
-            {
-                var user = userService.GetByUsername(request.Username);
-                if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-                {
-                    return BadRequest("Wrong password.");
-                }
-
-                var token = CreateToken(user);
-                return Ok(token);
-            }
-            catch (ArgumentException e)
-            {
-                return BadRequest(e.Message);
-            }
+            var token = CreateToken(user);
+            return Ok(token);
         }
 
         private string CreateToken(User user)

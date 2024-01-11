@@ -1,8 +1,8 @@
-using System.Security.Authentication;
 using System.Security.Claims;
 using api.Context;
 using api.Data.Models;
 using api.Data.SubModels;
+using api.Exceptions;
 using api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,9 +19,9 @@ public class UserService(IHttpContextAccessor httpContextAccessor, AppDbContext 
     public User GetById(long id)
     {
         return dbContext.Users
-                   .Include(u => u.AdditionalInfo)
-                   .FirstOrDefault(u => u.Id.Equals(id)) 
-               ?? throw new ArgumentException("User not found");
+                   .Include(e => e.AdditionalInfo)
+                   .FirstOrDefault(e => e.Id.Equals(id)) 
+               ?? throw new EntityNotFoundException(new User().GetType().Name);
     }
     
     public User GetByUsername(string username)
@@ -29,17 +29,14 @@ public class UserService(IHttpContextAccessor httpContextAccessor, AppDbContext 
         return dbContext.Users
                    .Include(u => u.AdditionalInfo)
                    .FirstOrDefault(u => u.Username.Equals(username)) 
-               ?? throw new ArgumentException("User not found");
+               ?? throw new EntityNotFoundException(new User().GetType().Name);
     }
 
     public User GetFromToken()
     {
-        if(httpContextAccessor.HttpContext is not null)
-        {
-            return GetByUsername(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name) 
-                                 ?? throw new AuthenticationException("Wrong token"));
-        }
-        return null!;
+        return httpContextAccessor.HttpContext is not null 
+            ? GetByUsername(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name)!) 
+            : throw new EntityNotFoundException(new User().GetType().Name);
     }
 
     public void AddInfo(AdditionalUserInfo additionalUserInfo)
