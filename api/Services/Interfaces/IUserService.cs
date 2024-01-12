@@ -7,7 +7,6 @@ namespace api.Services.Interfaces;
 
 public interface IUserService
 {
-    void CreateUser(User user);
     void AddInfo(AdditionalUserInfo additionalUserInfo);
     User GetById(long id);
     User GetByUsername(string username);

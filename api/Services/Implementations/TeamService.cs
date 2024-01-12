@@ -1,4 +1,4 @@
-using api.Context;
+using api.Config;
 using api.Data.Enums;
 using api.Data.Models;
 using api.Data.Requests;

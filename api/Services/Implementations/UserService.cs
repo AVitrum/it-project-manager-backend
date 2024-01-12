@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using api.Context;
+using api.Config;
 using api.Data.Models;
 using api.Data.SubModels;
 using api.Exceptions;
@@ -10,9 +10,9 @@ namespace api.Services.Implementations;
 
 public class UserService(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserService
 {
-    public void CreateUser(User user)
+    public void AddInfo(AdditionalUserInfo additionalUserInfo)
     {
-        dbContext.Users.Add(user);
+        dbContext.AdditionalUserInfos.Add(additionalUserInfo);
         dbContext.SaveChanges();
     }
 
@@ -37,11 +37,5 @@ public class UserService(IHttpContextAccessor httpContextAccessor, AppDbContext 
         return httpContextAccessor.HttpContext is not null 
             ? GetByUsername(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name)!) 
             : throw new EntityNotFoundException(new User().GetType().Name);
-    }
-
-    public void AddInfo(AdditionalUserInfo additionalUserInfo)
-    {
-        dbContext.AdditionalUserInfos.Add(additionalUserInfo);
-        dbContext.SaveChanges();
     }
 }
