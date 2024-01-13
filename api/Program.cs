@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddCustomServices();
+builder.Services.AddCustomRepositories();
 builder.Services.AddCustomSwaggerGen();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 

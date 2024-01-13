@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Authentication;
 using api.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         {
             DbUpdateException { InnerException: Npgsql.PostgresException { SqlState: "23505" } } => (StatusCodes.Status409Conflict, exception.Message),
             ArgumentException => (StatusCodes.Status400BadRequest, exception.Message),
+            AuthenticationException => (StatusCodes.Status401Unauthorized, exception.Message),
             EntityNotFoundException => (StatusCodes.Status400BadRequest, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using api.Data.SubModels;
 
 namespace api.Data.Models;
@@ -20,6 +21,12 @@ public class User
     
     public string PasswordHash { get; set; }
     
+    public string? Image { get; set; }
+    
+    [NotMapped] 
+    public IFormFile? ImageFile { get; set; }
+    
     public ICollection<AdditionalUserInfo> AdditionalInfo { get; set; }
+    
     public ICollection<UserTeam> UserTeams { get; set; }
 }

@@ -1,80 +1,75 @@
-using api.Config;
 using api.Data.Enums;
 using api.Data.Models;
 using api.Data.Requests;
+using api.Data.Responses;
 using api.Data.SubModels;
-using api.Exceptions;
+using api.Repositories.Interfaces;
 using api.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Services.Implementations;
 
-public class TeamService(AppDbContext dbContext) : ITeamService
+public class TeamService(ITeamRepository teamRepository, IUserRepository userRepository) : ITeamService
 {
-    public void Create(TeamCreationRequest request, User user)
+    public void Create(TeamCreationRequest request)
     {
         var team = new Team
         {
             Name = request.Name
         };
 
-        dbContext.Teams.Add(team);
-        dbContext.SaveChanges();
+        teamRepository.Create(team);
 
+        var user = userRepository.GetFromToken();
+        
         var userTeam = new UserTeam 
         {
             UserId = user.Id,
             TeamId = team.Id,
             Role = UserRole.Manager
         };
-
-        dbContext.UserTeams.Add(userTeam);
-        dbContext.SaveChanges();
+        
+        teamRepository.SaveUserInTeam(userTeam);
     }
 
-    public bool AddUser(User user, Team team, UserRole role)
+    public void AddUser(long teamId, long userId)
     {
-        if (user.Equals(null) || team.Equals(null)) return false;
-        if (InTeam(user, team)) throw new ArgumentException("User already in this team");
+        var team = teamRepository.GetById(teamId);
+        var user = userRepository.GetById(userId);
+        
+        if (HasPermission(userRepository.GetFromToken(), team))
+        {
+            throw new Exception("Server error.");
+        }
+        
+        if (InTeam(user, team))
+        {
+            throw new ArgumentException("User already in this team");
+        }
         
         var userTeam = new UserTeam
         {
             UserId = user.Id,
             TeamId = team.Id,
-            Role = role
+            Role = UserRole.Regular
         };
 
-        dbContext.UserTeams.Add(userTeam);
-        dbContext.SaveChanges();
-        return true;
+        teamRepository.SaveUserInTeam(userTeam);
     }
     
-    public Team Get(long id)
+    public TeamResponse Get(long id)
     {
-        return dbContext.Teams
-                   .Include(e => e.UserTeams) 
-                   .ThenInclude(e => e.User)
-                   .ThenInclude(e => e.AdditionalInfo)
-                   .FirstOrDefault(e => e.Id == id)
-               ?? throw new EntityNotFoundException(new Team().GetType().Name);
+        return TeamResponse.TeamToTeamResponse(teamRepository.GetById(id));
     }  
 
     public bool HasPermission(User user, Team team)
     {
-        var userTeam = FindByUserAndTeam(user, team);
+        var userTeam = teamRepository.FindByUserAndTeam(user, team);
         return userTeam is { Role: UserRole.Manager };
-    }
-
-    private UserTeam? FindByUserAndTeam(User user, Team team)
-    {
-        var userTeam = dbContext.UserTeams
-            .FirstOrDefault(e => e.UserId == user.Id && e.TeamId == team.Id);
-        return userTeam;
     }
     
     private bool InTeam(User user, Team team)
     {
-        var userTeam = FindByUserAndTeam(user, team);
+        var userTeam = teamRepository.FindByUserAndTeam(user, team);
         return userTeam != null;
     }
 }

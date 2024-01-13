@@ -1,13 +1,11 @@
-using api.Data.Enums;
-using api.Data.Models;
 using api.Data.Requests;
+using api.Data.Responses;
 
 namespace api.Services.Interfaces;
 
 public interface ITeamService
 {
-    void Create(TeamCreationRequest request, User user);
-    bool AddUser(User user, Team team, UserRole role);
-    bool HasPermission(User user, Team team);
-    Team Get(long id);
+    void Create(TeamCreationRequest request);
+    void AddUser(long teamId, long userId);
+    TeamResponse Get(long id);
 }

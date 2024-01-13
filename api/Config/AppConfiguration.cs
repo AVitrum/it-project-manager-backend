@@ -1,4 +1,6 @@
 using System.Text;
+using api.Repositories.Implementations;
+using api.Repositories.Interfaces;
 using api.Services.Implementations;
 using api.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +16,12 @@ public static class AppConfiguration
         services.AddScoped<IAuthService, AuthService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         services.AddScoped<IUserService, UserService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         services.AddScoped<ITeamService, TeamService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+    }
+    
+    public static void AddCustomRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IUserRepository, UserRepository>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddScoped<ITeamRepository, TeamRepository>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
     }
     
     public static void AddCustomSwaggerGen(this IServiceCollection services)

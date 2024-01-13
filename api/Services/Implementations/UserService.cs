@@ -1,41 +1,79 @@
-using System.Security.Claims;
-using api.Config;
-using api.Data.Models;
+using api.Data.Requests;
+using api.Data.Responses;
 using api.Data.SubModels;
-using api.Exceptions;
+using api.Repositories.Interfaces;
 using api.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using FileStream = System.IO.FileStream;
 
 namespace api.Services.Implementations;
 
-public class UserService(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserService
+public class UserService(IHostEnvironment env, IUserRepository userRepository) : IUserService
 {
-    public void AddInfo(AdditionalUserInfo additionalUserInfo)
+    public void AddInfo(AddInfoRequest request)
     {
-        dbContext.AdditionalUserInfos.Add(additionalUserInfo);
-        dbContext.SaveChanges();
+        var user = userRepository.GetFromToken();
+        
+        var additionalUserInfo = new AdditionalUserInfo
+        {
+            UserId = user.Id,
+            Type = request.Type,
+            Info = request.Info,
+        };
+        
+        userRepository.SaveAdditionalInfo(additionalUserInfo);
     }
 
-    public User GetById(long id)
+    public void SaveImage(IFormFile imageFile)
     {
-        return dbContext.Users
-                   .Include(e => e.AdditionalInfo)
-                   .FirstOrDefault(e => e.Id.Equals(id)) 
-               ?? throw new EntityNotFoundException(new User().GetType().Name);
-    }
-    
-    public User GetByUsername(string username)
-    {
-        return dbContext.Users
-                   .Include(u => u.AdditionalInfo)
-                   .FirstOrDefault(u => u.Username.Equals(username)) 
-               ?? throw new EntityNotFoundException(new User().GetType().Name);
+        var contentPath = env.ContentRootPath;
+        var path = Path.Combine(contentPath, "Uploads");
+
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        var ext = Path.GetExtension(imageFile.FileName);
+        var allowedExtensions = new[] { ".jpg", ".png", ".jpeg" };
+
+        if (!allowedExtensions.Contains(ext))
+        {
+            throw new ArgumentException($"The file is in an incorrect format, acceptable formats:{string.Join(",", allowedExtensions)}");
+        }
+        
+        var newFileName = Guid.NewGuid() + ext;
+        var stream = new FileStream(Path.Combine(path, newFileName), FileMode.Create);
+        imageFile.CopyTo(stream);
+        stream.Close();
+
+        var user = userRepository.GetFromToken();
+        user.Image = newFileName;
+        user.ImageFile = imageFile;
+        userRepository.Update(user);
     }
 
-    public User GetFromToken()
+    public bool DeleteImage()
     {
-        return httpContextAccessor.HttpContext is not null 
-            ? GetByUsername(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name)!) 
-            : throw new EntityNotFoundException(new User().GetType().Name);
+        var user = userRepository.GetFromToken();
+        
+        var path = Path.Combine(env.ContentRootPath, "Uploads/", user.Image!);
+        Console.WriteLine(path);
+
+        if (!File.Exists(path))
+        {
+            return false;
+        }
+        
+        user.Image = null;
+        user.ImageFile = null;
+        userRepository.Update(user);
+       
+        File.Delete(path);
+        return true;
+    }
+
+    public UserInfoResponse Profile()
+    {
+        return UserInfoResponse.UserToUserInfoResponse(userRepository.GetFromToken());
     }
 }

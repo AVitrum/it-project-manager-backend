@@ -1,9 +1,9 @@
-using api.Data.Models;
+using api.Data.Requests;
 
 namespace api.Services.Interfaces;
 
 public interface IAuthService
 {
-    void CreateUser(User user);
-    string CreateToken(User user);
+    void Register(UserCreationRequest request);
+    string Login(UserLoginRequest request);
 }

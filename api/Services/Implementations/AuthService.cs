@@ -1,22 +1,41 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Text;
-using api.Config;
 using api.Data.Models;
+using api.Data.Requests;
+using api.Repositories.Interfaces;
 using api.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace api.Services.Implementations;
 
-public class AuthService(IConfiguration configuration, AppDbContext dbContext) : IAuthService
+public class AuthService(IConfiguration configuration, IUserRepository userRepository) : IAuthService
 {
-    public void CreateUser(User user)
+    public void Register(UserCreationRequest request)
     {
-        dbContext.Users.Add(user);
-        dbContext.SaveChanges();
+        if (request.Equals(null) || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Username))
+        {
+            throw new ArgumentException("Email and Username are required!");
+        }
+
+        var user = UserCreationRequest.UserCreationRequestToUser(request);
+        userRepository.Create(user);
     }
 
-    public string CreateToken(User user)
+    public string Login(UserLoginRequest request)
+    {
+        var user = userRepository.GetByUsername(request.Username);
+            
+        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        {
+            throw new AuthenticationException("Wrong password");
+        }
+        
+        return CreateToken(user);
+    }
+
+    private string CreateToken(User user)
     {
         var claims = new List<Claim> {
             new(ClaimTypes.Name, user.Username),
