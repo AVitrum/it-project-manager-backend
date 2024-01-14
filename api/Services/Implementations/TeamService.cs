@@ -8,44 +8,45 @@ using api.Services.Interfaces;
 
 namespace api.Services.Implementations;
 
-public class TeamService(ITeamRepository teamRepository, IUserRepository userRepository) : ITeamService
+public class TeamService(ITeamRepository teamRepository, IUserRepository userRepository)
+    : ITeamService
 {
-    public void Create(TeamCreationRequest request)
+    public async Task CreateAsync(TeamCreationRequest request)
     {
         var team = new Team
         {
             Name = request.Name
         };
 
-        teamRepository.Create(team);
+        await teamRepository.CreateAsync(team);
 
-        var user = userRepository.GetFromToken();
-        
-        var userTeam = new UserTeam 
+        var user = await userRepository.GetAsync();
+
+        var userTeam = new UserTeam
         {
             UserId = user.Id,
             TeamId = team.Id,
             Role = UserRole.Manager
         };
-        
-        teamRepository.SaveUserInTeam(userTeam);
+
+        await teamRepository.SaveUserInTeamAsync(userTeam);
     }
 
-    public void AddUser(long teamId, long userId)
+    public async Task AddUserAsync(long teamId, long userId)
     {
-        var team = teamRepository.GetById(teamId);
-        var user = userRepository.GetById(userId);
-        
-        if (HasPermission(userRepository.GetFromToken(), team))
+        var team = await teamRepository.GetAsync(teamId);
+        var user = await userRepository.GetAsync(userId);
+
+        if (await HasPermissionAsync(await userRepository.GetAsync(), team))
         {
             throw new Exception("Server error.");
         }
-        
-        if (InTeam(user, team))
+
+        if (await InTeamAsync(user, team))
         {
             throw new ArgumentException("User already in this team");
         }
-        
+
         var userTeam = new UserTeam
         {
             UserId = user.Id,
@@ -53,23 +54,23 @@ public class TeamService(ITeamRepository teamRepository, IUserRepository userRep
             Role = UserRole.Regular
         };
 
-        teamRepository.SaveUserInTeam(userTeam);
+        await teamRepository.SaveUserInTeamAsync(userTeam);
     }
-    
-    public TeamResponse Get(long id)
-    {
-        return TeamResponse.TeamToTeamResponse(teamRepository.GetById(id));
-    }  
 
-    public bool HasPermission(User user, Team team)
+    public async Task<TeamResponse> GetAsync(long id)
     {
-        var userTeam = teamRepository.FindByUserAndTeam(user, team);
+        return TeamResponse.TeamToTeamResponse(await teamRepository.GetAsync(id));
+    }
+
+    private async Task<bool> HasPermissionAsync(User user, Team team)
+    {
+        var userTeam = await teamRepository.FindByUserAndTeamAsync(user, team);
         return userTeam is { Role: UserRole.Manager };
     }
-    
-    private bool InTeam(User user, Team team)
+
+    private async Task<bool> InTeamAsync(User user, Team team)
     {
-        var userTeam = teamRepository.FindByUserAndTeam(user, team);
+        var userTeam = await teamRepository.FindByUserAndTeamAsync(user, team);
         return userTeam != null;
     }
 }

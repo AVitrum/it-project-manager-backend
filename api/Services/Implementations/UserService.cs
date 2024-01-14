@@ -3,27 +3,26 @@ using api.Data.Responses;
 using api.Data.SubModels;
 using api.Repositories.Interfaces;
 using api.Services.Interfaces;
-using FileStream = System.IO.FileStream;
 
 namespace api.Services.Implementations;
 
 public class UserService(IHostEnvironment env, IUserRepository userRepository) : IUserService
 {
-    public void AddInfo(AddInfoRequest request)
+    public async Task AddInfoAsync(AddInfoRequest request)
     {
-        var user = userRepository.GetFromToken();
-        
+        var user = await userRepository.GetAsync();
+
         var additionalUserInfo = new AdditionalUserInfo
         {
             UserId = user.Id,
             Type = request.Type,
             Info = request.Info,
         };
-        
-        userRepository.SaveAdditionalInfo(additionalUserInfo);
+
+        await userRepository.SaveAdditionalInfoAsync(additionalUserInfo);
     }
 
-    public void SaveImage(IFormFile imageFile)
+    public async Task SaveImageAsync(IFormFile imageFile)
     {
         var contentPath = env.ContentRootPath;
         var path = Path.Combine(contentPath, "Uploads");
@@ -40,22 +39,22 @@ public class UserService(IHostEnvironment env, IUserRepository userRepository) :
         {
             throw new ArgumentException($"The file is in an incorrect format, acceptable formats:{string.Join(",", allowedExtensions)}");
         }
-        
+
         var newFileName = Guid.NewGuid() + ext;
         var stream = new FileStream(Path.Combine(path, newFileName), FileMode.Create);
-        imageFile.CopyTo(stream);
+        await imageFile.CopyToAsync(stream);
         stream.Close();
 
-        var user = userRepository.GetFromToken();
+        var user = await userRepository.GetAsync();
         user.Image = newFileName;
         user.ImageFile = imageFile;
-        userRepository.Update(user);
+        await userRepository.UpdateAsync(user);
     }
 
-    public bool DeleteImage()
+    public async Task<bool> DeleteImageAsync()
     {
-        var user = userRepository.GetFromToken();
-        
+        var user = await userRepository.GetAsync();
+
         var path = Path.Combine(env.ContentRootPath, "Uploads/", user.Image!);
         Console.WriteLine(path);
 
@@ -63,17 +62,18 @@ public class UserService(IHostEnvironment env, IUserRepository userRepository) :
         {
             return false;
         }
-        
+
         user.Image = null;
         user.ImageFile = null;
-        userRepository.Update(user);
-       
+        await userRepository.UpdateAsync(user);
+
         File.Delete(path);
         return true;
     }
 
-    public UserInfoResponse Profile()
+    public async Task<UserInfoResponse> ProfileAsync()
     {
-        return UserInfoResponse.UserToUserInfoResponse(userRepository.GetFromToken());
+        var user = await userRepository.GetAsync();
+        return UserInfoResponse.UserToUserInfoResponse(user);
     }
 }

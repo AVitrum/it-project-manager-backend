@@ -9,42 +9,45 @@ namespace api.Repositories.Implementations;
 
 public class TeamRepository(AppDbContext dbContext) : ITeamRepository
 {
-    public void Create(Team team)
+    public async Task CreateAsync(Team team)
     {
-        dbContext.Teams.Add(team);
-        dbContext.SaveChanges();
+        await dbContext.Teams.AddAsync(team);
+        await dbContext.SaveChangesAsync();
     }
 
-    public void Update(Team team)
+    public async Task UpdateAsync(Team team)
     {
-        throw new NotImplementedException();
+        dbContext.Teams.Update(team);
+        await dbContext.SaveChangesAsync();
     }
 
-    public bool Delete(Team team)
+    public async Task<bool> DeleteAsync(Team team)
     {
-        throw new NotImplementedException();
+        dbContext.Teams.Remove(team);
+        await dbContext.SaveChangesAsync();
+        return true;
     }
 
-    public Team GetById(long id)
+    public async Task<Team> GetAsync(long id)
     {
-        return dbContext.Teams
-                   .Include(e => e.UserTeams) 
+        return await dbContext.Teams
+                   .Include(e => e.UserTeams)
                    .ThenInclude(e => e.User)
                    .ThenInclude(e => e.AdditionalInfo)
-                   .FirstOrDefault(e => e.Id == id)
+                   .FirstOrDefaultAsync(e => e.Id == id)
                ?? throw new EntityNotFoundException(new Team().GetType().Name);
     }
-    
-    public UserTeam? FindByUserAndTeam(User user, Team team)
+
+    public async Task<UserTeam?> FindByUserAndTeamAsync(User user, Team team)
     {
-        var userTeam = dbContext.UserTeams
-            .FirstOrDefault(e => e.UserId == user.Id && e.TeamId == team.Id);
+        var userTeam = await dbContext.UserTeams
+            .FirstOrDefaultAsync(e => e.UserId == user.Id && e.TeamId == team.Id);
         return userTeam;
     }
 
-    public void SaveUserInTeam(UserTeam userTeam)
+    public async Task SaveUserInTeamAsync(UserTeam userTeam)
     {
-        dbContext.UserTeams.Add(userTeam);
-        dbContext.SaveChanges();
+        await dbContext.UserTeams.AddAsync(userTeam);
+        await dbContext.SaveChangesAsync();
     }
 }

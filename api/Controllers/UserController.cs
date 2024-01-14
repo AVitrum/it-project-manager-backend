@@ -6,41 +6,40 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize]
-    public class UserController(IUserService userService) : ControllerBase
+[Route("api/[controller]")]
+[ApiController]
+[Authorize]
+public class UserController(IUserService userService) : ControllerBase
+{
+    [HttpPut("addImage")]
+    public async Task<ActionResult> AddImage([FromForm] AddFileRequest request)
     {
-        [HttpPut("addImage")]
-        public ActionResult AddImage([FromForm] AddFileRequest request)
+        if (request.Equals(null))
         {
-            if (request.Equals(null))
-            {
-                return BadRequest("Error");
-            }
-            
-            userService.SaveImage(request.File);
-            return Ok("Saved");
+            return BadRequest("Error");
         }
 
-        [HttpPut("addInfo")]
-        public ActionResult<string> AddInfo(AddInfoRequest request)
-        {
-            
-            userService.AddInfo(request);
-            return "Added";
-        }
-
-        [HttpDelete("deleteFile")]
-        public ActionResult DeleteImage()
-        {
-            var response = userService.DeleteImage();
-            return response ? Ok(response) : BadRequest(response);
-        }
-
-        [HttpGet("info")]
-        public ActionResult<UserInfoResponse> Info()
-        {
-            return Ok(userService.Profile());
-        }
+        await userService.SaveImageAsync(request.File);
+        return Ok("Saved");
     }
+
+    [HttpPut("addInfo")]
+    public async Task<ActionResult<string>> AddInfo(AddInfoRequest request)
+    {
+        await userService.AddInfoAsync(request);
+        return "Added";
+    }
+
+    [HttpDelete("deleteFile")]
+    public async Task<ActionResult> DeleteImage()
+    {
+        var response = await userService.DeleteImageAsync();
+        return response ? Ok(response) : BadRequest(response);
+    }
+
+    [HttpGet("info")]
+    public async Task<ActionResult<UserInfoResponse>> Info()
+    {
+        return Ok(await userService.ProfileAsync());
+    }
+}

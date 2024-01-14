@@ -5,7 +5,7 @@ namespace api.Services.Interfaces;
 
 public interface ITeamService
 {
-    void Create(TeamCreationRequest request);
-    void AddUser(long teamId, long userId);
-    TeamResponse Get(long id);
+    Task CreateAsync(TeamCreationRequest request);
+    Task AddUserAsync(long teamId, long userId);
+    Task<TeamResponse> GetAsync(long id);
 }

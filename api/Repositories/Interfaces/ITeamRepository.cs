@@ -5,10 +5,11 @@ namespace api.Repositories.Interfaces;
 
 public interface ITeamRepository
 {
-    void Create(Team team);
-    void Update(Team team);
-    bool Delete(Team team);
-    void SaveUserInTeam(UserTeam userTeam);
-    Team GetById(long id);
-    UserTeam? FindByUserAndTeam(User user, Team team);
+    Task CreateAsync(Team team);
+    Task UpdateAsync(Team team);
+    Task<bool> DeleteAsync(Team team);
+    Task<Team> GetAsync(long id);
+
+    Task SaveUserInTeamAsync(UserTeam userTeam);
+    Task<UserTeam?> FindByUserAndTeamAsync(User user, Team team);
 }

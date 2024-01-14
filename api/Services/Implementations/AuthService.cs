@@ -12,26 +12,26 @@ namespace api.Services.Implementations;
 
 public class AuthService(IConfiguration configuration, IUserRepository userRepository) : IAuthService
 {
-    public void Register(UserCreationRequest request)
+    public async Task RegisterAsync(UserCreationRequest request)
     {
-        if (request.Equals(null) || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Username))
+        if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Username))
         {
             throw new ArgumentException("Email and Username are required!");
         }
 
         var user = UserCreationRequest.UserCreationRequestToUser(request);
-        userRepository.Create(user);
+        await userRepository.CreateAsync(user);
     }
 
-    public string Login(UserLoginRequest request)
+    public async Task<string> LoginAsync(UserLoginRequest request)
     {
-        var user = userRepository.GetByUsername(request.Username);
-            
+        var user = await userRepository.GetAsync(request.Username);
+
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
             throw new AuthenticationException("Wrong password");
         }
-        
+
         return CreateToken(user);
     }
 

@@ -5,14 +5,11 @@ namespace api.Repositories.Interfaces;
 
 public interface IUserRepository
 {
-    void Create(User user);
-    void Update(User user);
-    bool Delete(User user);
-
-    User GetById(long id);
-    User GetByUsername(string username);
-    User GetFromToken();
-
-
-    void SaveAdditionalInfo(AdditionalUserInfo additionalUserInfo);
+    Task CreateAsync(User user);
+    Task UpdateAsync(User user);
+    Task<bool> DeleteAsync(User user);
+    Task<User> GetAsync();
+    Task<User> GetAsync(long id);
+    Task<User> GetAsync(string username);
+    Task SaveAdditionalInfoAsync(AdditionalUserInfo additionalUserInfo);
 }

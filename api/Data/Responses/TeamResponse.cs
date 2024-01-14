@@ -4,6 +4,7 @@ namespace api.Data.Responses;
 
 public class TeamResponse
 {
+    public required long Id { get; set; }
     public required string Name { get; set; }
     public required List<UserTeamResponse?> Users { get; set; }
 
@@ -14,6 +15,7 @@ public class TeamResponse
 
         return new TeamResponse()
         {
+            Id = team.Id,
             Name = team.Name,
             Users = userInfoResponse!
         };

@@ -10,51 +10,51 @@ namespace api.Repositories.Implementations;
 
 public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserRepository
 {
-    public void Create(User user)
+    public async Task CreateAsync(User user)
     {
-        dbContext.Users.Add(user);
-        dbContext.SaveChanges();
-    }
-    
-    public void Update(User user)
-    {
-        dbContext.Users.Update(user);
-        dbContext.SaveChanges();
+        await dbContext.Users.AddAsync(user);
+        await dbContext.SaveChangesAsync();
     }
 
-    public bool Delete(User user)
+    public async Task UpdateAsync(User user)
+    {
+        dbContext.Users.Update(user);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> DeleteAsync(User user)
     {
         dbContext.Users.Remove(user);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return true;
     }
 
-    public User GetById(long id)
+    public async Task<User> GetAsync()
     {
-        return dbContext.Users
-                   .Include(e => e.AdditionalInfo)
-                   .FirstOrDefault(e => e.Id.Equals(id)) 
-               ?? throw new EntityNotFoundException(new User().GetType().Name);
-    }
-
-    public User GetByUsername(string username)
-    {
-        return dbContext.Users
-                   .Include(u => u.AdditionalInfo)
-                   .FirstOrDefault(u => u.Username.Equals(username)) 
-               ?? throw new EntityNotFoundException(new User().GetType().Name);
-    }
-    
-    public User GetFromToken()
-    {
-        return httpContextAccessor.HttpContext is not null 
-            ? GetByUsername(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name)!) 
+        return httpContextAccessor.HttpContext is not null
+            ? await GetAsync(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name)!)
             : throw new EntityNotFoundException(new User().GetType().Name);
     }
 
-    public void SaveAdditionalInfo(AdditionalUserInfo additionalUserInfo)
+    public async Task<User> GetAsync(long id)
     {
-        dbContext.AdditionalUserInfos.Add(additionalUserInfo);
-        dbContext.SaveChanges();
+        return await dbContext.Users
+                   .Include(e => e.AdditionalInfo)
+                   .FirstOrDefaultAsync(e => e.Id.Equals(id))
+               ?? throw new EntityNotFoundException(new User().GetType().Name);
+    }
+
+    public async Task<User> GetAsync(string username)
+    {
+        return await dbContext.Users
+                   .Include(u => u.AdditionalInfo)
+                   .FirstOrDefaultAsync(u => u.Username.Equals(username))
+               ?? throw new EntityNotFoundException(new User().GetType().Name);
+    }
+
+    public async Task SaveAdditionalInfoAsync(AdditionalUserInfo additionalUserInfo)
+    {
+        await dbContext.AdditionalUserInfos.AddAsync(additionalUserInfo);
+        await dbContext.SaveChangesAsync();
     }
 }

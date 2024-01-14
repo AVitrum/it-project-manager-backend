@@ -11,22 +11,22 @@ namespace api.Controllers;
 public class TeamController(ITeamService teamService) : ControllerBase
 {
     [HttpPost("create")]
-    public ActionResult Create(TeamCreationRequest request)
+    public async Task<ActionResult> Create(TeamCreationRequest request)
     {
-        teamService.Create(request);
+        await teamService.CreateAsync(request);
         return Ok("Created");
     }
 
     [HttpPost("{teamId:long}/{userId:long}")]
-    public ActionResult AddUser(long teamId, long userId)
+    public async Task<ActionResult> AddUser(long teamId, long userId)
     {
-        teamService.AddUser(teamId, userId);
+        await teamService.AddUserAsync(teamId, userId);
         return Ok("Added");
     }
 
     [HttpGet("{teamId:long}")]
-    public ActionResult GetById(long teamId) 
+    public async Task<ActionResult> GetById(long teamId)
     {
-        return Ok(teamService.Get(teamId));
+        return Ok(await teamService.GetAsync(teamId));
     }
 }

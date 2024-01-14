@@ -4,6 +4,6 @@ namespace api.Services.Interfaces;
 
 public interface IAuthService
 {
-    void Register(UserCreationRequest request);
-    string Login(UserLoginRequest request);
+    Task RegisterAsync(UserCreationRequest request);
+    Task<string> LoginAsync(UserLoginRequest request);
 }

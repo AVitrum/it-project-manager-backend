@@ -5,8 +5,8 @@ namespace api.Services.Interfaces;
 
 public interface IUserService
 {
-    void AddInfo(AddInfoRequest request);
-    void SaveImage(IFormFile imageFile);
-    bool DeleteImage();
-    UserInfoResponse Profile();
+    Task AddInfoAsync(AddInfoRequest request);
+    Task SaveImageAsync(IFormFile imageFile);
+    Task<bool> DeleteImageAsync();
+    Task<UserInfoResponse> ProfileAsync();
 }
