@@ -8,8 +8,7 @@ using Server.Services.Interfaces;
 
 namespace Server.Services.Implementations;
 
-public class TeamService(ITeamRepository teamRepository, IUserRepository userRepository)
-    : ITeamService
+public class TeamService(ITeamRepository teamRepository, IUserRepository userRepository) : ITeamService
 {
     public async Task CreateAsync(TeamCreationRequest request)
     {

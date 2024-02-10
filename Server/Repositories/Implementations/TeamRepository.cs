@@ -35,7 +35,7 @@ public class TeamRepository(AppDbContext dbContext) : ITeamRepository
                    .ThenInclude(e => e.User)
                    .ThenInclude(e => e.AdditionalInfo)
                    .FirstOrDefaultAsync(e => e.Id == id)
-               ?? throw new EntityNotFoundException(new Team().GetType().Name);
+               ?? throw new EntityNotFoundException(nameof(Team));
     }
 
     public async Task<UserTeam?> FindByUserAndTeamAsync(User user, Team team)

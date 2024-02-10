@@ -33,7 +33,7 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
     {
         return httpContextAccessor.HttpContext is not null
             ? await GetAsync(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name)!)
-            : throw new EntityNotFoundException(new User().GetType().Name);
+            : throw new EntityNotFoundException(nameof(User));
     }
 
     public async Task<User> GetAsync(long id)
@@ -41,7 +41,7 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
         return await dbContext.Users
                    .Include(e => e.AdditionalInfo)
                    .FirstOrDefaultAsync(e => e.Id.Equals(id))
-               ?? throw new EntityNotFoundException(new User().GetType().Name);
+               ?? throw new EntityNotFoundException(nameof(User));
     }
 
     public async Task<User> GetAsync(string username)
@@ -49,7 +49,7 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
         return await dbContext.Users
                    .Include(u => u.AdditionalInfo)
                    .FirstOrDefaultAsync(u => u.Username.Equals(username))
-               ?? throw new EntityNotFoundException(new User().GetType().Name);
+               ?? throw new EntityNotFoundException(nameof(User));
     }
 
     public async Task SaveAdditionalInfoAsync(AdditionalUserInfo additionalUserInfo)

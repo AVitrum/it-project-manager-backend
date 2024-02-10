@@ -5,7 +5,7 @@ namespace Server.Data.Models;
 
 public class Team
 {
-    [Required, Key]
+    [Key]
     public long Id { get; set; }
 
     public string Name { get; set; }

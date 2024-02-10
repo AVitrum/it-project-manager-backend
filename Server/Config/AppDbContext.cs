@@ -4,7 +4,8 @@ using Server.Data.SubModels;
 
 namespace Server.Config;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) 
+    : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Team> Teams { get; set; }
