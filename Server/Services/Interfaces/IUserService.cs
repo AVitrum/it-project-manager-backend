@@ -1,12 +1,11 @@
-using Server.Data.Requests;
 using Server.Data.Responses;
+using UserHelper;
 
 namespace Server.Services.Interfaces;
 
 public interface IUserService
 {
-    Task AddInfoAsync(AddInfoRequest request);
-    Task SaveImageAsync(IFormFile imageFile);
-    Task<bool> DeleteImageAsync();
     Task<UserInfoResponse> ProfileAsync();
+    Task<string> ChangePasswordAsync(ChangePasswordRequest request);
+    string GenerateCodeAsync(string email);
 }

@@ -1,45 +1,36 @@
+using EmailSystem;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data.Requests;
 using Server.Data.Responses;
 using Server.Services.Interfaces;
+using UserHelper;
 
 namespace Server.Controllers;
 
 [Route("Server/[controller]")]
 [ApiController]
 [Authorize]
-public class UserController(IUserService userService) : ControllerBase
+public class UserController(IUserService userService, IEmailSender emailSender) : ControllerBase
 {
-    [HttpPut("AddImage")]
-    public async Task<ActionResult> AddImage([FromForm] AddFileRequest request)
+    [HttpPut("ChangePassword")]
+    public async Task<ActionResult<string>> ChangePassword(ChangePasswordRequest request)
     {
-        if (request.Equals(null))
-        {
-            return BadRequest("Error");
-        }
-
-        await userService.SaveImageAsync(request.File);
-        return Ok("Saved");
-    }
-
-    [HttpPut("AddInfo")]
-    public async Task<ActionResult<string>> AddInfo(AddInfoRequest request)
-    {
-        await userService.AddInfoAsync(request);
-        return "Added";
-    }
-
-    [HttpDelete("DeleteFile")]
-    public async Task<ActionResult> DeleteImage()
-    {
-        var response = await userService.DeleteImageAsync();
-        return response ? Ok(response) : BadRequest(response);
+        return Ok(await userService.ChangePasswordAsync(request));
     }
 
     [HttpGet("Info")]
     public async Task<ActionResult<UserInfoResponse>> Info()
     {
         return Ok(await userService.ProfileAsync());
+    }
+
+    [HttpPost("SendCode")]
+    [AllowAnonymous]
+    public async Task<ActionResult<string>> SendCode(CodeRequest request)
+    {
+        var code = userService.GenerateCodeAsync(request.Email);
+        await emailSender.SendEmailAsync(request.Email, "Confirmation code", code);
+        return Ok("Sent");
     }
 }

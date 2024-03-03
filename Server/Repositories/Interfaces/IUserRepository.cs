@@ -11,5 +11,4 @@ public interface IUserRepository
     Task<User> GetAsync();
     Task<User> GetAsync(long id);
     Task<User> GetAsync(string username);
-    Task SaveAdditionalInfoAsync(AdditionalUserInfo additionalUserInfo);
 }

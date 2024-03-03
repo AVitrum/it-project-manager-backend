@@ -2,7 +2,6 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Server.Config;
 using Server.Data.Models;
-using Server.Data.SubModels;
 using Server.Exceptions;
 using Server.Repositories.Interfaces;
 
@@ -32,29 +31,23 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
     public async Task<User> GetAsync()
     {
         return httpContextAccessor.HttpContext is not null
-            ? await GetAsync(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name)!)
+            ? await GetAsync(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email)!)
             : throw new EntityNotFoundException(nameof(User));
     }
 
     public async Task<User> GetAsync(long id)
     {
         return await dbContext.Users
-                   .Include(e => e.AdditionalInfo)
+//                   .Include(e => e.AdditionalInfo)
                    .FirstOrDefaultAsync(e => e.Id.Equals(id))
                ?? throw new EntityNotFoundException(nameof(User));
     }
 
-    public async Task<User> GetAsync(string username)
+    public async Task<User> GetAsync(string email)
     {
         return await dbContext.Users
-                   .Include(u => u.AdditionalInfo)
-                   .FirstOrDefaultAsync(u => u.Username.Equals(username))
+//                   .Include(u => u.AdditionalInfo)
+                   .FirstOrDefaultAsync(u => u.Email.Equals(email))
                ?? throw new EntityNotFoundException(nameof(User));
-    }
-
-    public async Task SaveAdditionalInfoAsync(AdditionalUserInfo additionalUserInfo)
-    {
-        await dbContext.AdditionalUserInfos.AddAsync(additionalUserInfo);
-        await dbContext.SaveChangesAsync();
     }
 }

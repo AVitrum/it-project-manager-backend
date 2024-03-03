@@ -18,12 +18,9 @@ public class User
     
     public required string PasswordHash { get; set; }
     
-    public string? Image { get; set; }
+    public required DateTime CreationDate { get; set; }
     
-    [NotMapped] 
-    public IFormFile? ImageFile { get; set; }
-    
-    public ICollection<AdditionalUserInfo> AdditionalInfo { get; set; }
+    public required bool IsBlocked { get; set; }
     
     public ICollection<UserTeam> UserTeams { get; set; }
 }

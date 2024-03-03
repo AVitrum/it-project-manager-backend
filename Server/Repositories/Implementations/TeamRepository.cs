@@ -33,7 +33,7 @@ public class TeamRepository(AppDbContext dbContext) : ITeamRepository
         return await dbContext.Teams
                    .Include(e => e.UserTeams)
                    .ThenInclude(e => e.User)
-                   .ThenInclude(e => e.AdditionalInfo)
+//                   .ThenInclude(e => e.AdditionalInfo)
                    .FirstOrDefaultAsync(e => e.Id == id)
                ?? throw new EntityNotFoundException(nameof(Team));
     }

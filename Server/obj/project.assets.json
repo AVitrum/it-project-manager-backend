@@ -444,6 +444,26 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
+      "Microsoft.Extensions.Configuration/8.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "8.0.0",
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Extensions.Configuration.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.Configuration.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
       "Microsoft.Extensions.Configuration.Abstractions/8.0.0": {
         "type": "package",
         "dependencies": {
@@ -712,6 +732,19 @@
         },
         "runtime": {
           "lib/netstandard2.0/Mono.TextTemplating.dll": {}
+        }
+      },
+      "Newtonsoft.Json/13.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Npgsql/8.0.0": {
@@ -1127,6 +1160,33 @@
         },
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
+      "EmailSystem/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/EmailSystem.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/EmailSystem.dll": {}
+        }
+      },
+      "UserHelper/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "BCrypt.Net-Next": "4.0.3",
+          "Microsoft.Extensions.Configuration": "8.0.0",
+          "Microsoft.IdentityModel.Tokens": "7.0.3",
+          "Newtonsoft.Json": "13.0.3",
+          "System.IdentityModel.Tokens.Jwt": "7.0.3"
+        },
+        "compile": {
+          "bin/placeholder/UserHelper.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/UserHelper.dll": {}
         }
       }
     }
@@ -1805,6 +1865,36 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "Microsoft.Extensions.Configuration/8.0.0": {
+      "sha512": "0J/9YNXTMWSZP2p2+nvl8p71zpSwokZXZuJW+VjdErkegAnFdO1XlqtA62SJtgVYHdKu3uPxJHcMR/r35HwFBA==",
+      "type": "package",
+      "path": "microsoft.extensions.configuration/8.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Configuration.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.targets",
+        "lib/net462/Microsoft.Extensions.Configuration.dll",
+        "lib/net462/Microsoft.Extensions.Configuration.xml",
+        "lib/net6.0/Microsoft.Extensions.Configuration.dll",
+        "lib/net6.0/Microsoft.Extensions.Configuration.xml",
+        "lib/net7.0/Microsoft.Extensions.Configuration.dll",
+        "lib/net7.0/Microsoft.Extensions.Configuration.xml",
+        "lib/net8.0/Microsoft.Extensions.Configuration.dll",
+        "lib/net8.0/Microsoft.Extensions.Configuration.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Configuration.xml",
+        "microsoft.extensions.configuration.8.0.0.nupkg.sha512",
+        "microsoft.extensions.configuration.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "Microsoft.Extensions.Configuration.Abstractions/8.0.0": {
       "sha512": "3lE/iLSutpgX1CC0NOW70FJoGARRHbyKmG7dc0klnUZ9Dd9hS6N/POPWhKhMLCEuNN5nXEY5agmlFtH562vqhQ==",
       "type": "package",
@@ -2274,6 +2364,36 @@
         "lib/netstandard2.0/Mono.TextTemplating.dll",
         "mono.texttemplating.2.2.1.nupkg.sha512",
         "mono.texttemplating.nuspec"
+      ]
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "sha512": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "type": "package",
+      "path": "newtonsoft.json/13.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "README.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/net6.0/Newtonsoft.Json.dll",
+        "lib/net6.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "newtonsoft.json.13.0.3.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
       ]
     },
     "Npgsql/8.0.0": {
@@ -2863,17 +2983,29 @@
         "system.threading.channels.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "EmailSystem/1.0.0": {
+      "type": "project",
+      "path": "../EmailSystem/EmailSystem.csproj",
+      "msbuildProject": "../EmailSystem/EmailSystem.csproj"
+    },
+    "UserHelper/1.0.0": {
+      "type": "project",
+      "path": "../UserHelper/UserHelper.csproj",
+      "msbuildProject": "../UserHelper/UserHelper.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "BCrypt.Net-Next >= 4.0.3",
+      "EmailSystem >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.0",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.0",
       "Microsoft.IdentityModel.Tokens >= 7.0.3",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.0",
       "Swashbuckle.AspNetCore.Filters >= 7.0.12",
-      "Swashbuckle.AspNetCore.SwaggerUI >= 6.5.0"
+      "Swashbuckle.AspNetCore.SwaggerUI >= 6.5.0",
+      "UserHelper >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -2882,11 +3014,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/almashiandrey/Developer/main/it_project-manager-backend/Server/Server.csproj",
+      "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/Server.csproj",
       "projectName": "Server",
-      "projectPath": "/Users/almashiandrey/Developer/main/it_project-manager-backend/Server/Server.csproj",
+      "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/Server.csproj",
       "packagesPath": "/Users/almashiandrey/.nuget/packages/",
-      "outputPath": "/Users/almashiandrey/Developer/main/it_project-manager-backend/Server/obj/",
+      "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/almashiandrey/.nuget/NuGet/NuGet.Config"
@@ -2895,13 +3027,19 @@
         "net8.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj": {
+              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj"
+            },
+            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj": {
+              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -2964,7 +3102,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

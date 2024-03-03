@@ -24,7 +24,9 @@ public class UserCreationRequest
         {
             Username = userCreationRequest.Username,
             Email = userCreationRequest.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreationRequest.Password)
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreationRequest.Password),
+            CreationDate = DateTime.Now,
+            IsBlocked = true
         };
     } 
 }

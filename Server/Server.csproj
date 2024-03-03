@@ -30,4 +30,9 @@
       <Folder Include="Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\UserHelper\UserHelper.csproj" />
+      <ProjectReference Include="..\EmailSystem\EmailSystem.csproj" />
+    </ItemGroup>
+
 </Project>

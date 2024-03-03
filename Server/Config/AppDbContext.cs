@@ -10,7 +10,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<User> Users { get; set; }
     public DbSet<Team> Teams { get; set; }
     public DbSet<UserTeam> UserTeams { get; set; }
-    public DbSet<AdditionalUserInfo> AdditionalUserInfos { get; set; }
+
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,11 +22,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasIndex(e => e.Email)
             .IsUnique();
 
-        modelBuilder.Entity<User>()
-            .HasMany(e => e.AdditionalInfo)
-            .WithOne(e => e.User)
-            .HasForeignKey(e => e.UserId)
-            .IsRequired();
+//        modelBuilder.Entity<User>()
+//            .HasMany(e => e.AdditionalInfo)
+//            .WithOne(e => e.User)
+//            .HasForeignKey(e => e.UserId)
+//            .IsRequired();
         
         modelBuilder.Entity<Team>()
             .HasIndex(e => e.Name)

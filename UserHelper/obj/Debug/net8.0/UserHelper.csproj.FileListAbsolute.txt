@@ -1,0 +1,13 @@
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/bin/Debug/net8.0/UserHelper.deps.json
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/bin/Debug/net8.0/UserHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/bin/Debug/net8.0/UserHelper.pdb
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.csproj.AssemblyReference.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.GeneratedMSBuildEditorConfig.editorconfig
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.AssemblyInfoInputs.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.AssemblyInfo.cs
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.csproj.CoreCompileInputs.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.sourcelink.json
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/refint/UserHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.pdb
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/ref/UserHelper.dll

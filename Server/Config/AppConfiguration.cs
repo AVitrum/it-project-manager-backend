@@ -1,4 +1,5 @@
 using System.Text;
+using EmailSystem;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Server.Repositories.Implementations;
@@ -16,6 +17,8 @@ public static class AppConfiguration
         services.AddScoped<IAuthService, AuthService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         services.AddScoped<IUserService, UserService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         services.AddScoped<ITeamService, TeamService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddScoped<IEmailSender, EmailSender>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
     }
     
     public static void AddCustomRepositories(this IServiceCollection services)

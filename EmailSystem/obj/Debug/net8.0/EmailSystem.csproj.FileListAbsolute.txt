@@ -1,0 +1,12 @@
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/bin/Debug/net8.0/EmailSystem.deps.json
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/bin/Debug/net8.0/EmailSystem.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/bin/Debug/net8.0/EmailSystem.pdb
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/EmailSystem.GeneratedMSBuildEditorConfig.editorconfig
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/EmailSystem.AssemblyInfoInputs.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/EmailSystem.AssemblyInfo.cs
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/EmailSystem.csproj.CoreCompileInputs.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/EmailSystem.sourcelink.json
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/EmailSystem.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/refint/EmailSystem.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/EmailSystem.pdb
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/Debug/net8.0/ref/EmailSystem.dll
