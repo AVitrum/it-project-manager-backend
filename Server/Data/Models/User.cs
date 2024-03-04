@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Server.Data.SubModels;
 
 namespace Server.Data.Models;
 
@@ -15,12 +14,19 @@ public class User
     [MaxLength(40)]
     [EmailAddress(ErrorMessage = "Invalid Email Address")]
     public required string Email { get; set; }
+
+    public required byte[] PasswordHash { get; set; } = new byte[32];
+
+    public required byte[] PasswordSalt { get; set; } = new byte[32];
     
-    public required string PasswordHash { get; set; }
+    public string? VerificationToken { get; set; }
+    
+    public DateTime? VerifiedAt { get; set; }
+
+    public string? PasswordResetToken { get; set; }
+    
+    public DateTime? ResetTokenExpires { get; set; }
     
     public required DateTime CreationDate { get; set; }
-    
-    public required bool IsBlocked { get; set; }
-    
     public ICollection<UserTeam> UserTeams { get; set; }
 }

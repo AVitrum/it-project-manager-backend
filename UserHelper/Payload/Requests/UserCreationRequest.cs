@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Server.Data.Models;
 
-namespace Server.Data.Requests;
+namespace UserHelper.Payload.Requests;
 
 public class UserCreationRequest
 {
@@ -17,16 +16,7 @@ public class UserCreationRequest
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", 
         ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
     public required string Password { get; set; }
-    
-    public static User UserCreationRequestToUser(UserCreationRequest userCreationRequest)
-    {
-        return new User
-        {
-            Username = userCreationRequest.Username,
-            Email = userCreationRequest.Email,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(userCreationRequest.Password),
-            CreationDate = DateTime.Now,
-            IsBlocked = true
-        };
-    } 
+
+    [Compare("Password")]
+    public required string ConfirmPassword { get; set; }
 }

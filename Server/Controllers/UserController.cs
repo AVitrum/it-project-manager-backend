@@ -1,36 +1,46 @@
-using EmailSystem;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Server.Data.Requests;
 using Server.Data.Responses;
 using Server.Services.Interfaces;
 using UserHelper;
+using UserHelper.Payload.Requests;
+using ResetPasswordRequest = UserHelper.Payload.Requests.ResetPasswordRequest;
 
 namespace Server.Controllers;
 
-[Route("Server/[controller]")]
+[Route("server/[controller]")]
 [ApiController]
 [Authorize]
-public class UserController(IUserService userService, IEmailSender emailSender) : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
-    [HttpPut("ChangePassword")]
-    public async Task<ActionResult<string>> ChangePassword(ChangePasswordRequest request)
+    [HttpGet("getResetPasswordToken")]
+    [AllowAnonymous]
+    public async Task<IActionResult> CreateResetPasswordToken(TokenRequest request)
+    {
+        await userService.CreateResetPasswordTokenAsync(request.Email!);
+        return Ok("The token has been sent!");
+    }
+    
+    [HttpPut("resetPassword")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+    {
+        await userService.ResetPassword(request);
+        return Ok("Changed!");
+    }
+    
+    
+    [HttpPut("changePassword")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
         return Ok(await userService.ChangePasswordAsync(request));
     }
 
-    [HttpGet("Info")]
-    public async Task<ActionResult<UserInfoResponse>> Info()
+    [HttpGet("profile")]
+    public async Task<IActionResult> Info()
     {
         return Ok(await userService.ProfileAsync());
-    }
-
-    [HttpPost("SendCode")]
-    [AllowAnonymous]
-    public async Task<ActionResult<string>> SendCode(CodeRequest request)
-    {
-        var code = userService.GenerateCodeAsync(request.Email);
-        await emailSender.SendEmailAsync(request.Email, "Confirmation code", code);
-        return Ok("Sent");
     }
 }

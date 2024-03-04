@@ -1,4 +1,4 @@
-namespace Server.Data.Requests;
+namespace UserHelper.Payload.Requests;
 
 public class UserLoginRequest
 {

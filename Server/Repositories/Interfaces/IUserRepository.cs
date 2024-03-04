@@ -1,5 +1,4 @@
 using Server.Data.Models;
-using Server.Data.SubModels;
 
 namespace Server.Repositories.Interfaces;
 
@@ -11,4 +10,7 @@ public interface IUserRepository
     Task<User> GetAsync();
     Task<User> GetAsync(long id);
     Task<User> GetAsync(string username);
+    Task<User> GetAsyncByToken(string token);
+    Task<User> GetAsyncByPasswordResetToken(string token);
+    Task<bool> ExistByEmailAsync(string email);
 }

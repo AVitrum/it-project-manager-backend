@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Config;
 using Server.Data.Models;
-using Server.Data.SubModels;
 using Server.Exceptions;
 using Server.Repositories.Interfaces;
 

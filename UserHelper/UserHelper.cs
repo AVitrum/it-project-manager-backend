@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Authentication;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -9,34 +9,30 @@ namespace UserHelper;
 
 public static class UserHelper
 {
-    public static void CheckHashedPassword(string passwordToCheck, string userPasswordHash)
+    public static string CreateRandomToken()
     {
-        if(!BCrypt.Net.BCrypt.Verify(passwordToCheck, userPasswordHash)) 
-            throw new AuthenticationException("Wrong password!");
+        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
     }
 
-    public static void CheckPassword(ChangePasswordRequest request)
-    { 
-        if (!request.NewPassword.Equals(request.SecondNewPassword)) 
-            throw new ArgumentException("Passwords are not the same!");
-    }
-
-    public static bool CheckDateAfterRegistration(DateTime registrationDate)
+    public static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
     {
-        return registrationDate.AddDays(3) >= DateTime.Now;
+        using var hmac = new HMACSHA512(passwordSalt);
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+        return computedHash.SequenceEqual(passwordHash);
     }
     
-    public static void BanCheck(bool isBanned)
+    public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
     {
-        if (isBanned) throw new ArgumentException("You need to verify your account!");
+        using var hmac = new HMACSHA512();
+        passwordSalt = hmac.Key;
+        passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
     }
     
     public static string CreateToken(IConfiguration configuration, UserDto user)
     {
         var claims = new List<Claim> {
-            new(ClaimTypes.Name, user.Username),
-            new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.Role, "Admin"),
+            new(ClaimTypes.Name, user.Username!),
+            new(ClaimTypes.Email, user.Email!),
             new(ClaimTypes.Role, "User")
         };
 

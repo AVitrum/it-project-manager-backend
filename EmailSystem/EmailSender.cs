@@ -22,7 +22,15 @@ public class EmailSender : IEmailSender
             From = new MailAddress(mail),
             To = { email },
             Subject = subject,
-            Body = $"<html><body> {message} </body><html>",
+            Body = "<html>" +
+                    "<body>" +
+                        $"{subject}:" +
+                        $"<h2>{message}</h2>" +
+                        "<p>If you did not send this request," +
+                        " then contact our technical support," +
+                        " you may have been hacked!</p>" +
+                    "</body>" +
+                   "<html>",
             IsBodyHtml = true
         };
         

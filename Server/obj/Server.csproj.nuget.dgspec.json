@@ -173,7 +173,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj": {
+                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

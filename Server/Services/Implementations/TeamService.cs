@@ -2,7 +2,6 @@ using Server.Data.Enums;
 using Server.Data.Models;
 using Server.Data.Requests;
 using Server.Data.Responses;
-using Server.Data.SubModels;
 using Server.Repositories.Interfaces;
 using Server.Services.Interfaces;
 
