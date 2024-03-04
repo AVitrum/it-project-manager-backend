@@ -27,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Data\SubModels\" />
       <Folder Include="Migrations\" />
     </ItemGroup>
 

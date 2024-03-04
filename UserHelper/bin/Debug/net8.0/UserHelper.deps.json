@@ -9,6 +9,7 @@
       "UserHelper/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
+          "EmailSystem": "1.0.0",
           "Microsoft.Extensions.Configuration": "8.0.0",
           "Microsoft.IdentityModel.Tokens": "7.0.3",
           "Newtonsoft.Json": "13.0.3",
@@ -117,6 +118,11 @@
             "fileVersion": "7.0.3.41017"
           }
         }
+      },
+      "EmailSystem/1.0.0": {
+        "runtime": {
+          "EmailSystem.dll": {}
+        }
       }
     }
   },
@@ -195,6 +201,11 @@
       "sha512": "sha512-caEe+OpQNYNiyZb+DJpUVROXoVySWBahko2ooNfUcllxa9ZQUM8CgM/mDjP6AoFn6cQU9xMmG+jivXWub8cbGg==",
       "path": "system.identitymodel.tokens.jwt/7.0.3",
       "hashPath": "system.identitymodel.tokens.jwt.7.0.3.nupkg.sha512"
+    },
+    "EmailSystem/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

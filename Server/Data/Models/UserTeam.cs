@@ -1,7 +1,6 @@
 using Server.Data.Enums;
-using Server.Data.Models;
 
-namespace Server.Data.SubModels;
+namespace Server.Data.Models;
 
 public class UserTeam
 {

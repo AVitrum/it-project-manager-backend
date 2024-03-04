@@ -50,4 +50,21 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
                    .FirstOrDefaultAsync(u => u.Email.Equals(email))
                ?? throw new EntityNotFoundException(nameof(User));
     }
+
+    public async Task<User> GetAsyncByToken(string token)
+    {
+        return await dbContext.Users.FirstOrDefaultAsync(u => u.VerificationToken!.Equals(token)) 
+               ?? throw new EntityNotFoundException(nameof(User));
+    }
+
+    public async Task<User> GetAsyncByPasswordResetToken(string token)
+    {
+        return await dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken!.Equals(token)) 
+               ?? throw new EntityNotFoundException(nameof(User)); 
+    }
+
+    public Task<bool> ExistByEmailAsync(string email)
+    {
+        return dbContext.Users.AnyAsync(u => u.Email.Equals(email));
+    }
 }

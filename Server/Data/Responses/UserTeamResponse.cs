@@ -1,4 +1,4 @@
-using Server.Data.SubModels;
+using Server.Data.Models;
 
 namespace Server.Data.Responses;
 

@@ -689,6 +689,7 @@
       "UserHelper/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
+          "EmailSystem": "1.0.0",
           "Microsoft.Extensions.Configuration": "8.0.0",
           "Microsoft.IdentityModel.Tokens": "7.0.3",
           "Newtonsoft.Json": "13.0.3",

@@ -11,3 +11,6 @@
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/refint/UserHelper.dll
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.pdb
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/ref/UserHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/bin/Debug/net8.0/EmailSystem.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/bin/Debug/net8.0/EmailSystem.pdb
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/Debug/net8.0/UserHelper.csproj.Up2Date
