@@ -16,24 +16,35 @@
     <ItemGroup>
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.2.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
+      <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.4.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
       <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.12" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\SubModels\" />
       <Folder Include="Migrations\" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\UserHelper\UserHelper.csproj" />
       <ProjectReference Include="..\EmailSystem\EmailSystem.csproj" />
+      <ProjectReference Include="..\OAuth\OAuth.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Home\Index.cshtml" />
+      <AdditionalFiles Include="Views\Home\Privacy.cshtml" />
+      <AdditionalFiles Include="Views\Shared\Error.cshtml" />
+      <AdditionalFiles Include="Views\Shared\_Layout.cshtml" />
+      <AdditionalFiles Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+      <AdditionalFiles Include="Views\_ViewImports.cshtml" />
+      <AdditionalFiles Include="Views\_ViewStart.cshtml" />
     </ItemGroup>
 
 </Project>

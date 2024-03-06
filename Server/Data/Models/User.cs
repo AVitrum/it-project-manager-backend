@@ -27,6 +27,7 @@ public class User
     
     public DateTime? ResetTokenExpires { get; set; }
     
-    public required DateTime CreationDate { get; set; }
+    public required DateTime RegistrationDate { get; set; }
+    
     public ICollection<UserTeam> UserTeams { get; set; }
 }

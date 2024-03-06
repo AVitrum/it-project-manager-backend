@@ -50,4 +50,9 @@ public static class UserHelper
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         return jwt;
     }
+
+    public static bool CheckVerificationStatus(UserDto user)
+    {
+        return user.VerifiedAt == null && user.RegistrationDate!.Value.Date.AddDays(3) < DateTime.UtcNow;
+    }
 }

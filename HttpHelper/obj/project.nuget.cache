@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "2c5nR7MDa1HOUwg6JVTZjslpOlI/mx/zFYUnm34loMLQR7rVd5A2dJS85loHvG3jGwiALnFkMsBU5x9SX5NHmA==",
+  "success": true,
+  "projectFilePath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/HttpHelper.csproj",
+  "expectedPackageFiles": [
+    "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.webutilities/8.0.2/microsoft.aspnetcore.webutilities.8.0.2.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.net.http.headers/8.0.2/microsoft.net.http.headers.8.0.2.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/system.io.pipelines/8.0.0/system.io.pipelines.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

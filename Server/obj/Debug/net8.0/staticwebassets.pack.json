@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/projectbundle/Server.bundle.scp.css",
+      "PackagePath": "staticwebassets/Server.bundle.scp.css"
+    },
+    {
       "Id": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },

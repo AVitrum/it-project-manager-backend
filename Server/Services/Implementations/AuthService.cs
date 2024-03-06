@@ -1,6 +1,5 @@
 using EmailSystem;
 using Server.Data.Models;
-using Server.Data.Requests;
 using Server.Exceptions;
 using Server.Repositories.Interfaces;
 using Server.Services.Interfaces;
@@ -34,7 +33,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             VerificationToken = CreateRandomToken(),
-            CreationDate = DateTime.UtcNow,
+            RegistrationDate = DateTime.UtcNow,
         };
         await userRepository.CreateAsync(user);
     }
@@ -54,9 +53,17 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             throw new ArgumentException("Password is incorrect");
         }
 
+        if (CheckVerificationStatus(new UserDto
+                { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
+        {
+            await userRepository.DeleteAsync(user);
+            throw new EntityNotFoundException("You have not verified your account." +
+                                              " Your account has been deleted");
+        }
+
         if (user.VerifiedAt == null)
         {
-            throw new ArgumentException("Not verified!");
+            throw new ArgumentException("Not verified! Please verify your account");
         }
         
         return CreateToken(configuration, new UserDto
