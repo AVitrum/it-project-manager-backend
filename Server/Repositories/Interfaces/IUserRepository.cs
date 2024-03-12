@@ -9,7 +9,7 @@ public interface IUserRepository
     Task<bool> DeleteAsync(User user);
     Task<User> GetAsync();
     Task<User> GetAsync(long id);
-    Task<User> GetAsync(string username);
+    Task<User> GetAsync(string email);
     Task<User> GetAsyncByToken(string token);
     Task<User> GetAsyncByPasswordResetToken(string token);
     Task<bool> ExistByEmailAsync(string email);

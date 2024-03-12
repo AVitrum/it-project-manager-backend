@@ -50,9 +50,6 @@ namespace Server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(40)
@@ -68,6 +65,9 @@ namespace Server.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("bytea");
+
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ResetTokenExpires")
                         .HasColumnType("timestamp with time zone");
@@ -94,7 +94,7 @@ namespace Server.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Server.Data.SubModels.UserTeam", b =>
+            modelBuilder.Entity("Server.Data.Models.UserTeam", b =>
                 {
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
@@ -112,7 +112,7 @@ namespace Server.Migrations
                     b.ToTable("UserTeams");
                 });
 
-            modelBuilder.Entity("Server.Data.SubModels.UserTeam", b =>
+            modelBuilder.Entity("Server.Data.Models.UserTeam", b =>
                 {
                     b.HasOne("Server.Data.Models.Team", "Team")
                         .WithMany("UserTeams")

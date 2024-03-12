@@ -1,0 +1,13 @@
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/bin/Debug/net8.0/HttpHelper.deps.json
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/bin/Debug/net8.0/HttpHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/bin/Debug/net8.0/HttpHelper.pdb
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.csproj.AssemblyReference.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.GeneratedMSBuildEditorConfig.editorconfig
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.AssemblyInfoInputs.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.AssemblyInfo.cs
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.csproj.CoreCompileInputs.cache
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.sourcelink.json
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/refint/HttpHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/HttpHelper.pdb
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/HttpHelper/obj/Debug/net8.0/ref/HttpHelper.dll

@@ -5,21 +5,21 @@ namespace EmailSystem;
 
 public class EmailSender : IEmailSender
 {
+    private const string Mail = "prms.noreply@gmail.com";
+    private const string Password = "roqvjmaewgfrfeau";
+    
     public Task SendEmailAsync(string email, string subject, string message)
     {
-        var mail = "prms.noreply@gmail.com";
-        var pw = "roqvjmaewgfrfeau";
-
         var client = new SmtpClient("smtp.gmail.com")
         {
             Port = 587,
             EnableSsl = true,
-            Credentials = new NetworkCredential(mail, pw)
+            Credentials = new NetworkCredential(Mail, Password)
         };
 
         var msg = new MailMessage
         {
-            From = new MailAddress(mail),
+            From = new MailAddress(Mail),
             To = { email },
             Subject = subject,
             Body = "<html>" +

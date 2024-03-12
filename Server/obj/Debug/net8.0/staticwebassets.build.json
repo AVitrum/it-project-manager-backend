@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "++ihql5YOpvnezmn5DLnL5mH0JtVifFSi+P8mYItR7M=",
+  "Hash": "OB1zpEB8HM9wu+wEtSghwLwcws9pU2VsOy/AB3zk7G4=",
   "Source": "Server",
   "BasePath": "_content/Server",
   "Mode": "Default",
@@ -16,6 +16,44 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/bundle/Server.styles.css",
+      "SourceId": "Server",
+      "SourceType": "Computed",
+      "ContentRoot": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/bundle/",
+      "BasePath": "_content/Server",
+      "RelativePath": "Server.styles.css",
+      "AssetKind": "All",
+      "AssetMode": "CurrentProject",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ApplicationBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/bundle/Server.styles.css"
+    },
+    {
+      "Identity": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/projectbundle/Server.bundle.scp.css",
+      "SourceId": "Server",
+      "SourceType": "Computed",
+      "ContentRoot": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/projectbundle/",
+      "BasePath": "_content/Server",
+      "RelativePath": "Server.bundle.scp.css",
+      "AssetKind": "All",
+      "AssetMode": "Reference",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ProjectBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/projectbundle/Server.bundle.scp.css"
+    },
     {
       "Identity": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/wwwroot/css/site.css",
       "SourceId": "Server",

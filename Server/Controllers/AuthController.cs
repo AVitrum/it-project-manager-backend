@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Server.Data.Requests;
 using Server.Services.Interfaces;
-using UserHelper;
 using UserHelper.Payload.Requests;
 
 namespace Server.Controllers;

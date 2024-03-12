@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "pWpY1tFeHkG51M8t/vA6S+aBw0+Oj0+B3/PPZm/F9L7x8kgK1vcSxI2/IuvygDjFzbvZqxFJg/YPd6BA1mguhQ==",
+  "success": true,
+  "projectFilePath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj",
+  "expectedPackageFiles": [
+    "/Users/almashiandrey/.nuget/packages/identitymodel/6.2.0/identitymodel.6.2.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.webutilities/8.0.2/microsoft.aspnetcore.webutilities.8.0.2.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.net.http.headers/8.0.2/microsoft.net.http.headers.8.0.2.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/system.io.pipelines/8.0.0/system.io.pipelines.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

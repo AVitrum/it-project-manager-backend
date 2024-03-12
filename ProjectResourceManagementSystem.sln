@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserHelper", "UserHelper\Us
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSystem", "EmailSystem\EmailSystem.csproj", "{FD1A6C5D-A5DE-4F5F-BEF9-284770A78510}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpHelper", "HttpHelper\HttpHelper.csproj", "{C34C986E-7EF9-42D8-AD69-40CCDBC5C3D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth", "OAuth\OAuth.csproj", "{B385DEA2-FF52-4A24-8AAA-B7F3FDF3D0AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +29,13 @@ Global
 		{FD1A6C5D-A5DE-4F5F-BEF9-284770A78510}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD1A6C5D-A5DE-4F5F-BEF9-284770A78510}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD1A6C5D-A5DE-4F5F-BEF9-284770A78510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C34C986E-7EF9-42D8-AD69-40CCDBC5C3D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C34C986E-7EF9-42D8-AD69-40CCDBC5C3D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C34C986E-7EF9-42D8-AD69-40CCDBC5C3D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C34C986E-7EF9-42D8-AD69-40CCDBC5C3D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B385DEA2-FF52-4A24-8AAA-B7F3FDF3D0AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B385DEA2-FF52-4A24-8AAA-B7F3FDF3D0AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B385DEA2-FF52-4A24-8AAA-B7F3FDF3D0AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B385DEA2-FF52-4A24-8AAA-B7F3FDF3D0AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
