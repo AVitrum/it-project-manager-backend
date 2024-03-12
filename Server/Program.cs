@@ -27,10 +27,10 @@ var app = builder.Build();
 app.UseStatusCodePages();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
 app.UseStaticFiles();
-app.UseRouting();
 app.UseSession();
 app.MapControllerRoute(
     name: "default",

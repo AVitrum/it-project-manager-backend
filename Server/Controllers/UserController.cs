@@ -39,7 +39,7 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("profile")]
-    public async Task<IActionResult> Info()
+    public async Task<IActionResult> Profile()
     {
         return Ok(await userService.ProfileAsync());
     }

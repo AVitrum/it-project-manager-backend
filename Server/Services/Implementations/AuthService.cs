@@ -1,4 +1,5 @@
 using EmailSystem;
+using OAuth;
 using Server.Data.Models;
 using Server.Exceptions;
 using Server.Repositories.Interfaces;
@@ -10,7 +11,7 @@ using static UserHelper.UserHelper;
 namespace Server.Services.Implementations;
 
 public class AuthService(IConfiguration configuration, IEmailSender emailSender, IUserRepository userRepository) 
-    : IAuthService
+    : IAuthService 
 {
     public async Task RegisterAsync(UserCreationRequest request)
     {
@@ -45,7 +46,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
 
         if (user == null)
         {
-            throw new EntityNotFoundException(nameof(User));
+            throw new NotImplementedException();
         }
 
         if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
@@ -66,6 +67,36 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             throw new ArgumentException("Not verified! Please verify your account");
         }
         
+        return CreateToken(configuration, new UserDto
+        {
+            Username = user.Username,
+            Email = user.Email
+        });
+    }
+
+    public Task GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<string> GoogleLoginAsync(string email)
+    {
+        var user = await userRepository.GetAsync(email);
+        if (user == null)
+        {
+            throw new NotImplementedException();
+        }
+
+        if (!CheckVerificationStatus(new UserDto
+                { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
+            return CreateToken(configuration, new UserDto
+            {
+                Username = user.Username,
+                Email = user.Email
+            });
+        user.VerifiedAt = DateTime.UtcNow;
+        await userRepository.UpdateAsync(user);
+
         return CreateToken(configuration, new UserDto
         {
             Username = user.Username,

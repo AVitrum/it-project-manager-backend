@@ -12,7 +12,7 @@ public static class GoogleOAuthService
     private const string OAuthServerEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
     private const string TokenServerEndpoint = "https://oauth2.googleapis.com/token";
 
-    public static string GenerateOAuthRequestUrl(string? scope, string? redirectUrl, string? codeChellange)
+    public static string GenerateOAuthRequestUrl(string? scope, string? redirectUrl, string? codeChallenge)
     {
         var queryParams = new Dictionary<string, string?>
         {
@@ -20,7 +20,7 @@ public static class GoogleOAuthService
             { "redirect_uri", redirectUrl },
             { "response_type", "code" },
             { "scope", scope },
-            { "code_challenge", codeChellange },
+            { "code_challenge", codeChallenge },
             { "code_challenge_method", "S256" },
             { "access_type", "offline" }
         };

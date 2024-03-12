@@ -2,13 +2,13 @@ using System.Text.Json.Serialization;
 
 namespace OAuth;
 
-public class UserInfoResponse
+public class GoogleUserInfoResponse
 {
     [JsonPropertyName("sub")]
     public string? Sub { get; init; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; init; }
+    public string? Name { get; set; }
 
     [JsonPropertyName("given_name")]
     public string? GivenName { get; init; }
