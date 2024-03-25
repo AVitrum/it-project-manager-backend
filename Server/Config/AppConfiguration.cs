@@ -16,7 +16,7 @@ public static class AppConfiguration
     {
         services.AddScoped<IAuthService, AuthService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         services.AddScoped<IUserService, UserService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
-        services.AddScoped<ITeamService, TeamService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddScoped<ICompanyService, CompanyService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         services.AddScoped<IEmailSender, EmailSender>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
     }
@@ -24,7 +24,7 @@ public static class AppConfiguration
     public static void AddCustomRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
-        services.AddScoped<ITeamRepository, TeamRepository>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddScoped<ICompanyRepository, CompanyRepository>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
     }
     
     public static void AddCustomSwaggerGen(this IServiceCollection services)

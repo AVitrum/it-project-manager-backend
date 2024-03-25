@@ -28,14 +28,14 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
         return true;
     }
 
-    public async Task<User> GetAsync()
+    public async Task<User> GetByCurrentTokenAsync()
     {
         return httpContextAccessor.HttpContext is not null
-            ? await GetAsync(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email)!)
+            ? await GetByEmailAsync(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email)!)
             : throw new EntityNotFoundException(nameof(User));
     }
 
-    public async Task<User> GetAsync(long id)
+    public async Task<User> GetByIdAsync(long id)
     {
         return await dbContext.Users
 //                   .Include(e => e.AdditionalInfo)
@@ -43,7 +43,7 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
                ?? throw new EntityNotFoundException(nameof(User));
     }
 
-    public async Task<User> GetAsync(string email)
+    public async Task<User> GetByEmailAsync(string email)
     {
         return await dbContext.Users
 //                   .Include(u => u.AdditionalInfo)
@@ -51,19 +51,19 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
                ?? throw new EntityNotFoundException(nameof(User));
     }
 
-    public async Task<User> GetAsyncByToken(string token)
+    public async Task<User> GetByTokenAsync(string token)
     {
         return await dbContext.Users.FirstOrDefaultAsync(u => u.VerificationToken!.Equals(token)) 
                ?? throw new EntityNotFoundException(nameof(User));
     }
 
-    public async Task<User> GetAsyncByPasswordResetToken(string token)
+    public async Task<User> GetByPasswordResetTokenAsync(string token)
     {
         return await dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken!.Equals(token)) 
                ?? throw new EntityNotFoundException(nameof(User)); 
     }
 
-    public Task<bool> ExistByEmailAsync(string email)
+    public Task<bool> ExistsByEmailAsync(string email)
     {
         return dbContext.Users.AnyAsync(u => u.Email.Equals(email));
     }

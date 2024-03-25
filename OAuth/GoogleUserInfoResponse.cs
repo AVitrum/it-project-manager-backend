@@ -4,11 +4,14 @@ namespace OAuth;
 
 public class GoogleUserInfoResponse
 {
+    [JsonPropertyName("email")]
+    public string? Email { get; set; }
+    
     [JsonPropertyName("sub")]
     public string? Sub { get; init; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public string? Name { get; init; }
 
     [JsonPropertyName("given_name")]
     public string? GivenName { get; init; }

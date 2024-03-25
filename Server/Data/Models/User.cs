@@ -8,16 +8,16 @@ public class User
     [Key]
     public long Id { get; set; }
     
-    [MaxLength(20)]
+    [MaxLength(50)]
     public required string Username { get; set; }
     
     [MaxLength(40)]
     [EmailAddress(ErrorMessage = "Invalid Email Address")]
     public required string Email { get; set; }
 
-    public required byte[] PasswordHash { get; set; } = new byte[32];
+    public required byte[] PasswordHash { get; set; } = new byte[64];
 
-    public required byte[] PasswordSalt { get; set; } = new byte[32];
+    public required byte[] PasswordSalt { get; set; } = new byte[128];
     
     public string? VerificationToken { get; set; }
     
@@ -29,5 +29,5 @@ public class User
     
     public required DateTime RegistrationDate { get; set; }
     
-    public ICollection<UserTeam> UserTeams { get; set; }
+    public ICollection<UserCompany> UserCompanies { get; set; }
 }

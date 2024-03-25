@@ -8,25 +8,25 @@ namespace Server.Controllers;
 [Route("server/[controller]")]
 [ApiController]
 [Authorize]
-public class TeamController(ITeamService teamService) : ControllerBase
+public class CompanyController(ICompanyService companyService) : ControllerBase
 {
     [HttpPost("create")]
-    public async Task<IActionResult> Create(TeamCreationRequest request)
+    public async Task<IActionResult> Create(CompanyCreationRequest request)
     {
-        await teamService.CreateAsync(request);
+        await companyService.CreateAsync(request);
         return Ok("Created");
     }
 
     [HttpPost("{teamId:long}/{userId:long}")]
     public async Task<IActionResult> AddUser(long teamId, long userId)
     {
-        await teamService.AddUserAsync(teamId, userId);
+        await companyService.AddUserAsync(teamId, userId);
         return Ok("Added");
     }
 
     [HttpGet("{teamId:long}")]
     public async Task<IActionResult> GetById(long teamId)
     {
-        return Ok(await teamService.GetAsync(teamId));
+        return Ok(await companyService.GetAsync(teamId));
     }
 }

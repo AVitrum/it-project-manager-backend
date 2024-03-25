@@ -22,7 +22,7 @@ namespace Server.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Server.Data.Models.Team", b =>
+            modelBuilder.Entity("Server.Data.Models.Company", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,7 @@ namespace Server.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Teams");
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Server.Data.Models.User", b =>
@@ -74,8 +74,8 @@ namespace Server.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("VerificationToken")
                         .HasColumnType("text");
@@ -94,51 +94,51 @@ namespace Server.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Server.Data.Models.UserTeam", b =>
+            modelBuilder.Entity("Server.Data.Models.UserCompany", b =>
                 {
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("TeamId")
+                    b.Property<long>("CompanyId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId", "TeamId");
+                    b.HasKey("UserId", "CompanyId");
 
-                    b.HasIndex("TeamId");
+                    b.HasIndex("CompanyId");
 
-                    b.ToTable("UserTeams");
+                    b.ToTable("UserCompanies");
                 });
 
-            modelBuilder.Entity("Server.Data.Models.UserTeam", b =>
+            modelBuilder.Entity("Server.Data.Models.UserCompany", b =>
                 {
-                    b.HasOne("Server.Data.Models.Team", "Team")
-                        .WithMany("UserTeams")
-                        .HasForeignKey("TeamId")
+                    b.HasOne("Server.Data.Models.Company", "Company")
+                        .WithMany("UserCompanies")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Server.Data.Models.User", "User")
-                        .WithMany("UserTeams")
+                        .WithMany("UserCompanies")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Team");
+                    b.Navigation("Company");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Server.Data.Models.Team", b =>
+            modelBuilder.Entity("Server.Data.Models.Company", b =>
                 {
-                    b.Navigation("UserTeams");
+                    b.Navigation("UserCompanies");
                 });
 
             modelBuilder.Entity("Server.Data.Models.User", b =>
                 {
-                    b.Navigation("UserTeams");
+                    b.Navigation("UserCompanies");
                 });
 #pragma warning restore 612, 618
         }

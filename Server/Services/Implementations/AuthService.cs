@@ -20,12 +20,12 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             throw new ArgumentException("Email and Username are required!");
         }
 
-        if (await userRepository.ExistByEmailAsync(request.Email))
+        if (await userRepository.ExistsByEmailAsync(request.Email))
         {
             throw new ArgumentException("User already exists");
         }
         
-        CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
+        GeneratePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
         var user = new User
         {
@@ -42,17 +42,12 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
 
     public async Task<string> LoginAsync(UserLoginRequest request)
     {
-        var user = await userRepository.GetAsync(request.Email);
+        var user = await userRepository.GetByEmailAsync(request.Email);
 
-        if (user == null)
-        {
-            throw new NotImplementedException();
-        }
+        if (user == null) throw new EntityNotFoundException(nameof(User));
 
-        if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-        {
+        if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt)) 
             throw new ArgumentException("Password is incorrect");
-        }
 
         if (CheckVerificationStatus(new UserDto
                 { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
@@ -62,34 +57,50 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
                                               " Your account has been deleted");
         }
 
-        if (user.VerifiedAt == null)
-        {
-            throw new ArgumentException("Not verified! Please verify your account");
-        }
+        if (user.VerifiedAt == null) throw new ArgumentException("Not verified! Please verify your account");
         
-        return CreateToken(configuration, new UserDto
+        return GenerateToken(configuration, new UserDto
         {
             Username = user.Username,
             Email = user.Email
         });
     }
 
-    public Task GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
+    public async Task GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
     {
-        throw new NotImplementedException();
+        var randomPassword = PasswordGenerator.GeneratePassword(8);
+        
+        GeneratePasswordHash(
+            randomPassword,
+            out var passwordHash,
+            out var passwordSalt);
+
+        var user = new User
+        {
+            Email = googleUserInfoResponse.Email!,
+            Username = googleUserInfoResponse.Name!,
+            PasswordHash = passwordHash,
+            PasswordSalt = passwordSalt,
+            RegistrationDate = DateTime.UtcNow,
+            VerifiedAt = DateTime.UtcNow,
+        };
+
+        await userRepository.CreateAsync(user);
+
+        await emailSender.SendEmailAsync(
+            googleUserInfoResponse.Email!,
+            "Change your password!",
+            $"We have generated a random password for you," +
+            " please use it to log in to your profile and change it there: " + $"{randomPassword}");
     }
 
     public async Task<string> GoogleLoginAsync(string email)
     {
-        var user = await userRepository.GetAsync(email);
-        if (user == null)
-        {
-            throw new NotImplementedException();
-        }
+        var user = await userRepository.GetByEmailAsync(email);
 
         if (!CheckVerificationStatus(new UserDto
                 { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
-            return CreateToken(configuration, new UserDto
+            return GenerateToken(configuration, new UserDto
             {
                 Username = user.Username,
                 Email = user.Email
@@ -97,22 +108,27 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         user.VerifiedAt = DateTime.UtcNow;
         await userRepository.UpdateAsync(user);
 
-        return CreateToken(configuration, new UserDto
+        return GenerateToken(configuration, new UserDto
         {
             Username = user.Username,
             Email = user.Email
         });
     }
 
+    public async Task<bool> ExistsByEmail(string email)
+    {
+        return await userRepository.ExistsByEmailAsync(email);
+    }
+
     public async Task SendVerificationToken(string email)
     {
-        var user = await userRepository.GetAsync(email);
+        var user = await userRepository.GetByEmailAsync(email);
         await emailSender.SendEmailAsync(email, "Verification Token", user.VerificationToken!);
     }
     
     public async Task Verify(string token)
     {
-        var user = await userRepository.GetAsyncByToken(token);
+        var user = await userRepository.GetByTokenAsync(token);
         user.VerifiedAt = DateTime.UtcNow;
         await userRepository.UpdateAsync(user);
     }

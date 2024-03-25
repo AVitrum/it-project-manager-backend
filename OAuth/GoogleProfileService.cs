@@ -5,7 +5,7 @@ namespace OAuth;
 
 public static class GoogleProfileService
 {
-    public static async Task<GoogleUserInfoResponse?> GetUserInfoAsync(string accessToken)
+    public static async Task<GoogleUserInfoResponse?> GetUserProfileAsync(string accessToken)
     {
         var client = new HttpClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);

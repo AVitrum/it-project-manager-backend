@@ -11,7 +11,7 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
 {
     public async Task<UserInfoResponse> ProfileAsync()
     {
-        var user = await userRepository.GetAsync();
+        var user = await userRepository.GetByCurrentTokenAsync();
         return new UserInfoResponse
         {
             Id = user.Id,
@@ -23,7 +23,7 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
 
     public async Task CreateResetPasswordTokenAsync(string email)
     {
-        var user = await userRepository.GetAsync(email);
+        var user = await userRepository.GetByEmailAsync(email);
 
         user.PasswordResetToken = CreateRandomToken();
         user.ResetTokenExpires = DateTime.UtcNow.AddDays(1);
@@ -34,9 +34,9 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
 
     public async Task<string> ChangePasswordAsync(ChangePasswordRequest request)
     {
-        var user = await userRepository.GetAsync();
+        var user = await userRepository.GetByCurrentTokenAsync();
 
-        CreatePasswordHash(request.NewPassword, out var passwordHash, out var passwordSalt);
+        GeneratePasswordHash(request.NewPassword, out var passwordHash, out var passwordSalt);
 
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;
@@ -46,14 +46,11 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
 
     public async Task ResetPassword(ResetPasswordRequest request)
     {
-        var user = await userRepository.GetAsyncByPasswordResetToken(request.Token);
+        var user = await userRepository.GetByPasswordResetTokenAsync(request.Token);
 
-        if (user.ResetTokenExpires < DateTime.UtcNow)
-        {
-            throw new ArgumentException("The token is not valid!");
-        }
+        if (user.ResetTokenExpires < DateTime.UtcNow) throw new ArgumentException("The token is not valid!");
 
-        CreatePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
+        GeneratePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
         
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;

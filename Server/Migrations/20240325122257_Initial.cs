@@ -13,7 +13,7 @@ namespace Server.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Teams",
+                name: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -22,7 +22,7 @@ namespace Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -31,7 +31,7 @@ namespace Server.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Username = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    Username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     PasswordHash = table.Column<byte[]>(type: "bytea", nullable: false),
                     PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: false),
@@ -39,7 +39,7 @@ namespace Server.Migrations
                     VerifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     PasswordResetToken = table.Column<string>(type: "text", nullable: true),
                     ResetTokenExpires = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    RegistrationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,24 +47,24 @@ namespace Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserTeams",
+                name: "UserCompanies",
                 columns: table => new
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: false),
-                    TeamId = table.Column<long>(type: "bigint", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserTeams", x => new { x.UserId, x.TeamId });
+                    table.PrimaryKey("PK_UserCompanies", x => new { x.UserId, x.CompanyId });
                     table.ForeignKey(
-                        name: "FK_UserTeams_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
+                        name: "FK_UserCompanies_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserTeams_Users_UserId",
+                        name: "FK_UserCompanies_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -72,10 +72,15 @@ namespace Server.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teams_Name",
-                table: "Teams",
+                name: "IX_Companies_Name",
+                table: "Companies",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCompanies_CompanyId",
+                table: "UserCompanies",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -88,21 +93,16 @@ namespace Server.Migrations
                 table: "Users",
                 column: "Username",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserTeams_TeamId",
-                table: "UserTeams",
-                column: "TeamId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserTeams");
+                name: "UserCompanies");
 
             migrationBuilder.DropTable(
-                name: "Teams");
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "Users");

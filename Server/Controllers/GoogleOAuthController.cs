@@ -7,18 +7,17 @@ namespace Server.Controllers;
 public class GoogleOAuthController(IAuthService authService) : Controller
 {
     private const string PkceSessionKey = "codeVerifier";
+    private static readonly string CodeVerifier = Guid.NewGuid().ToString();
+    private static readonly string? CodeChallenge = Sha256Helper.ComputeHash(CodeVerifier);
 
     public IActionResult RedirectOnOAuthServer()
     {
-        var codeVerifier = Guid.NewGuid().ToString();
-        var codeChallenge = Sha256Helper.ComputeHash(codeVerifier);
-
-        HttpContext.Session.SetString(PkceSessionKey, codeVerifier);
+        HttpContext.Session.SetString(PkceSessionKey, CodeVerifier);
 
         var url = GoogleOAuthService.GenerateOAuthRequestUrl(
             "https://www.googleapis.com/auth/userinfo.email",
             "https://localhost:8080/GoogleOAuth/Login",
-            codeChallenge);
+            CodeChallenge);
         return Redirect(url);
     }
 
@@ -32,22 +31,39 @@ public class GoogleOAuthController(IAuthService authService) : Controller
                 "https://localhost:8080/GoogleOAuth/Login");
         
         var email = await GoogleProfileService.GetUserEmailAsync(tokenResult!.AccessToken);
-        // var refreshedTokenResult = await GoogleOAuthService.RefreshTokenAsync(tokenResult.RefreshToken);
-        var token = await authService.GoogleLoginAsync(email!);
-        return Ok(token);
-    }
-
-    public IActionResult Register()
-    {
-        var codeVerifier = Guid.NewGuid().ToString();
-        var codeChallenge = Sha256Helper.ComputeHash(codeVerifier);
-
-        HttpContext.Session.SetString(PkceSessionKey, codeVerifier);
+        
+        if (await authService.ExistsByEmail(email!))
+        {
+            var token = await authService.GoogleLoginAsync(email!);
+            return Ok(token);
+        }
+        
+        HttpContext.Session.SetString("email", email!);
+        
         var url = GoogleOAuthService
             .GenerateOAuthRequestUrl(
                 "https://www.googleapis.com/auth/userinfo.profile",
                 "https://localhost:8080/GoogleOAuth/Profile",
-                codeChallenge);
+                CodeChallenge);
         return Redirect(url);
+    }
+    public async Task<IActionResult> ProfileAsync(string? code)
+    {
+        var codeVerifier = HttpContext.Session.GetString(PkceSessionKey);
+        var tokenResult = await GoogleOAuthService
+            .ExchangeCodeOnTokenAsync(
+                code,
+                codeVerifier,
+                "https://localhost:8080/GoogleOAuth/Profile");
+        
+        var profile = await GoogleProfileService.GetUserProfileAsync(tokenResult!.AccessToken);
+        // var refreshedTokenResult = await GoogleOAuthService.RefreshTokenAsync(tokenResult.RefreshToken);
+        var email = HttpContext.Session.GetString("email");
+        profile!.Email = email;
+
+        await authService.GoogleRegisterAsync(profile);
+        
+        var token = await authService.GoogleLoginAsync(email!);
+        return Ok(token);
     }
 }

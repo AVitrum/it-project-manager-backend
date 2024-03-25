@@ -7,8 +7,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
-    public DbSet<Team> Teams { get; set; }
-    public DbSet<UserTeam> UserTeams { get; set; }
+    public DbSet<Company> Companies { get; set; }
+    public DbSet<UserCompany> UserCompanies { get; set; }
 
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,21 +27,21 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
 //            .HasForeignKey(e => e.UserId)
 //            .IsRequired();
         
-        modelBuilder.Entity<Team>()
+        modelBuilder.Entity<Company>()
             .HasIndex(e => e.Name)
             .IsUnique();
 
-        modelBuilder.Entity<UserTeam>()
-            .HasKey(e => new { e.UserId, e.TeamId });
+        modelBuilder.Entity<UserCompany>()
+            .HasKey(e => new { e.UserId, e.CompanyId });
 
-        modelBuilder.Entity<UserTeam>()
+        modelBuilder.Entity<UserCompany>()
             .HasOne(e => e.User)
-            .WithMany(e => e.UserTeams)
+            .WithMany(e => e.UserCompanies)
             .HasForeignKey(e => e.UserId);
 
-        modelBuilder.Entity<UserTeam>()
-            .HasOne(e => e.Team)
-            .WithMany(e => e.UserTeams)
-            .HasForeignKey(e => e.TeamId);
+        modelBuilder.Entity<UserCompany>()
+            .HasOne(e => e.Company)
+            .WithMany(e => e.UserCompanies)
+            .HasForeignKey(e => e.CompanyId);
     }
 }
