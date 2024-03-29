@@ -13,7 +13,8 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
     {
         var team = new Company
         {
-            Name = request.Name
+            Name = request.Name,
+            RegistrationDate = DateTime.UtcNow
         };
 
         await companyRepository.CreateAsync(team);
@@ -24,7 +25,7 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         {
             UserId = user.Id,
             CompanyId = team.Id,
-            Role = UserRole.Manager
+            Role = EmployeeRole.Manager
         };
 
         await companyRepository.SaveUserInCompanyAsync(userTeam);
@@ -49,7 +50,7 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         {
             UserId = user.Id,
             CompanyId = team.Id,
-            Role = UserRole.Regular
+            Role = EmployeeRole.Regular
         };
 
         await companyRepository.SaveUserInCompanyAsync(userTeam);
@@ -71,7 +72,7 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
     private async Task<bool> HasPermissionAsync(User user, Company company)
     {
         var userTeam = await companyRepository.FindByUserAndCompanyAsync(user, company);
-        return userTeam is { Role: UserRole.Manager };
+        return userTeam is { Role: EmployeeRole.Manager };
     }
 
     private async Task<bool> InCompanyAsync(User user, Company company)

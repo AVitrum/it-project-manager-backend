@@ -30,17 +30,16 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
     public async Task<Company> GetByIdAsync(long id)
     {
         return await dbContext.Companies
-                   .Include(e => e.UserCompanies)
+                   .Include(e => e.UserCompanies)!
                    .ThenInclude(e => e.User)
                    .FirstOrDefaultAsync(e => e.Id == id)
                ?? throw new EntityNotFoundException(nameof(Company));
     }
 
-    public async Task<UserCompany> FindByUserAndCompanyAsync(User user, Company company)
+    public async Task<UserCompany?> FindByUserAndCompanyAsync(User user, Company company)
     {
         var userCompany = await dbContext.UserCompanies
-            .FirstOrDefaultAsync(e => e.UserId == user.Id && e.CompanyId == company.Id) 
-                          ?? throw new EntityNotFoundException(nameof(UserCompany));
+            .FirstOrDefaultAsync(e => e.UserId == user.Id && e.CompanyId == company.Id);
         return userCompany;
     }
 

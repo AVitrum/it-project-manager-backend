@@ -35,6 +35,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             PasswordSalt = passwordSalt,
             VerificationToken = CreateRandomToken(),
             RegistrationDate = DateTime.UtcNow,
+            PhoneNumber = request.PhoneNumber,
         };
         await userRepository.CreateAsync(user);
     }
@@ -83,6 +84,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             PasswordSalt = passwordSalt,
             RegistrationDate = DateTime.UtcNow,
             VerifiedAt = DateTime.UtcNow,
+            PhoneNumber = string.Empty,
         };
 
         await userRepository.CreateAsync(user);

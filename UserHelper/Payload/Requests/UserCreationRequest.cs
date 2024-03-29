@@ -19,4 +19,6 @@ public class UserCreationRequest
 
     [Compare("Password")]
     public required string ConfirmPassword { get; set; }
+
+    public required string PhoneNumber { get; set; }
 }

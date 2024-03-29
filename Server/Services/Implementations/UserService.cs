@@ -18,6 +18,7 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
             Username = user.Username,
             Email = user.Email,
             CreationDate = user.RegistrationDate,
+            PhoneNumber = user.PhoneNumber,
         };
     }
 

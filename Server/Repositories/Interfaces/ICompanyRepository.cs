@@ -9,5 +9,5 @@ public interface ICompanyRepository
     Task<bool> DeleteAsync(Company company);
     Task<Company> GetByIdAsync(long id);
     Task SaveUserInCompanyAsync(UserCompany userCompany);
-    Task<UserCompany> FindByUserAndCompanyAsync(User user, Company company);
+    Task<UserCompany?> FindByUserAndCompanyAsync(User user, Company company);
 }

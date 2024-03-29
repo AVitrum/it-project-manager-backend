@@ -1,6 +1,6 @@
 namespace Server.Data.Enums;
 
-public enum UserRole
+public enum EmployeeRole
 {
     Regular,
     Manager
