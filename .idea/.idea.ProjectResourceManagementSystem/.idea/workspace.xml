@@ -11,53 +11,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ea430f83-cdde-464f-83d9-f9b540b4c372" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EmailService/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EmailService/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EmailService/obj/rider.project.restore.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/OAuthService.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/ref/OAuth.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/refint/OAuth.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OAuthService/obj/rider.project.restore.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server/Config/DependencyInjectionExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserService/PasswordHelper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/UserService.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserService/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserService/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/UserService/obj/rider.project.restore.info" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectResourceManagementSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectResourceManagementSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/EmailSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/EmailSender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/EmailSystem.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/EmailService.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/IEmailSender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/IEmailSender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/bin/Debug/net8.0/EmailSystem.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/bin/Debug/net8.0/EmailSystem.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/bin/Debug/net8.0/EmailSystem.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/bin/Debug/net8.0/EmailSystem.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/EmailSystem.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.GlobalUsings.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.GlobalUsings.g.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/EmailSystem.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/EmailSystem.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailSystem.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/ref/EmailSystem.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/ref/EmailSystem.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/Debug/net8.0/refint/EmailSystem.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/refint/EmailSystem.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/EmailSystem.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/EmailSystem.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/EmailSystem.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/EmailSystem.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/EmailSystem.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/EmailSystem.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/rider.project.model.nuget.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/EmailSystem/obj/rider.project.restore.info" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/bin/Debug/net8.0/EmailService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/bin/Debug/net8.0/EmailService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/bin/Debug/net8.0/EmailService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/bin/Debug/net8.0/EmailService.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/EmailService.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/ref/EmailService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/ref/EmailService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/refint/EmailService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/refint/EmailService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EmailService/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/rider.project.restore.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HttpHelper/bin/Debug/net8.0/HttpHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/HttpHelper/bin/Debug/net8.0/HttpHelper.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HttpHelper/bin/Debug/net8.0/HttpHelper.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/HttpHelper/bin/Debug/net8.0/HttpHelper.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HttpHelper/obj/Debug/net8.0/HttpHelper.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/HttpHelper/obj/Debug/net8.0/HttpHelper.AssemblyInfo.cs" afterDir="false" />
@@ -69,137 +36,60 @@
       <change beforePath="$PROJECT_DIR$/HttpHelper/obj/Debug/net8.0/refint/HttpHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/HttpHelper/obj/Debug/net8.0/refint/HttpHelper.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HttpHelper/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/HttpHelper/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HttpHelper/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/HttpHelper/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/EmailResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/Payload/EmailResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/GoogleOAuthService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/GoogleOAuthService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/GoogleProfileService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/GoogleProfileService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/GoogleUserInfoResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/Payload/GoogleUserInfoResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/OAuth.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/OAuthService.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/Sha256Helper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/Sha256Helper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/bin/Debug/net8.0/HttpHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/HttpHelper.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/bin/Debug/net8.0/HttpHelper.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/HttpHelper.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/bin/Debug/net8.0/OAuth.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/OAuth.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/bin/Debug/net8.0/OAuth.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/bin/Debug/net8.0/OAuth.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/OAuthService.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.GlobalUsings.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.GlobalUsings.g.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.csproj.Up2Date" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.csproj.Up2Date" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/OAuth.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuth.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/ref/OAuth.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/Debug/net8.0/refint/OAuth.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/OAuth.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/OAuth.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/OAuth.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/OAuth.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/OAuth.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/OAuth.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/rider.project.model.nuget.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/OAuth/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectResourceManagementSystem.sln" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectResourceManagementSystem.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Config/AppConfiguration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Config/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Config/AppDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Controllers/AuthController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Controllers/AuthController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Controllers/GoogleOAuthController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Controllers/GoogleOAuthController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Controllers/EmployeeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Server.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Server.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Services/Implementations/AuthService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Services/Implementations/AuthService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Services/Implementations/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Services/Implementations/EmployeeService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Services/Interfaces/IAuthService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Services/Interfaces/IAuthService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Services/Interfaces/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Services/Interfaces/IEmployeeService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Views/Shared/Error.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Views/Employee/Error.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Views/Home/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Views/Shared/_Layout.cshtml.css" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Views/Home/_Layout.cshtml.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Views/Shared/_ValidationScriptsPartial.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Views/Employee/_ValidationScriptsPartial.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/HttpHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/HttpHelper.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/HttpHelper.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/HttpHelper.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/OAuthService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/OAuthService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/OAuthService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/bin/Debug/net8.0/OAuthService.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/OAuthService.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/ref/OAuthService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/ref/OAuthService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/refint/OAuthService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/refint/OAuthService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OAuthService/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Controllers/HomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/Views/_ViewStart.cshtml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/EmailSystem.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/EmailSystem.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/EmailService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/EmailService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/EmailService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/EmailService.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/HttpHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/HttpHelper.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/HttpHelper.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/HttpHelper.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/OAuth.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/OAuth.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/Server.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/Server.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/OAuthService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/OAuthService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/OAuthService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/OAuthService.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/Server.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/Server.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/Server.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/Server.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/UserHelper.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/UserHelper.pdb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/UserService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/UserService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/UserService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/UserService.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/bin/Debug/net8.0/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/bin/Debug/net8.0/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.csproj.FileListAbsolute.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/Server.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/project.razor.vscode.bin" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/project.razor.vscode.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/ref/Server.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/ref/Server.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/refint/Server.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/refint/Server.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/scopedcss/Views/Shared/_Layout.cshtml.rz.scp.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/scopedcss/bundle/Server.styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/scopedcss/bundle/Server.styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/Debug/net8.0/scopedcss/projectbundle/Server.bundle.scp.css" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Debug/net8.0/scopedcss/projectbundle/Server.bundle.scp.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/Server.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/Server.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Server/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/PasswordGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/Payload/Requests/ChangePasswordRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/Payload/Requests/ChangePasswordRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/Payload/Requests/ResetPasswordRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/Payload/Requests/ResetPasswordRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/Payload/Requests/TokenRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/Payload/Requests/TokenRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/Payload/Requests/UserCreationRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/Payload/Requests/UserCreationRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/Payload/Requests/UserLoginRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/Payload/Requests/UserLoginRequest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/Responses/UserInfoResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/Payload/Responses/UserInfoResponse.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/UserDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/Payload/UserDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/UserHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/UserHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/UserHelper.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/UserService.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/bin/Debug/net8.0/EmailSystem.dll" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/bin/Debug/net8.0/EmailService.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/bin/Debug/net8.0/EmailSystem.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/EmailService/bin/Debug/net8.0/EmailService.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/bin/Debug/net8.0/UserHelper.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/UserHelper.deps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/bin/Debug/net8.0/UserHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/bin/Debug/net8.0/UserHelper.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/UserService.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OAuthService/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserApi.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserApi.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserApi.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserApi.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserApi.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserApi.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserApi.GlobalUsings.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserApi.GlobalUsings.g.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserApi.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserApi.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserApi.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserApi.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.GlobalUsings.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.GlobalUsings.g.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.csproj.Up2Date" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.csproj.Up2Date" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/UserHelper.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserHelper.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/ref/UserHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/ref/UserHelper.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/Debug/net8.0/refint/UserHelper.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/refint/UserHelper.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/UserApi.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/UserApi.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/UserApi.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/UserApi.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/UserApi.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/UserApi.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/UserHelper.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/UserHelper.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/UserHelper.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/UserHelper.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/UserHelper.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/UserHelper.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/rider.project.model.nuget.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserHelper/obj/rider.project.restore.info" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/EmailService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/EmailService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/EmailService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/EmailService.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/UserService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/UserService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/UserService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/bin/Debug/net8.0/UserService.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/UserService.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/ref/UserService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/ref/UserService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/refint/UserService.dll" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/Debug/net8.0/refint/UserService.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserService/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/UserService/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -246,6 +136,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;.NET Launch Settings Profile.https.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.compose.yaml: Compose Deployment.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -254,7 +145,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -269,6 +160,21 @@
   }
 }</component>
   <component name="RunManager">
+    <configuration default="true" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Server/Server.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
     <configuration name="https" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/Server/Server.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
@@ -285,9 +191,32 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="removeOrphansOnComposeDown" value="false" />
+          <option name="sourceFilePath" value="compose.yaml" />
+          <option name="upDetach" value="false" />
+        </settings>
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-image">
+      <deployment type="docker-image">
+        <settings>
+          <option name="containerName" value="" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
       <deployment type="dockerfile">
-        <settings />
+        <settings>
+          <option name="containerName" value="" />
+          <option name="sourceFilePath" value="" />
+        </settings>
       </deployment>
       <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
       <method v="2" />
@@ -345,6 +274,11 @@
       <workItem from="1712087422040" duration="196000" />
       <workItem from="1712134737682" duration="2568000" />
       <workItem from="1712152875945" duration="1264000" />
+      <workItem from="1712171967797" duration="365000" />
+      <workItem from="1712172453041" duration="542000" />
+      <workItem from="1712173882821" duration="119000" />
+      <workItem from="1712174019144" duration="11000" />
+      <workItem from="1712174040758" duration="2000" />
     </task>
     <task id="LOCAL-00001" summary="Added a basis for Google authentication">
       <option name="closed" value="true" />
