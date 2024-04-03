@@ -3313,14 +3313,14 @@
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
       },
-      "EmailSystem/1.0.0": {
+      "EmailService/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "compile": {
-          "bin/placeholder/EmailSystem.dll": {}
+          "bin/placeholder/EmailService.dll": {}
         },
         "runtime": {
-          "bin/placeholder/EmailSystem.dll": {}
+          "bin/placeholder/EmailService.dll": {}
         }
       },
       "HttpHelper/1.0.0": {
@@ -3337,7 +3337,7 @@
           "bin/placeholder/HttpHelper.dll": {}
         }
       },
-      "OAuth/1.0.0": {
+      "OAuthService/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
@@ -3346,27 +3346,27 @@
           "Microsoft.AspNetCore.WebUtilities": "8.0.2"
         },
         "compile": {
-          "bin/placeholder/OAuth.dll": {}
+          "bin/placeholder/OAuthService.dll": {}
         },
         "runtime": {
-          "bin/placeholder/OAuth.dll": {}
+          "bin/placeholder/OAuthService.dll": {}
         }
       },
-      "UserHelper/1.0.0": {
+      "UserService/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
-          "EmailSystem": "1.0.0",
+          "EmailService": "1.0.0",
           "Microsoft.Extensions.Configuration": "8.0.0",
           "Newtonsoft.Json": "13.0.3",
           "System.IdentityModel.Tokens.Jwt": "7.4.0"
         },
         "compile": {
-          "bin/placeholder/UserHelper.dll": {}
+          "bin/placeholder/UserService.dll": {}
         },
         "runtime": {
-          "bin/placeholder/UserHelper.dll": {}
+          "bin/placeholder/UserService.dll": {}
         }
       }
     }
@@ -9470,39 +9470,39 @@
         "system.xml.xdocument.nuspec"
       ]
     },
-    "EmailSystem/1.0.0": {
+    "EmailService/1.0.0": {
       "type": "project",
-      "path": "../EmailSystem/EmailSystem.csproj",
-      "msbuildProject": "../EmailSystem/EmailSystem.csproj"
+      "path": "../EmailService/EmailService.csproj",
+      "msbuildProject": "../EmailService/EmailService.csproj"
     },
     "HttpHelper/1.0.0": {
       "type": "project",
       "path": "../HttpHelper/HttpHelper.csproj",
       "msbuildProject": "../HttpHelper/HttpHelper.csproj"
     },
-    "OAuth/1.0.0": {
+    "OAuthService/1.0.0": {
       "type": "project",
-      "path": "../OAuth/OAuth.csproj",
-      "msbuildProject": "../OAuth/OAuth.csproj"
+      "path": "../OAuthService/OAuthService.csproj",
+      "msbuildProject": "../OAuthService/OAuthService.csproj"
     },
-    "UserHelper/1.0.0": {
+    "UserService/1.0.0": {
       "type": "project",
-      "path": "../UserHelper/UserHelper.csproj",
-      "msbuildProject": "../UserHelper/UserHelper.csproj"
+      "path": "../UserService/UserService.csproj",
+      "msbuildProject": "../UserService/UserService.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "BCrypt.Net-Next >= 4.0.3",
-      "EmailSystem >= 1.0.0",
+      "EmailService >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.2",
       "Microsoft.AspNetCore.Mvc.TagHelpers >= 2.2.0",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.0",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 8.0.0",
-      "OAuth >= 1.0.0",
+      "OAuthService >= 1.0.0",
       "Swashbuckle.AspNetCore.Filters >= 7.0.12",
       "Swashbuckle.AspNetCore.SwaggerUI >= 6.5.0",
-      "UserHelper >= 1.0.0"
+      "UserService >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -9530,14 +9530,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj": {
-              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj"
+            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj": {
+              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj"
             },
-            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj": {
-              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj"
+            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj": {
+              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj"
             },
-            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj": {
-              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj"
+            "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj": {
+              "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj"
             }
           }
         }

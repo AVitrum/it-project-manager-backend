@@ -11,8 +11,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
-builder.Services.AddCustomServices();
-builder.Services.AddCustomRepositories();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("frontend", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("http://localhost:5173");
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowAnyMethod();
+        policyBuilder.AllowCredentials();
+    });
+});
+builder.Services.AddFeatureAddServices();
+builder.Services.AddFeatureAddCustomRepositories();
 builder.Services.AddCustomSwaggerGen();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSession(options =>
@@ -23,7 +33,6 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
-
 app.UseStatusCodePages();
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
@@ -35,4 +44,5 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseCors("frontend");
 app.Run();

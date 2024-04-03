@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Server.Services.Interfaces;
-using UserHelper.Payload.Requests;
+using UserService.Payload.Requests;
 
 namespace Server.Controllers;
 

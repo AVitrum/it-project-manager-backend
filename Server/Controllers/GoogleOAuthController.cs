@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using OAuth;
+using OAuthService;
 using Server.Services.Interfaces;
 
 namespace Server.Controllers;
 
-public class GoogleOAuthController(IAuthService authService) : Controller
+public class GoogleOAuthController(IConfiguration configuration, IAuthService authService) : Controller
 {
     private const string PkceSessionKey = "codeVerifier";
     private static readonly string CodeVerifier = Guid.NewGuid().ToString();
@@ -29,17 +29,17 @@ public class GoogleOAuthController(IAuthService authService) : Controller
                 code,
                 codeVerifier,
                 "https://localhost:8080/GoogleOAuth/Login");
-        
+
         var email = await GoogleProfileService.GetUserEmailAsync(tokenResult!.AccessToken);
-        
+
         if (await authService.ExistsByEmail(email!))
         {
             var token = await authService.GoogleLoginAsync(email!);
-            return Ok(token);
+            return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}/{token}");
         }
-        
+
         HttpContext.Session.SetString("email", email!);
-        
+
         var url = GoogleOAuthService
             .GenerateOAuthRequestUrl(
                 "https://www.googleapis.com/auth/userinfo.profile",
@@ -55,15 +55,15 @@ public class GoogleOAuthController(IAuthService authService) : Controller
                 code,
                 codeVerifier,
                 "https://localhost:8080/GoogleOAuth/Profile");
-        
+
         var profile = await GoogleProfileService.GetUserProfileAsync(tokenResult!.AccessToken);
         // var refreshedTokenResult = await GoogleOAuthService.RefreshTokenAsync(tokenResult.RefreshToken);
         var email = HttpContext.Session.GetString("email");
         profile!.Email = email;
 
         await authService.GoogleRegisterAsync(profile);
-        
+
         var token = await authService.GoogleLoginAsync(email!);
-        return Ok(token);
+        return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl")}/{token}");
     }
 }

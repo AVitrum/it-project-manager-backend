@@ -9,15 +9,15 @@
       "Server/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
-          "EmailSystem": "1.0.0",
+          "EmailService": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.2",
           "Microsoft.AspNetCore.Mvc.TagHelpers": "2.2.0",
           "Microsoft.EntityFrameworkCore.Tools": "8.0.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.0",
-          "OAuth": "1.0.0",
+          "OAuthService": "1.0.0",
           "Swashbuckle.AspNetCore.Filters": "7.0.12",
           "Swashbuckle.AspNetCore.SwaggerUI": "6.5.0",
-          "UserHelper": "1.0.0"
+          "UserService": "1.0.0"
         },
         "runtime": {
           "Server.dll": {}
@@ -1675,9 +1675,9 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
-      "EmailSystem/1.0.0": {
+      "EmailService/1.0.0": {
         "runtime": {
-          "EmailSystem.dll": {}
+          "EmailService.dll": {}
         }
       },
       "HttpHelper/1.0.0": {
@@ -1689,26 +1689,26 @@
           "HttpHelper.dll": {}
         }
       },
-      "OAuth/1.0.0": {
+      "OAuthService/1.0.0": {
         "dependencies": {
           "HttpHelper": "1.0.0",
           "IdentityModel": "6.2.0",
           "Microsoft.AspNetCore.WebUtilities": "8.0.2"
         },
         "runtime": {
-          "OAuth.dll": {}
+          "OAuthService.dll": {}
         }
       },
-      "UserHelper/1.0.0": {
+      "UserService/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
-          "EmailSystem": "1.0.0",
+          "EmailService": "1.0.0",
           "Microsoft.Extensions.Configuration": "8.0.0",
           "Newtonsoft.Json": "13.0.3",
           "System.IdentityModel.Tokens.Jwt": "7.4.0"
         },
         "runtime": {
-          "UserHelper.dll": {}
+          "UserService.dll": {}
         }
       }
     }
@@ -3007,7 +3007,7 @@
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
     },
-    "EmailSystem/1.0.0": {
+    "EmailService/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -3017,12 +3017,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "OAuth/1.0.0": {
+    "OAuthService/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "UserHelper/1.0.0": {
+    "UserService/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

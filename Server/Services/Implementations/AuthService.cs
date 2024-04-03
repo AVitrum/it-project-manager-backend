@@ -1,12 +1,14 @@
-using EmailSystem;
-using OAuth;
+using EmailService;
+using OAuthService;
+using OAuthService.Payload;
 using Server.Data.Models;
 using Server.Exceptions;
 using Server.Repositories.Interfaces;
 using Server.Services.Interfaces;
-using UserHelper;
-using UserHelper.Payload.Requests;
-using static UserHelper.UserHelper;
+using UserService.Payload;
+using UserService.Payload.Requests;
+using static UserService.UserHelper;
+using static UserService.PasswordHelper;
 
 namespace Server.Services.Implementations;
 
@@ -67,9 +69,9 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         });
     }
 
-    public async Task GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
+    public async Task<bool> GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
     {
-        var randomPassword = PasswordGenerator.GeneratePassword(8);
+        var randomPassword = GeneratePassword(8);
         
         GeneratePasswordHash(
             randomPassword,
@@ -94,6 +96,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             "Change your password!",
             $"We have generated a random password for you," +
             " please use it to log in to your profile and change it there: " + $"{randomPassword}");
+        return true;
     }
 
     public async Task<string> GoogleLoginAsync(string email)

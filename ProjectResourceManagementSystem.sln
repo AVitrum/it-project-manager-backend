@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 #
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{B99E2798-E439-4D66-9059-B2177BE9B88C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserHelper", "UserHelper\UserHelper.csproj", "{1B1F2987-2222-4142-B4F6-782A6F5E70A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{1B1F2987-2222-4142-B4F6-782A6F5E70A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSystem", "EmailSystem\EmailSystem.csproj", "{FD1A6C5D-A5DE-4F5F-BEF9-284770A78510}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "EmailService\EmailService.csproj", "{FD1A6C5D-A5DE-4F5F-BEF9-284770A78510}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpHelper", "HttpHelper\HttpHelper.csproj", "{C34C986E-7EF9-42D8-AD69-40CCDBC5C3D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuth", "OAuth\OAuth.csproj", "{B385DEA2-FF52-4A24-8AAA-B7F3FDF3D0AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuthService", "OAuthService\OAuthService.csproj", "{B385DEA2-FF52-4A24-8AAA-B7F3FDF3D0AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HttpHelper")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+347c9a3c44e35782f8670b48ef6e11728dc49f2e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9b6f614c42b7f6255e3770d42eaee42b90973146")]
 [assembly: System.Reflection.AssemblyProductAttribute("HttpHelper")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HttpHelper")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

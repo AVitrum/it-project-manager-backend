@@ -4,14 +4,14 @@
     "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/Server.csproj": {}
   },
   "projects": {
-    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj": {
+    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj",
-        "projectName": "EmailSystem",
-        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj",
+        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj",
+        "projectName": "EmailService",
+        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj",
         "packagesPath": "/Users/almashiandrey/.nuget/packages/",
-        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/obj/",
+        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/almashiandrey/.nuget/NuGet/NuGet.Config"
@@ -120,14 +120,14 @@
         }
       }
     },
-    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj": {
+    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj",
-        "projectName": "OAuth",
-        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj",
+        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj",
+        "projectName": "OAuthService",
+        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj",
         "packagesPath": "/Users/almashiandrey/.nuget/packages/",
-        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/obj/",
+        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/almashiandrey/.nuget/NuGet/NuGet.Config"
@@ -209,14 +209,14 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj": {
-                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj"
+              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj": {
+                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj"
               },
-              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj": {
-                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuth/OAuth.csproj"
+              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj": {
+                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj"
               },
-              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj": {
-                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj"
+              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj": {
+                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj"
               }
             }
           }
@@ -285,14 +285,14 @@
         }
       }
     },
-    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj": {
+    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj",
-        "projectName": "UserHelper",
-        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj",
+        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj",
+        "projectName": "UserService",
+        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj",
         "packagesPath": "/Users/almashiandrey/.nuget/packages/",
-        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/",
+        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/almashiandrey/.nuget/NuGet/NuGet.Config"
@@ -307,8 +307,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj": {
-                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailSystem/EmailSystem.csproj"
+              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj": {
+                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/EmailService/EmailService.csproj"
               }
             }
           }
