@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "pdcpUCR/d63HyH7xVXo2O6GLhSqkWNVbgz5UFVRaXDhxB6t15aQLxs12SvPFqcOmpc2iNBHPDMNGOWJ34I4Afw==",
+  "success": true,
+  "projectFilePath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj",
+  "expectedPackageFiles": [
+    "/Users/almashiandrey/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.http.features/6.0.0-preview.4.21253.5/microsoft.aspnetcore.http.features.6.0.0-preview.4.21253.5.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.extensions.configuration/8.0.0/microsoft.extensions.configuration.8.0.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.extensions.configuration.abstractions/8.0.0/microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.identitymodel.abstractions/7.4.0/microsoft.identitymodel.abstractions.7.4.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.identitymodel.jsonwebtokens/7.4.0/microsoft.identitymodel.jsonwebtokens.7.4.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.identitymodel.logging/7.4.0/microsoft.identitymodel.logging.7.4.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.identitymodel.tokens/7.4.0/microsoft.identitymodel.tokens.7.4.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/system.identitymodel.tokens.jwt/7.4.0/system.identitymodel.tokens.jwt.7.4.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/system.io.pipelines/6.0.0-preview.4.21253.7/system.io.pipelines.6.0.0-preview.4.21253.7.nupkg.sha512"
+  ],
+  "logs": []
+}

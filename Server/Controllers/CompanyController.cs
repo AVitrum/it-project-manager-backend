@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Server.Data.Requests;
+using Server.Payload.Requests;
 using Server.Services.Interfaces;
 
 namespace Server.Controllers;

@@ -32,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -85,6 +90,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -152,6 +162,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -215,8 +230,8 @@
               "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj": {
                 "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/OAuthService/OAuthService.csproj"
               },
-              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj": {
-                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj"
+              "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj": {
+                "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj"
               }
             }
           }
@@ -225,6 +240,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -285,14 +305,14 @@
         }
       }
     },
-    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj": {
+    "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj",
-        "projectName": "UserService",
-        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/UserService.csproj",
+        "projectUniqueName": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj",
+        "projectName": "UserHelper",
+        "projectPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/UserHelper.csproj",
         "packagesPath": "/Users/almashiandrey/.nuget/packages/",
-        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserService/obj/",
+        "outputPath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/UserHelper/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/almashiandrey/.nuget/NuGet/NuGet.Config"
@@ -317,6 +337,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -326,6 +351,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
+            },
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[6.0.0-preview.4.21253.5, )"
             },
             "Microsoft.Extensions.Configuration": {
               "target": "Package",

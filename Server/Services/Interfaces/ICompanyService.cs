@@ -1,5 +1,5 @@
-using Server.Data.Requests;
-using Server.Data.Responses;
+using Server.Payload.Requests;
+using Server.Payload.Responses;
 
 namespace Server.Services.Interfaces;
 

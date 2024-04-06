@@ -1,7 +1,7 @@
 using Server.Data.Enums;
 using Server.Data.Models;
-using Server.Data.Requests;
-using Server.Data.Responses;
+using Server.Payload.Requests;
+using Server.Payload.Responses;
 using Server.Repositories.Interfaces;
 using Server.Services.Interfaces;
 

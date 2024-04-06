@@ -76,6 +76,9 @@ namespace Server.Migrations
                         .HasColumnType("bytea");
 
                     b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RefreshToken")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -83,6 +86,12 @@ namespace Server.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ResetTokenExpires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("TokenCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("TokenExpired")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Username")

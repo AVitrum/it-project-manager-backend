@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "591M8uIEV/ac3pV4oRDnXt9F2/GprpgGBVe8MVUeJ53dtZjUf7hvyg6Jx40Axm4OOKC9P9ofd8Zr3CluGyyY0Q==",
+  "dgSpecHash": "qxx0EAAJDdrJ4J6VVD819O+b2y/dEt3c4m+Ssb/X02SwuUidrvYv8/LzPl4qkCExRq1BiAYxrMbNx10fn5MUmA==",
   "success": true,
   "projectFilePath": "/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/Server.csproj",
   "expectedPackageFiles": [
@@ -23,7 +23,7 @@
     "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.http/2.2.0/microsoft.aspnetcore.http.2.2.0.nupkg.sha512",
     "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.http.abstractions/2.2.0/microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
     "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.http.extensions/2.2.0/microsoft.aspnetcore.http.extensions.2.2.0.nupkg.sha512",
-    "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.http.features/2.2.0/microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
+    "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.http.features/6.0.0-preview.4.21253.5/microsoft.aspnetcore.http.features.6.0.0-preview.4.21253.5.nupkg.sha512",
     "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.jsonpatch/2.2.0/microsoft.aspnetcore.jsonpatch.2.2.0.nupkg.sha512",
     "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.mvc.abstractions/2.2.0/microsoft.aspnetcore.mvc.abstractions.2.2.0.nupkg.sha512",
     "/Users/almashiandrey/.nuget/packages/microsoft.aspnetcore.mvc.core/2.2.0/microsoft.aspnetcore.mvc.core.2.2.0.nupkg.sha512",

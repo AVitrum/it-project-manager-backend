@@ -1,14 +1,15 @@
+using System.Security.Authentication;
 using EmailService;
-using OAuthService;
 using OAuthService.Payload;
 using Server.Data.Models;
 using Server.Exceptions;
+using Server.Payload.Requests;
+using Server.Payload.Responses;
 using Server.Repositories.Interfaces;
 using Server.Services.Interfaces;
-using UserService.Payload;
-using UserService.Payload.Requests;
-using static UserService.UserHelper;
-using static UserService.PasswordHelper;
+using UserHelper;
+using static UserHelper.UserHelper;
+using static UserHelper.PasswordHelper;
 
 namespace Server.Services.Implementations;
 
@@ -43,7 +44,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
     }
 
 
-    public async Task<string> LoginAsync(UserLoginRequest request)
+    public async Task<LoginResponse> LoginAsync(UserLoginRequest request)
     {
         var user = await userRepository.GetByEmailAsync(request.Email);
 
@@ -61,12 +62,23 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         }
 
         if (user.VerifiedAt == null) throw new ArgumentException("Not verified! Please verify your account");
+
+        GenerateRefreshToken(out var refreshToken);
+        user.RefreshToken = refreshToken.Token;
+        user.TokenExpires = refreshToken.Expires;
+        user.TokenCreated = refreshToken.Created;
+
+        await userRepository.UpdateAsync(user);
         
-        return GenerateToken(configuration, new UserDto
+        return new LoginResponse
         {
-            Username = user.Username,
-            Email = user.Email
-        });
+            AccessToken = GenerateToken(configuration, new UserDto
+            {
+                Username = user.Username,
+                Email = user.Email
+            }),
+            RefreshToken = refreshToken.Token
+        };
     }
 
     public async Task<bool> GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
@@ -99,25 +111,38 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         return true;
     }
 
-    public async Task<string> GoogleLoginAsync(string email)
+    public async Task<LoginResponse> GoogleLoginAsync(string email)
     {
         var user = await userRepository.GetByEmailAsync(email);
+        
+        GenerateRefreshToken(out var refreshToken);
+        
+        await SetRefreshToken(user, refreshToken);
 
         if (!CheckVerificationStatus(new UserDto
                 { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
-            return GenerateToken(configuration, new UserDto
+            return new LoginResponse
             {
-                Username = user.Username,
-                Email = user.Email
-            });
+                AccessToken = GenerateToken(configuration, new UserDto
+                {
+                    Username = user.Username,
+                    Email = user.Email
+                }),
+                RefreshToken = refreshToken.Token
+            };
+        
         user.VerifiedAt = DateTime.UtcNow;
         await userRepository.UpdateAsync(user);
 
-        return GenerateToken(configuration, new UserDto
+        return new LoginResponse
         {
-            Username = user.Username,
-            Email = user.Email
-        });
+            AccessToken = GenerateToken(configuration, new UserDto
+            {
+                Username = user.Username,
+                Email = user.Email
+            }),
+            RefreshToken = refreshToken.Token
+        };
     }
 
     public async Task<bool> ExistsByEmail(string email)
@@ -131,10 +156,39 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         await emailSender.SendEmailAsync(email, "Verification Token", user.VerificationToken!);
     }
     
-    public async Task Verify(string token)
+    public async Task VerifyAsync(string token)
     {
         var user = await userRepository.GetByTokenAsync(token);
         user.VerifiedAt = DateTime.UtcNow;
+        await userRepository.UpdateAsync(user);
+    }
+
+    public async Task<LoginResponse> RefreshAsync(RefreshRequest request)
+    {
+        var user = await userRepository.GetByRefreshToken(request.RefreshToken);
+
+        if (user.TokenExpires < DateTime.UtcNow)
+            throw new AuthenticationException("RefreshToken Expired");
+        
+        GenerateRefreshToken(out var refreshToken);
+        await SetRefreshToken(user, refreshToken);
+        
+        return new LoginResponse
+        {
+            AccessToken = GenerateToken(configuration, new UserDto
+            {
+                Username = user.Username,
+                Email = user.Email
+            }),
+            RefreshToken = refreshToken.Token
+        };
+    }
+    
+    private async Task SetRefreshToken(User user, RefreshToken refreshToken)
+    {
+        user.RefreshToken = refreshToken.Token;
+        user.TokenExpires = refreshToken.Expires;
+        user.TokenCreated = refreshToken.Created;
         await userRepository.UpdateAsync(user);
     }
 }

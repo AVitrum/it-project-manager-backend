@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Server.Payload.Requests;
 using Server.Services.Interfaces;
-using UserService.Payload.Requests;
 
 namespace Server.Controllers;
 
@@ -21,6 +21,12 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok(await authService.LoginAsync(request));
     }
 
+    [HttpPost("Refresh")]
+    public async Task<IActionResult> RefreshToken(RefreshRequest request)
+    {
+        return Ok(await authService.RefreshAsync(request));
+    }
+
     [HttpPost("sendToken")]
     public async Task<IActionResult> SendToken(TokenRequest request)
     {
@@ -31,7 +37,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     [HttpPost("verify")]
     public async Task<IActionResult> Verify(TokenRequest request)
     {
-        await authService.Verify(request.Token!);
+        await authService.VerifyAsync(request.Token!);
         return Ok("Verified");
     }
 }

@@ -15,7 +15,7 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddFeatureAddServices(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IAuthService, AuthService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
-        serviceCollection.AddScoped<IEmployeeService, EmployeeService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IUserService, UserService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         serviceCollection.AddScoped<ICompanyService, CompanyService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
         serviceCollection.AddScoped<IEmailSender, EmailSender>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();

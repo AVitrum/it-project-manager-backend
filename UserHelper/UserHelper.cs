@@ -1,0 +1,54 @@
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+
+namespace UserHelper;
+
+public static class UserHelper
+{
+    public static string CreateRandomToken()
+    {
+        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+    }
+    
+    public static string GenerateToken(IConfiguration configuration, UserDto user)
+    {
+        var claims = new List<Claim> {
+            new(ClaimTypes.Name, user.Username!),
+            new(ClaimTypes.Email, user.Email!),
+            new(ClaimTypes.Role, "User")
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            configuration.GetSection("AppSettings:Token").Value!));
+
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.Now.AddDays(1),
+            signingCredentials: credentials
+        );
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        return jwt;
+    }
+
+    public static void GenerateRefreshToken(out RefreshToken refreshToken)
+    {
+        refreshToken = new RefreshToken
+        {
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            Expires = DateTime.UtcNow.AddDays(7),
+        };
+    }
+
+    public static bool CheckVerificationStatus(UserDto user)
+    {
+        return user.VerifiedAt == null && user.RegistrationDate!.Value.Date.AddDays(3) < DateTime.UtcNow;
+    }
+}

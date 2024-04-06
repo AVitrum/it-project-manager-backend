@@ -251,8 +251,8 @@
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/HttpHelper.pdb
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/EmailService.dll
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/OAuthService.dll
-/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/UserService.dll
-/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/UserService.pdb
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/EmailService.pdb
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/OAuthService.pdb
 /Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/obj/Debug/net8.0/scopedcss/Views/Home/_Layout.cshtml.rz.scp.css
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/UserHelper.dll
+/Users/almashiandrey/Developer/Main/it-project-manager-backend/Server/bin/Debug/net8.0/UserHelper.pdb

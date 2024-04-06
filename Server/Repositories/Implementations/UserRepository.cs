@@ -35,10 +35,15 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
             : throw new EntityNotFoundException(nameof(User));
     }
 
+    public async Task<User> GetByRefreshToken(string refreshToken)
+    {
+        return await dbContext.Users.FirstOrDefaultAsync(e => e.RefreshToken.Equals(refreshToken)) ??
+               throw new EntityNotFoundException(nameof(User));
+    }
+
     public async Task<User> GetByIdAsync(long id)
     {
         return await dbContext.Users
-//                   .Include(e => e.AdditionalInfo)
                    .FirstOrDefaultAsync(e => e.Id.Equals(id))
                ?? throw new EntityNotFoundException(nameof(User));
     }

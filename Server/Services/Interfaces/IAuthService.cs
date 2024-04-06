@@ -1,16 +1,18 @@
 using OAuthService;
 using OAuthService.Payload;
-using UserService.Payload.Requests;
+using Server.Payload.Requests;
+using Server.Payload.Responses;
 
 namespace Server.Services.Interfaces;
 
 public interface IAuthService
 {
     Task RegisterAsync(UserCreationRequest request);
-    Task<string> LoginAsync(UserLoginRequest request);
+    Task<LoginResponse> LoginAsync(UserLoginRequest request);
     Task<bool> GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse);
-    Task<string> GoogleLoginAsync(string email);
+    Task<LoginResponse> GoogleLoginAsync(string email);
     Task<bool> ExistsByEmail(string email);
     Task SendVerificationToken(string email);
-    Task Verify(string token);
+    Task VerifyAsync(string token);
+    Task<LoginResponse> RefreshAsync(RefreshRequest request);
 }
