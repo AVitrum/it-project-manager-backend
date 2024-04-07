@@ -21,6 +21,15 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
         await dbContext.SaveChangesAsync();
     }
 
+    public async Task UpdateRefreshTokenAsync(RefreshToken refreshToken)
+    {
+        if (await dbContext.RefreshTokens.AnyAsync(e => e.Token == refreshToken.Token))
+            dbContext.RefreshTokens.Update(refreshToken);
+        else
+            await dbContext.RefreshTokens.AddAsync(refreshToken);
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task<bool> DeleteAsync(User user)
     {
         dbContext.Users.Remove(user);
@@ -35,11 +44,24 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
             : throw new EntityNotFoundException(nameof(User));
     }
 
-    public async Task<User> GetByRefreshToken(string refreshToken)
+    public async Task<(User, RefreshToken)> GetByRefreshToken(string refreshToken)
     {
-        return await dbContext.Users.FirstOrDefaultAsync(e => e.RefreshToken.Equals(refreshToken)) ??
-               throw new EntityNotFoundException(nameof(User));
+        var query = from user in dbContext.Users
+            join token in dbContext.RefreshTokens
+                on user.Id equals token.UserId
+            where token.Token == refreshToken
+            select new { user, token };
+
+        var result = await query.FirstOrDefaultAsync();
+
+        if (result == null)
+        {
+            throw new EntityNotFoundException(nameof(User));
+        }
+
+        return (result.user, result.token);
     }
+
 
     public async Task<User> GetByIdAsync(long id)
     {
@@ -68,8 +90,8 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
                ?? throw new EntityNotFoundException(nameof(User)); 
     }
 
-    public Task<bool> ExistsByEmailAsync(string email)
+    public async Task<bool> ExistsByEmailAsync(string email)
     {
-        return dbContext.Users.AnyAsync(u => u.Email.Equals(email));
+        return await dbContext.Users.AnyAsync(u => u.Email.Equals(email));
     }
 }

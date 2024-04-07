@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Server.Config;
@@ -11,9 +12,11 @@ using Server.Config;
 namespace Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240407081413_UpdatedRefreshToken")]
+    partial class UpdatedRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,23 +65,21 @@ namespace Server.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("Expired")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("Expires")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("RefreshTokens");
                 });
@@ -93,16 +94,16 @@ namespace Server.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("bytea");
 
                     b.Property<string>("PasswordResetToken")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
@@ -124,8 +125,8 @@ namespace Server.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("VerificationToken")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTime?>("VerifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -165,8 +166,8 @@ namespace Server.Migrations
             modelBuilder.Entity("Server.Data.Models.RefreshToken", b =>
                 {
                     b.HasOne("Server.Data.Models.User", "User")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("Server.Data.Models.RefreshToken", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -199,7 +200,7 @@ namespace Server.Migrations
 
             modelBuilder.Entity("Server.Data.Models.User", b =>
                 {
-                    b.Navigation("RefreshTokens");
+                    b.Navigation("RefreshToken");
 
                     b.Navigation("UserCompanies");
                 });

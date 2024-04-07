@@ -11,24 +11,24 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
 {
     public async Task CreateAsync(CompanyCreationRequest request)
     {
-        var team = new Company
+        var newTeam = new Company
         {
             Name = request.Name,
             RegistrationDate = DateTime.UtcNow
         };
 
-        await companyRepository.CreateAsync(team);
+        await companyRepository.CreateAsync(newTeam);
 
         var user = await userRepository.GetByCurrentTokenAsync();
 
-        var userTeam = new UserCompany
+        var newUserCompany = new UserCompany
         {
             UserId = user.Id,
-            CompanyId = team.Id,
+            CompanyId = newTeam.Id,
             Role = EmployeeRole.Manager
         };
 
-        await companyRepository.SaveUserInCompanyAsync(userTeam);
+        await companyRepository.SaveUserInCompanyAsync(newUserCompany);
     }
 
     public async Task AddUserAsync(long companyId, long userId)
@@ -37,14 +37,10 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         var user = await userRepository.GetByIdAsync(userId);
 
         if (await HasPermissionAsync(await userRepository.GetByCurrentTokenAsync(), team))
-        {
             throw new Exception("Server error.");
-        }
 
         if (await InCompanyAsync(user, team))
-        {
             throw new ArgumentException("User already in this company");
-        }
 
         var userTeam = new UserCompany
         {
@@ -64,7 +60,7 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         {
             Id = company.Id,
             Name = company.Name,
-            Users = company.UserCompanies
+            Users = company.UserCompanies!
                 .Select(UserCompanyResponse.ConvertToResponse).ToList()
         };
     }

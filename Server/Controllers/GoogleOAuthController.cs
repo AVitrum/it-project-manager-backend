@@ -64,6 +64,7 @@ public class GoogleOAuthController(IConfiguration configuration, IAuthService au
         await authService.GoogleRegisterAsync(profile);
 
         var token = await authService.GoogleLoginAsync(email!);
-        return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl")}/{token}");
+        return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl")}" +
+                        $"/AccessToken:{token.AccessToken}RefreshToken:{token.RefreshToken}");
     }
 }

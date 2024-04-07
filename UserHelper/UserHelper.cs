@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -38,12 +37,14 @@ public static class UserHelper
         return jwt;
     }
 
-    public static void GenerateRefreshToken(out RefreshToken refreshToken)
+    public static void GenerateRefreshToken(out RefreshTokenDto refreshTokenDto)
     {
-        refreshToken = new RefreshToken
+        refreshTokenDto = new RefreshTokenDto
         {
-            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            Token = CreateRandomToken(),
+            Created = DateTime.UtcNow,
             Expires = DateTime.UtcNow.AddDays(7),
+            Expired = false
         };
     }
 

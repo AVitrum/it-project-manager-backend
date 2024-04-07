@@ -40,11 +40,7 @@
     <ItemGroup>
       <AdditionalFiles Include="Views\Home\Index.cshtml" />
       <AdditionalFiles Include="Views\Home\Privacy.cshtml" />
-      <AdditionalFiles Include="Views\User\Error.cshtml" />
-      <AdditionalFiles Include="Views\User\_Layout.cshtml" />
-      <AdditionalFiles Include="Views\User\_ValidationScriptsPartial.cshtml" />
       <AdditionalFiles Include="Views\_ViewImports.cshtml" />
-      <AdditionalFiles Include="Views\_ViewStart.cshtml" />
     </ItemGroup>
 
 </Project>
