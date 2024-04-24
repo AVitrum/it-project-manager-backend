@@ -1,5 +1,4 @@
 using OAuthService;
-using OAuthService.Payload;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 
@@ -7,7 +6,7 @@ namespace Server.Services.Interfaces;
 
 public interface IAuthService
 {
-    Task RegisterAsync(UserCreationRequest request);
+    Task RegisterAsync(RegistrationRequest request);
     Task<LoginResponse> LoginAsync(UserLoginRequest request);
     Task<bool> GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse);
     Task<LoginResponse> GoogleLoginAsync(string email);

@@ -29,7 +29,7 @@ public class GoogleOAuthService
         return url;
     }
 
-    public static async Task<TokenResult?> ExchangeCodeOnTokenAsync(string? code, string? codeVerifier, string? redirectUrl)
+    public static async Task<TokenResult> ExchangeCodeOnTokenAsync(string? code, string? codeVerifier, string? redirectUrl)
     {
         var authParams = new Dictionary<string, string?>
         {
@@ -40,8 +40,14 @@ public class GoogleOAuthService
             { "grant_type", "authorization_code" },
             { "redirect_uri", redirectUrl }
         };
-
+        
         var tokenResult = await SendPostRequest<TokenResult>(TokenServerEndpoint, authParams);
+
+        if (tokenResult == null)
+        {
+            throw new GoogleOAuthException("Google OAuth Error");
+        }
+        
         return tokenResult;
     }
 

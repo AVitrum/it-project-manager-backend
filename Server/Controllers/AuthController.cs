@@ -4,12 +4,12 @@ using Server.Services.Interfaces;
 
 namespace Server.Controllers;
 
-[Route("server/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class AuthController(IAuthService authService) : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserCreationRequest request)
+    public async Task<IActionResult> Register(RegistrationRequest request)
     {
         await authService.RegisterAsync(request);
         return Ok("Registered!");
@@ -21,7 +21,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok(await authService.LoginAsync(request));
     }
 
-    [HttpPost("Refresh")]
+    [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken(RefreshRequest request)
     {
         return Ok(await authService.RefreshAsync(request));

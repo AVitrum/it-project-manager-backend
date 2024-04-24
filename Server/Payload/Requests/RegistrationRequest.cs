@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Payload.Requests;
 
-public class UserCreationRequest
+public class RegistrationRequest
 {
     [Required(ErrorMessage = "Username is required.")]
     public required string Username { get; set; }
@@ -16,9 +16,4 @@ public class UserCreationRequest
     [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", 
         ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
     public required string Password { get; set; }
-
-    [Compare("Password")]
-    public required string ConfirmPassword { get; set; }
-
-    public required string PhoneNumber { get; set; }
 }

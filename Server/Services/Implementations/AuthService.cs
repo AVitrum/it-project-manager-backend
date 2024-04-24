@@ -1,6 +1,6 @@
 using System.Security.Authentication;
 using EmailService;
-using OAuthService.Payload;
+using OAuthService;
 using Server.Data.Models;
 using Server.Exceptions;
 using Server.Payload.Requests;
@@ -13,17 +13,17 @@ using static UserHelper.PasswordHelper;
 
 namespace Server.Services.Implementations;
 
-public class AuthService(IConfiguration configuration, IEmailSender emailSender, IUserRepository userRepository) 
-    : IAuthService 
+public class AuthService(IConfiguration configuration, IEmailSender emailSender, IUserRepository userRepository)
+    : IAuthService
 {
-    public async Task RegisterAsync(UserCreationRequest request)
+    public async Task RegisterAsync(RegistrationRequest request)
     {
         if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Username))
             throw new ArgumentException("Email and Username are required!");
 
-        if (await userRepository.ExistsByEmailAsync(request.Email)) 
+        if (await userRepository.ExistsByEmailAsync(request.Email))
             throw new ArgumentException("User already exists");
-        
+
         GeneratePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
 
         var newUser = new User
@@ -34,22 +34,20 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             PasswordSalt = passwordSalt,
             VerificationToken = CreateRandomToken(),
             RegistrationDate = DateTime.UtcNow,
-            PhoneNumber = request.PhoneNumber,
         };
         await userRepository.CreateAsync(newUser);
     }
-    
+
     public async Task<LoginResponse> LoginAsync(UserLoginRequest request)
     {
-        var user = await userRepository.GetByEmailAsync(request.Email);
+        var user = await userRepository.GetByEmailAsync(request.Email)
+            ?? throw new EntityNotFoundException(nameof(User));
 
-        if (user == null) throw new EntityNotFoundException(nameof(User));
-
-        if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt)) 
+        if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             throw new ArgumentException("Password is incorrect");
 
         if (CheckVerificationStatus(new UserDto
-                { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
+        { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
         {
             await userRepository.DeleteAsync(user);
             throw new EntityNotFoundException("You have not verified your account." +
@@ -60,7 +58,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
 
         GenerateRefreshToken(out var refreshToken);
         await SetRefreshToken(user, refreshToken);
-        
+
         return new LoginResponse
         {
             AccessToken = GenerateToken(configuration, new UserDto
@@ -75,7 +73,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
     public async Task<bool> GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
     {
         var randomPassword = GeneratePassword(8);
-        
+
         GeneratePasswordHash(
             randomPassword,
             out var passwordHash,
@@ -105,13 +103,13 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
     public async Task<LoginResponse> GoogleLoginAsync(string email)
     {
         var user = await userRepository.GetByEmailAsync(email);
-        
+
         GenerateRefreshToken(out var refreshToken);
-        
+
         await SetRefreshToken(user, refreshToken);
 
         if (!CheckVerificationStatus(new UserDto
-                { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
+        { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
             return new LoginResponse
             {
                 AccessToken = GenerateToken(configuration, new UserDto
@@ -121,7 +119,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
                 }),
                 RefreshToken = refreshToken.Token
             };
-        
+
         user.VerifiedAt = DateTime.UtcNow;
         await userRepository.UpdateAsync(user);
 
@@ -159,10 +157,10 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
             await userRepository.UpdateRefreshTokenAsync(token);
             throw new AuthenticationException("RefreshToken Expired");
         }
-        
+
         GenerateRefreshToken(out var refreshToken);
         await SetRefreshToken(user, refreshToken);
-        
+
         return new LoginResponse
         {
             AccessToken = GenerateToken(configuration, new UserDto

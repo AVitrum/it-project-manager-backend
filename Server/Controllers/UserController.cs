@@ -6,7 +6,7 @@ using ResetPasswordRequest = Server.Payload.Requests.ResetPasswordRequest;
 
 namespace Server.Controllers;
 
-[Route("server/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class UserController(IUserService userService) : ControllerBase

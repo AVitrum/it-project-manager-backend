@@ -5,17 +5,17 @@ namespace HttpHelper;
 public class TokenResult
 {
     [JsonProperty("access_token")]
-    public string AccessToken { get; set; }
+    public required string AccessToken { get; set; }
 
     [JsonProperty("expires_in")]
-    public string ExpiresIn { get; set; }
+    public required string ExpiresIn { get; set; }
 
     [JsonProperty("scope")]
-    public string Scope { get; set; }
+    public required string Scope { get; set; }
 
     [JsonProperty("token_type")]
-    public string TokenType { get; set; }
+    public required string TokenType { get; set; }
 
     [JsonProperty("refresh_token")]
-    public string RefreshToken { get; set; }
+    public required string RefreshToken { get; set; }
 }

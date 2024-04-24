@@ -15,7 +15,7 @@ public class GoogleOAuthController(IConfiguration configuration, IAuthService au
         HttpContext.Session.SetString(PkceSessionKey, CodeVerifier);
 
         var url = GoogleOAuthService.GenerateOAuthRequestUrl(
-            "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
             "https://localhost:8080/GoogleOAuth/Login",
             CodeChallenge);
         return Redirect(url);
@@ -30,41 +30,21 @@ public class GoogleOAuthController(IConfiguration configuration, IAuthService au
                 codeVerifier,
                 "https://localhost:8080/GoogleOAuth/Login");
 
-        var email = await GoogleProfileService.GetUserEmailAsync(tokenResult!.AccessToken);
+        var response = await GoogleProfileService.GetUserProfileAsync(tokenResult.AccessToken);
 
-        if (await authService.ExistsByEmail(email!))
+        if (await authService.ExistsByEmail(response.Email))
         {
-            var token = await authService.GoogleLoginAsync(email!);
-            return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}/{token}");
+            var tokens = await authService.GoogleLoginAsync(response.Email);
+            return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}" + "/OAuth" +
+                            $"/?AccessToken={tokens.AccessToken}&RefreshToken={tokens.RefreshToken}");
         }
+        else
+        {
+            await authService.GoogleRegisterAsync(response);
 
-        HttpContext.Session.SetString("email", email!);
-
-        var url = GoogleOAuthService
-            .GenerateOAuthRequestUrl(
-                "https://www.googleapis.com/auth/userinfo.profile",
-                "https://localhost:8080/GoogleOAuth/Profile",
-                CodeChallenge);
-        return Redirect(url);
-    }
-    public async Task<IActionResult> ProfileAsync(string? code)
-    {
-        var codeVerifier = HttpContext.Session.GetString(PkceSessionKey);
-        var tokenResult = await GoogleOAuthService
-            .ExchangeCodeOnTokenAsync(
-                code,
-                codeVerifier,
-                "https://localhost:8080/GoogleOAuth/Profile");
-
-        var profile = await GoogleProfileService.GetUserProfileAsync(tokenResult!.AccessToken);
-        // var refreshedTokenResult = await GoogleOAuthService.RefreshTokenAsync(tokenResult.RefreshToken);
-        var email = HttpContext.Session.GetString("email");
-        profile!.Email = email;
-
-        await authService.GoogleRegisterAsync(profile);
-
-        var token = await authService.GoogleLoginAsync(email!);
-        return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl")}" +
-                        $"/AccessToken:{token.AccessToken}RefreshToken:{token.RefreshToken}");
+            var tokens = await authService.GoogleLoginAsync(response.Email);
+            return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}" + "/OAuth" +
+                            $"/?AccessToken={tokens.AccessToken}&RefreshToken={tokens.RefreshToken}");
+        }
     }
 }

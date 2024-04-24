@@ -5,7 +5,7 @@ using Server.Services.Interfaces;
 
 namespace Server.Controllers;
 
-[Route("server/[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 [Authorize]
 public class CompanyController(ICompanyService companyService) : ControllerBase
