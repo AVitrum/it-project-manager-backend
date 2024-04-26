@@ -3,8 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var inDocker = Environment.GetEnvironmentVariable("IN_DOCKER") == "true";
+
 builder.Services.AddDbContext<AppDbContext>(
-    o => o.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+    o => o.UseNpgsql(builder.Configuration.GetConnectionString(
+        inDocker ? "IN_DOCKER" : "DefaultConnection"))
 );
 
 builder.Services.AddControllers();

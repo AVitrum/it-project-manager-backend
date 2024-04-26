@@ -14,5 +14,6 @@ services:
       ASPNETCORE_HTTPS_PORTS: 8080
       ASPNETCORE_Kestrel__Certificates__Default__Password: "123456"
       ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+      IN_DOCKER: "true"
     volumes:
       - .aspnet/https:/https/

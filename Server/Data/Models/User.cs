@@ -5,7 +5,7 @@ namespace Server.Data.Models;
 public class User
 {
     [Key] public long Id { get; init; }
-    
+
     [MaxLength(50)]
     public required string Username { get; init; }
 
@@ -14,7 +14,7 @@ public class User
     public required string Email { get; init; }
     [MaxLength(20)] public string? PhoneNumber { get; init; }
     public required DateTime RegistrationDate { get; init; }
-    
+
     public required byte[] PasswordHash { get; set; } = new byte[64];
     public required byte[] PasswordSalt { get; set; } = new byte[128];
 

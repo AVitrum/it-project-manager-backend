@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using OAuthService;
 using Server.Exceptions;
+using UserHelper;
 
 namespace Server.Config;
 
@@ -43,6 +44,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             AuthenticationException => (StatusCodes.Status401Unauthorized, exception.Message),
             EntityNotFoundException => (StatusCodes.Status400BadRequest, exception.Message),
             GoogleOAuthException => (StatusCodes.Status504GatewayTimeout, exception.Message),
+            UserException => (StatusCodes.Status400BadRequest, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };
     }

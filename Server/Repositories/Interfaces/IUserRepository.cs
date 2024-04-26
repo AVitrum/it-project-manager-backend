@@ -15,4 +15,5 @@ public interface IUserRepository
     Task<User> GetByTokenAsync(string token);
     Task<User> GetByPasswordResetTokenAsync(string token);
     Task<bool> ExistsByEmailAsync(string email);
+    Task<bool> ExistsByUsernameAsync(string username);
 }

@@ -13,7 +13,7 @@ public class UserCompanyResponse
     {
         return new UserCompanyResponse
         {
-            Id = userCompany.User.Id,
+            Id = userCompany.User!.Id,
             Username = userCompany.User.Username,
             Email = userCompany.User.Email,
             Role = userCompany.Role.ToString()

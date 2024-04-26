@@ -4,6 +4,7 @@ using Server.Config;
 using Server.Data.Models;
 using Server.Exceptions;
 using Server.Repositories.Interfaces;
+using UserHelper;
 
 namespace Server.Repositories.Implementations;
 
@@ -39,26 +40,22 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
 
     public async Task<User> GetByCurrentTokenAsync()
     {
+        const string email = ClaimTypes.Email;
+
         return httpContextAccessor.HttpContext is not null
-            ? await GetByEmailAsync(httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Email)!)
-            : throw new EntityNotFoundException(nameof(User));
+            ? await GetByEmailAsync(httpContextAccessor.HttpContext.User.FindFirstValue(email)!)
+            : throw new UserNotFoundException(email);
     }
 
     public async Task<(User, RefreshToken)> GetByRefreshToken(string refreshToken)
     {
         var query = from user in dbContext.Users
-            join token in dbContext.RefreshTokens
-                on user.Id equals token.UserId
-            where token.Token == refreshToken
-            select new { user, token };
+                    join token in dbContext.RefreshTokens
+                        on user.Id equals token.UserId
+                    where token.Token == refreshToken
+                    select new { user, token };
 
-        var result = await query.FirstOrDefaultAsync();
-
-        if (result == null)
-        {
-            throw new EntityNotFoundException(nameof(User));
-        }
-
+        var result = await query.FirstOrDefaultAsync() ?? throw new EntityNotFoundException(nameof(User));
         return (result.user, result.token);
     }
 
@@ -67,31 +64,35 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
     {
         return await dbContext.Users
                    .FirstOrDefaultAsync(e => e.Id.Equals(id))
-               ?? throw new EntityNotFoundException(nameof(User));
+               ?? throw new UserNotFoundException(id);
     }
 
     public async Task<User> GetByEmailAsync(string email)
     {
         return await dbContext.Users
-//                   .Include(u => u.AdditionalInfo)
                    .FirstOrDefaultAsync(u => u.Email.Equals(email))
-               ?? throw new EntityNotFoundException(nameof(User));
+               ?? throw new UserNotFoundException(email);
     }
 
     public async Task<User> GetByTokenAsync(string token)
     {
-        return await dbContext.Users.FirstOrDefaultAsync(u => u.VerificationToken!.Equals(token)) 
-               ?? throw new EntityNotFoundException(nameof(User));
+        return await dbContext.Users.FirstOrDefaultAsync(u => u.VerificationToken!.Equals(token))
+               ?? throw new UserException("Wrong Verification Token!");
     }
 
     public async Task<User> GetByPasswordResetTokenAsync(string token)
     {
-        return await dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken!.Equals(token)) 
-               ?? throw new EntityNotFoundException(nameof(User)); 
+        return await dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken!.Equals(token))
+               ?? throw new UserException("Wrong Password Reset Token!");
     }
 
     public async Task<bool> ExistsByEmailAsync(string email)
     {
         return await dbContext.Users.AnyAsync(u => u.Email.Equals(email));
+    }
+
+    public async Task<bool> ExistsByUsernameAsync(string username)
+    {
+        return await dbContext.Users.AnyAsync(u => u.Username.Equals(username));
     }
 }
