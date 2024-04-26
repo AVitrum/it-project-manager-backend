@@ -34,15 +34,15 @@ public class GoogleOAuthController(IConfiguration configuration, IAuthService au
 
         if (await authService.ExistsByEmail(response.Email))
         {
-            var tokens = await authService.GoogleLoginAsync(response.Email);
+            var tokens = await authService.GoogleOAuthLoginAsync(response.Email);
             return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}" + "/OAuth" +
                             $"/?AccessToken={tokens.AccessToken}&RefreshToken={tokens.RefreshToken}");
         }
         else
         {
-            await authService.GoogleRegisterAsync(response);
+            await authService.GoogleOAuthRegistrationAsync(response);
 
-            var tokens = await authService.GoogleLoginAsync(response.Email);
+            var tokens = await authService.GoogleOAuthLoginAsync(response.Email);
             return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}" + "/OAuth" +
                             $"/?AccessToken={tokens.AccessToken}&RefreshToken={tokens.RefreshToken}");
         }

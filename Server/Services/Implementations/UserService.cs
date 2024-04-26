@@ -10,7 +10,7 @@ namespace Server.Services.Implementations;
 
 public class UserService(IEmailSender emailSender, IUserRepository userRepository) : IUserService
 {
-    public async Task<UserInfoResponse> ProfileAsync()
+    public async Task<UserInfoResponse> UserProfileAsync()
     {
         var user = await userRepository.GetByCurrentTokenAsync();
         return new UserInfoResponse
@@ -46,7 +46,7 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
         return "Updated";
     }
 
-    public async Task ResetPassword(ResetPasswordRequest request)
+    public async Task ResetPasswordAsync(ResetPasswordRequest request)
     {
         var user = await userRepository.GetByPasswordResetTokenAsync(request.Token);
 

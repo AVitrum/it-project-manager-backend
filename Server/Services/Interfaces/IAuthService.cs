@@ -8,10 +8,10 @@ public interface IAuthService
 {
     Task RegisterAsync(RegistrationRequest request);
     Task<LoginResponse> LoginAsync(UserLoginRequest request);
-    Task<bool> GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse);
-    Task<LoginResponse> GoogleLoginAsync(string email);
+    Task<bool> GoogleOAuthRegistrationAsync(GoogleUserInfoResponse googleUserInfoResponse);
+    Task<LoginResponse> GoogleOAuthLoginAsync(string email);
     Task<bool> ExistsByEmail(string email);
     Task SendVerificationToken(string email);
-    Task VerifyAsync(string token);
-    Task<LoginResponse> RefreshAsync(RefreshRequest request);
+    Task VerifyAccountAsync(string token);
+    Task<LoginResponse> RefreshJwtAsync(RefreshRequest request);
 }

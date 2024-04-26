@@ -24,20 +24,20 @@ public class AuthController(IAuthService authService) : ControllerBase
     [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken(RefreshRequest request)
     {
-        return Ok(await authService.RefreshAsync(request));
+        return Ok(await authService.RefreshJwtAsync(request));
     }
 
     [HttpPost("sendToken")]
-    public async Task<IActionResult> SendToken(TokenRequest request)
+    public async Task<IActionResult> SendVerificationToken(TokenRequest request)
     {
         await authService.SendVerificationToken(request.Email!);
         return Ok("The token has been sent!");
     }
 
     [HttpPost("verify")]
-    public async Task<IActionResult> Verify(TokenRequest request)
+    public async Task<IActionResult> VerifyAccountAsync(TokenRequest request)
     {
-        await authService.VerifyAsync(request.Token!);
+        await authService.VerifyAccountAsync(request.Token!);
         return Ok("Verified");
     }
 }

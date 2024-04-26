@@ -14,7 +14,7 @@ public static class UserHelper
         return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
     }
     
-    public static string GenerateToken(IConfiguration configuration, UserDto user)
+    public static string GenerateBearerToken(IConfiguration configuration, UserDto user)
     {
         var claims = new List<Claim> {
             new(ClaimTypes.Name, user.Username!),
@@ -48,7 +48,7 @@ public static class UserHelper
         };
     }
 
-    public static bool CheckVerificationStatus(UserDto user)
+    public static bool IsAccountVerified(UserDto user)
     {
         return user.VerifiedAt == null && user.RegistrationDate!.Value.Date.AddDays(3) < DateTime.UtcNow;
     }

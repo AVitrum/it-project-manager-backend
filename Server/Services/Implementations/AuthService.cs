@@ -43,10 +43,10 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
     {
         var user = await userRepository.GetByEmailAsync(request.Email);
 
-        if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+        if (!IsPasswordHashEqual(request.Password, user.PasswordHash, user.PasswordSalt))
             throw new UserException("Password is incorrect");
 
-        if (CheckVerificationStatus(new UserDto
+        if (IsAccountVerified(new UserDto
         { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
         {
             await userRepository.DeleteAsync(user);
@@ -61,7 +61,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
 
         return new LoginResponse
         {
-            AccessToken = GenerateToken(configuration, new UserDto
+            AccessToken = GenerateBearerToken(configuration, new UserDto
             {
                 Username = user.Username,
                 Email = user.Email
@@ -70,7 +70,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         };
     }
 
-    public async Task<bool> GoogleRegisterAsync(GoogleUserInfoResponse googleUserInfoResponse)
+    public async Task<bool> GoogleOAuthRegistrationAsync(GoogleUserInfoResponse googleUserInfoResponse)
     {
         var randomPassword = GeneratePassword(8);
 
@@ -100,7 +100,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         return true;
     }
 
-    public async Task<LoginResponse> GoogleLoginAsync(string email)
+    public async Task<LoginResponse> GoogleOAuthLoginAsync(string email)
     {
         var user = await userRepository.GetByEmailAsync(email);
 
@@ -108,11 +108,11 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
 
         await SetRefreshToken(user, refreshToken);
 
-        if (!CheckVerificationStatus(new UserDto
+        if (!IsAccountVerified(new UserDto
         { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
             return new LoginResponse
             {
-                AccessToken = GenerateToken(configuration, new UserDto
+                AccessToken = GenerateBearerToken(configuration, new UserDto
                 {
                     Username = user.Username,
                     Email = user.Email
@@ -125,7 +125,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
 
         return new LoginResponse
         {
-            AccessToken = GenerateToken(configuration, new UserDto
+            AccessToken = GenerateBearerToken(configuration, new UserDto
             {
                 Username = user.Username,
                 Email = user.Email
@@ -140,14 +140,14 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         await emailSender.SendEmailAsync(email, "Verification Token", user.VerificationToken!);
     }
 
-    public async Task VerifyAsync(string token)
+    public async Task VerifyAccountAsync(string token)
     {
         var user = await userRepository.GetByTokenAsync(token);
         user.VerifiedAt = DateTime.UtcNow;
         await userRepository.UpdateAsync(user);
     }
 
-    public async Task<LoginResponse> RefreshAsync(RefreshRequest request)
+    public async Task<LoginResponse> RefreshJwtAsync(RefreshRequest request)
     {
         var (user, token) = await userRepository.GetByRefreshToken(request.RefreshToken);
 
@@ -163,7 +163,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
 
         return new LoginResponse
         {
-            AccessToken = GenerateToken(configuration, new UserDto
+            AccessToken = GenerateBearerToken(configuration, new UserDto
             {
                 Username = user.Username,
                 Email = user.Email

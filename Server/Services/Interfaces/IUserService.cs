@@ -6,8 +6,8 @@ namespace Server.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<UserInfoResponse> ProfileAsync();
+    Task<UserInfoResponse> UserProfileAsync();
     Task CreateResetPasswordTokenAsync(string email);
     Task<string> ChangePasswordAsync(ChangePasswordRequest request);
-    Task ResetPassword(ResetPasswordRequest request);
+    Task ResetPasswordAsync(ResetPasswordRequest request);
 }

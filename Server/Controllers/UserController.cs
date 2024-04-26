@@ -23,7 +23,7 @@ public class UserController(IUserService userService) : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
     {
-        await userService.ResetPassword(request);
+        await userService.ResetPasswordAsync(request);
         return Ok("Changed!");
     }
     
@@ -35,8 +35,8 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     [HttpGet("profile")]
-    public async Task<IActionResult> Profile()
+    public async Task<IActionResult> UserProfile()
     {
-        return Ok(await userService.ProfileAsync());
+        return Ok(await userService.UserProfileAsync());
     }
 }
