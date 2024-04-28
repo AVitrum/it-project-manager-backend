@@ -2,7 +2,6 @@ using Server.Config;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var inDocker = Environment.GetEnvironmentVariable("IN_DOCKER") == "true";
 
 builder.Services.AddDbContext<AppDbContext>(

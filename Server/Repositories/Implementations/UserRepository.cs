@@ -49,11 +49,11 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
 
     public async Task<(User, RefreshToken)> GetByRefreshToken(string refreshToken)
     {
-        var query = from user in dbContext.Users
-                    join token in dbContext.RefreshTokens
-                        on user.Id equals token.UserId
-                    where token.Token == refreshToken
-                    select new { user, token };
+        var query = 
+            from user in dbContext.Users 
+            join token in dbContext.RefreshTokens on user.Id equals token.UserId 
+            where token.Token == refreshToken 
+            select new { user, token };
 
         var result = await query.FirstOrDefaultAsync() ?? throw new EntityNotFoundException(nameof(User));
         return (result.user, result.token);

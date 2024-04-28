@@ -1,5 +1,6 @@
 using System.Text;
 using EmailService;
+using FileService;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Server.Repositories.Implementations;
@@ -14,10 +15,15 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddFeatureAddServices(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IAuthService, AuthService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
-        serviceCollection.AddScoped<IUserService, UserService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
-        serviceCollection.AddScoped<ICompanyService, CompanyService>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IAuthService, AuthService>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IUserService, UserService>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<ICompanyService, CompanyService>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
         serviceCollection.AddScoped<IEmailSender, EmailSender>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IFileService, FileService.FileService>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
 
         return serviceCollection;
