@@ -14,7 +14,6 @@ public class User
     public required string Email { get; init; }
     [MaxLength(20)] public string? PhoneNumber { get; init; }
     public required DateTime RegistrationDate { get; init; }
-    public string? PictureLink { get; set; }
     public required byte[] PasswordHash { get; set; } = new byte[64];
     public required byte[] PasswordSalt { get; set; } = new byte[128];
     [MaxLength(128)] public string? VerificationToken { get; init; }
@@ -23,6 +22,7 @@ public class User
     public DateTime? ResetTokenExpires { get; set; }
     
     
-    public ICollection<RefreshToken> RefreshTokens { get; } = new List<RefreshToken>();
+    public IEnumerable<RefreshToken> RefreshTokens { get; } = new List<RefreshToken>();
+    public ProfilePhoto ProfilePhoto { get; set; }
     public ICollection<UserCompany> UserCompanies { get; init; }
 }

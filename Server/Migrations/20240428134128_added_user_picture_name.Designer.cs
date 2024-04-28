@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Server.Config;
@@ -11,9 +12,11 @@ using Server.Config;
 namespace Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240428134128_added_user_picture_name")]
+    partial class added_user_picture_name
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,33 +52,6 @@ namespace Server.Migrations
                         .IsUnique();
 
                     b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("Server.Data.Models.ProfilePhoto", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("PictureLink")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PictureName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("ProfilePhotos");
                 });
 
             modelBuilder.Entity("Server.Data.Models.RefreshToken", b =>
@@ -139,6 +115,12 @@ namespace Server.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("PictureLink")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PictureName")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -189,17 +171,6 @@ namespace Server.Migrations
                     b.ToTable("UserCompanies");
                 });
 
-            modelBuilder.Entity("Server.Data.Models.ProfilePhoto", b =>
-                {
-                    b.HasOne("Server.Data.Models.User", "User")
-                        .WithOne("ProfilePhoto")
-                        .HasForeignKey("Server.Data.Models.ProfilePhoto", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Server.Data.Models.RefreshToken", b =>
                 {
                     b.HasOne("Server.Data.Models.User", "User")
@@ -237,9 +208,6 @@ namespace Server.Migrations
 
             modelBuilder.Entity("Server.Data.Models.User", b =>
                 {
-                    b.Navigation("ProfilePhoto")
-                        .IsRequired();
-
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("UserCompanies");

@@ -22,6 +22,12 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
         await dbContext.SaveChangesAsync();
     }
 
+    public async Task AddProfilePhoto(ProfilePhoto profilePhoto)
+    {
+        await dbContext.ProfilePhotos.AddAsync(profilePhoto);
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task UpdateRefreshTokenAsync(RefreshToken refreshToken)
     {
         if (await dbContext.RefreshTokens.AnyAsync(e => e.Token == refreshToken.Token))
@@ -38,13 +44,33 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
         return true;
     }
 
-    public async Task<User> GetByCurrentTokenAsync()
+    public async Task<bool> DeleteProfilePhotoAsync(ProfilePhoto profilePhoto)
+    {
+        dbContext.ProfilePhotos.Remove(profilePhoto);
+        await dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<User> GetByJwtAsync()
     {
         const string email = ClaimTypes.Email;
 
         return httpContextAccessor.HttpContext is not null
             ? await GetByEmailAsync(httpContextAccessor.HttpContext.User.FindFirstValue(email)!)
             : throw new UserNotFoundException(email);
+    }
+
+    public async Task<(User, ProfilePhoto?)> GetByJwtWithPhotoAsync()
+    {
+        var user = await GetByJwtAsync();
+        
+        var query = 
+            from profilePhoto in dbContext.ProfilePhotos 
+            where profilePhoto.UserId == user.Id
+            select new { profilePhoto };
+
+        var result = await query.FirstOrDefaultAsync();
+        return (user, result?.profilePhoto);
     }
 
     public async Task<(User, RefreshToken)> GetByRefreshToken(string refreshToken)

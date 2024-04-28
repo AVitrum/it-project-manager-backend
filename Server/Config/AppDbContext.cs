@@ -10,7 +10,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<UserCompany> UserCompanies => Set<UserCompany>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
-
+    public DbSet<ProfilePhoto> ProfilePhotos => Set<ProfilePhoto>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,6 +30,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasMany(e => e.RefreshTokens)
             .WithOne(e => e.User)
             .HasForeignKey(e => e.UserId)
+            .IsRequired();
+        
+        modelBuilder.Entity<User>()
+            .HasOne(e => e.ProfilePhoto)
+            .WithOne(e => e.User)
+            .HasForeignKey<ProfilePhoto>(e => e.UserId)
             .IsRequired();
 
         modelBuilder.Entity<UserCompany>()

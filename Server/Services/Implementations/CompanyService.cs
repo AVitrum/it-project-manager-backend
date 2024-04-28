@@ -19,7 +19,7 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
 
         await companyRepository.CreateAsync(newTeam);
 
-        var user = await userRepository.GetByCurrentTokenAsync();
+        var user = await userRepository.GetByJwtAsync();
 
         var newUserCompany = new UserCompany
         {
@@ -36,7 +36,7 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         var team = await companyRepository.GetByIdAsync(companyId);
         var user = await userRepository.GetByIdAsync(userId);
 
-        if (await HasPermissionAsync(await userRepository.GetByCurrentTokenAsync(), team))
+        if (await HasPermissionAsync(await userRepository.GetByJwtAsync(), team))
             throw new Exception("Server error.");
 
         if (await InCompanyAsync(user, team))

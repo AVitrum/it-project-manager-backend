@@ -1,3 +1,4 @@
+using FileService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Payload.Requests;
@@ -11,6 +12,20 @@ namespace Server.Controllers;
 [Authorize]
 public class UserController(IUserService userService) : ControllerBase
 {
+    [HttpPut]
+    public async Task<IActionResult> UpdateInfo(UserUpdateRequest request)
+    {
+        throw new NotImplementedException();
+    } 
+    
+    [HttpPut("profileImage")]
+    public async Task<IActionResult> ProfileImage([FromForm] IFormFile file)
+    {
+        await userService.ChangeProfileImage(file);
+
+        return Ok();
+    } 
+    
     [HttpGet("getResetPasswordToken")]
     [AllowAnonymous]
     public async Task<IActionResult> CreateResetPasswordToken(TokenRequest request)

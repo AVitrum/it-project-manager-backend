@@ -1,4 +1,6 @@
 using EmailService;
+using FileService;
+using Server.Data.Models;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 using Server.Repositories.Interfaces;
@@ -8,12 +10,13 @@ using static UserHelper.PasswordHelper;
 
 namespace Server.Services.Implementations;
 
-public class UserService(IEmailSender emailSender, IUserRepository userRepository) : IUserService
+public class UserService(IEmailSender emailSender, IFileService fileService, IUserRepository userRepository) : IUserService
 {
     public async Task<UserInfoResponse> UserProfileAsync()
     {
-        var user = await userRepository.GetByCurrentTokenAsync();
-        return new UserInfoResponse
+        var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
+        
+        var profile = new UserInfoResponse
         {
             Id = user.Id,
             Username = user.Username,
@@ -21,6 +24,13 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
             CreationDate = user.RegistrationDate,
             PhoneNumber = user.PhoneNumber,
         };
+
+        if (picture != null)
+        {
+            profile.ImageUrl = picture.PictureLink;
+        }
+
+        return profile;
     }
 
     public async Task CreateResetPasswordTokenAsync(string email)
@@ -36,7 +46,7 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
 
     public async Task<string> ChangePasswordAsync(ChangePasswordRequest request)
     {
-        var user = await userRepository.GetByCurrentTokenAsync();
+        var user = await userRepository.GetByJwtAsync();
 
         GeneratePasswordHash(request.NewPassword, out var passwordHash, out var passwordSalt);
 
@@ -60,5 +70,26 @@ public class UserService(IEmailSender emailSender, IUserRepository userRepositor
         user.ResetTokenExpires = null;
         
         await userRepository.UpdateAsync(user);
+    }
+
+    public async Task ChangeProfileImage(IFormFile file)
+    {
+        var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
+
+        if (picture != null)
+        {
+            await fileService.DeleteAsync(picture.PictureName);
+        }
+        
+        var imageUrl = await fileService.UploadAsync(user.Username, file);
+
+        var newPicture = new ProfilePhoto
+        {
+            PictureLink = imageUrl,
+            PictureName = $"{user.Username}_{file.FileName}",
+            UserId = user.Id
+        };
+
+        await userRepository.AddProfilePhoto(newPicture);
     }
 }

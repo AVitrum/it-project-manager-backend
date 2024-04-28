@@ -10,4 +10,5 @@ public interface IUserService
     Task CreateResetPasswordTokenAsync(string email);
     Task<string> ChangePasswordAsync(ChangePasswordRequest request);
     Task ResetPasswordAsync(ResetPasswordRequest request);
+    Task ChangeProfileImage(IFormFile imageUrl);
 }
