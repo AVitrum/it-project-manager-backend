@@ -16,17 +16,30 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         await companyService.CreateAsync(request);
         return Ok("Created");
     }
-
-    [HttpPost("{teamId:long}/{userId:long}")]
-    public async Task<IActionResult> AddUser(long teamId, long userId)
+    
+    [HttpPost("{companyId:long}/addUser")]
+    public async Task<IActionResult> AddUser(long companyId, AddUserToCompanyRequest request)
     {
-        await companyService.AddUserAsync(teamId, userId);
+        await companyService.AddUserAsync(companyId, request);
         return Ok("Added");
     }
 
-    [HttpGet("{teamId:long}")]
-    public async Task<IActionResult> GetById(long teamId)
+    [HttpPost("{companyId:long}/addPosition")]
+    public async Task<IActionResult> AddPosition(long companyId, CreatePositionRequest request)
     {
-        return Ok(await companyService.GetAsync(teamId));
+        await companyService.CreatePositionAsync(companyId, request);
+        return Ok("Created");
+    }
+
+    [HttpGet("{companyId:long}")]
+    public async Task<IActionResult> GetById(long companyId)
+    {
+        return Ok(await companyService.GetAsync(companyId));
+    }
+
+    [HttpGet("{companyId:long}/{positionId:long}")]
+    public async Task<IActionResult> GetPositionById(long companyId, long positionId)
+    {
+        return Ok(await companyService.GetPositionAsync(companyId, positionId));
     }
 }

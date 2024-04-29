@@ -11,42 +11,88 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
 {
     public async Task CreateAsync(CompanyCreationRequest request)
     {
-        var newTeam = new Company
+        var newCompany = new Company
         {
             Name = request.Name,
             RegistrationDate = DateTime.UtcNow
         };
-
-        await companyRepository.CreateAsync(newTeam);
+        var company = await companyRepository.CreateAsync(newCompany);
 
         var user = await userRepository.GetByJwtAsync();
+
+        var positionPermissions = PositionPermissions.None;
+        PositionPermissionsHelper.AddAllPermissions(ref positionPermissions);
+        var newPositionInCompany = new PositionInCompany
+        {
+            CompanyId = company.Id,
+            Name = "CEO",
+            Permissions = positionPermissions
+        };
+        var positionInCompany = await companyRepository.CreatePositionAsync(newPositionInCompany);
 
         var newUserCompany = new UserCompany
         {
             UserId = user.Id,
-            CompanyId = newTeam.Id,
-            Role = EmployeeRole.Manager
+            CompanyId = newCompany.Id,
+            PositionInCompanyId = positionInCompany.Id,
         };
 
         await companyRepository.SaveUserInCompanyAsync(newUserCompany);
     }
 
-    public async Task AddUserAsync(long companyId, long userId)
+    public async Task CreatePositionAsync(long companyId, CreatePositionRequest request)
     {
-        var team = await companyRepository.GetByIdAsync(companyId);
-        var user = await userRepository.GetByIdAsync(userId);
+        var position = new PositionInCompany
+        {
+            CompanyId = companyId,
+            Name = request.Name,
+            Permissions = (request.CreateProject ? PositionPermissions.CreateProject : PositionPermissions.None) |
+                          (request.UpdateProject ? PositionPermissions.UpdateProject : PositionPermissions.None) |
+                          (request.DeleteProject ? PositionPermissions.DeleteProject : PositionPermissions.None) |
+                          (request.AddUser ? PositionPermissions.AddUser : PositionPermissions.None) |
+                          (request.DeleteUser ? PositionPermissions.DeleteUser : PositionPermissions.None)
+        };
 
-        if (await HasPermissionAsync(await userRepository.GetByJwtAsync(), team))
-            throw new Exception("Server error.");
+        await companyRepository.CreatePositionAsync(position);
+    }
+    
+    public async Task<PositionPermissionsResponse> GetPositionAsync(long companyId, long positionId)
+    {
+        var position = await companyRepository.FindPositionByIdAndCompanyIdAsync(positionId, companyId);
 
-        if (await InCompanyAsync(user, team))
+        return new PositionPermissionsResponse
+        {
+            PositionName = position.Name,
+            CreateProject = (position.Permissions & PositionPermissions.CreateProject) != 0,
+            UpdateProject = (position.Permissions & PositionPermissions.UpdateProject) != 0,
+            DeleteProject = (position.Permissions & PositionPermissions.DeleteProject) != 0,
+            AddUser = (position.Permissions & PositionPermissions.AddUser) != 0,
+            DeleteUser = (position.Permissions & PositionPermissions.DeleteUser) != 0
+        };
+    }
+
+
+    public async Task AddUserAsync(long companyId, AddUserToCompanyRequest request)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+        var userToAdd = await userRepository.GetByEmailAsync(request.Email);
+
+        var currentUser = await userRepository.GetByJwtAsync();
+        var employee = await companyRepository.FindByUserAndCompanyAsync(currentUser, company);
+
+        if ((employee.PositionInCompany?.Permissions & PositionPermissions.AddUser) == 0)
+            throw new Exception("You don't have this permission");
+
+        if (await companyRepository.ExistsByUserAndCompanyAsync(userToAdd, company))
             throw new ArgumentException("User already in this company");
+        
+        var position = await companyRepository.FindPositionByNameAndCompanyIdAsync(request.PositionName, companyId);
 
         var userTeam = new UserCompany
         {
-            UserId = user.Id,
-            CompanyId = team.Id,
-            Role = EmployeeRole.Regular
+            UserId = userToAdd.Id,
+            CompanyId = company.Id,
+            PositionInCompanyId = position.Id,
         };
 
         await companyRepository.SaveUserInCompanyAsync(userTeam);
@@ -63,17 +109,5 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
             Users = company.UserCompanies!
                 .Select(UserCompanyResponse.ConvertToResponse).ToList()
         };
-    }
-
-    private async Task<bool> HasPermissionAsync(User user, Company company)
-    {
-        var userTeam = await companyRepository.FindByUserAndCompanyAsync(user, company);
-        return userTeam is { Role: EmployeeRole.Manager };
-    }
-
-    private async Task<bool> InCompanyAsync(User user, Company company)
-    {
-        var userTeam = await companyRepository.FindByUserAndCompanyAsync(user, company);
-        return userTeam != null;
     }
 }
