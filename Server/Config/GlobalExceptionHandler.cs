@@ -1,10 +1,10 @@
 using System.Diagnostics;
 using System.Security.Authentication;
+using DatabaseService;
 using FileService;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using OAuthService;
-using Server.Exceptions;
 using UserHelper;
 
 namespace Server.Config;
@@ -43,9 +43,8 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             DbUpdateException { InnerException: Npgsql.PostgresException { SqlState: "23505" } } => (StatusCodes.Status409Conflict, exception.Message),
             ArgumentException => (StatusCodes.Status400BadRequest, exception.Message),
             AuthenticationException => (StatusCodes.Status401Unauthorized, exception.Message),
-            EntityNotFoundException => (StatusCodes.Status400BadRequest, exception.Message),
+            DatabaseException => (StatusCodes.Status400BadRequest, exception.Message),
             GoogleOAuthException => (StatusCodes.Status504GatewayTimeout, exception.Message),
-            UserException => (StatusCodes.Status400BadRequest, exception.Message),
             FileException => (StatusCodes.Status400BadRequest, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };

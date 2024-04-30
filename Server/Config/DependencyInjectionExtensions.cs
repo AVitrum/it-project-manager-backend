@@ -1,9 +1,10 @@
 using System.Text;
+using DatabaseService.Repositories.Implementations;
+using DatabaseService.Repositories.Interfaces;
 using EmailService;
 using FileService;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Server.Repositories.Implementations;
 using Server.Repositories.Interfaces;
 using Server.Services.Implementations;
 using Server.Services.Interfaces;

@@ -1,7 +1,8 @@
 using System.Security.Authentication;
+using DatabaseService;
+using DatabaseService.Data.Models;
 using EmailService;
 using OAuthService;
-using Server.Data.Models;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 using Server.Repositories.Interfaces;

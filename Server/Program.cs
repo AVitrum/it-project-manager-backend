@@ -1,3 +1,4 @@
+using DatabaseService;
 using Server.Config;
 using Microsoft.EntityFrameworkCore;
 

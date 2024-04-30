@@ -1,5 +1,6 @@
-using Server.Data.Enums;
-using Server.Data.Models;
+using DatabaseService.Data.Enums;
+using DatabaseService.Data.Models;
+using DatabaseService.Repositories.Interfaces;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 using Server.Repositories.Interfaces;

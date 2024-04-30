@@ -1,4 +1,4 @@
-using Server.Data.Models;
+using DatabaseService.Data.Models;
 
 namespace Server.Payload.Responses;
 
