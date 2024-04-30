@@ -9,7 +9,8 @@ public class Company
     public required DateTime  RegistrationDate { get; set; }
     public string? Description { get; set; }
     public double? Budget { get; set; }
-    
+
+    public ICollection<PositionInCompany>? PositionInCompanies { get; set; }
     public ICollection<UserCompany>? UserCompanies { get; set; }
 }
 

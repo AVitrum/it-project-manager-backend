@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Server.Config;
@@ -11,9 +12,11 @@ using Server.Config;
 namespace Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240429133133_added_position_to_company")]
+    partial class added_position_to_company
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,17 +204,12 @@ namespace Server.Migrations
                     b.Property<long>("CompanyId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("PositionInCompanyId")
-                        .HasColumnType("bigint");
-
                     b.Property<double>("Salary")
                         .HasColumnType("double precision");
 
                     b.HasKey("UserId", "CompanyId");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("PositionInCompanyId");
 
                     b.ToTable("UserCompanies");
                 });
@@ -257,12 +255,6 @@ namespace Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Server.Data.Models.PositionInCompany", "PositionInCompany")
-                        .WithMany("UserCompanies")
-                        .HasForeignKey("PositionInCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Server.Data.Models.User", "User")
                         .WithMany("UserCompanies")
                         .HasForeignKey("UserId")
@@ -271,8 +263,6 @@ namespace Server.Migrations
 
                     b.Navigation("Company");
 
-                    b.Navigation("PositionInCompany");
-
                     b.Navigation("User");
                 });
 
@@ -280,11 +270,6 @@ namespace Server.Migrations
                 {
                     b.Navigation("PositionInCompanies");
 
-                    b.Navigation("UserCompanies");
-                });
-
-            modelBuilder.Entity("Server.Data.Models.PositionInCompany", b =>
-                {
                     b.Navigation("UserCompanies");
                 });
 

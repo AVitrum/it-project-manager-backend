@@ -10,6 +10,6 @@ public class ChangePasswordRequest
         ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
     public required string NewPassword { get; set; }
     
-    [Compare("SecondNewPassword", ErrorMessage = "Passwords are not the same.")]
+    [Compare("NewPassword", ErrorMessage = "Passwords are not the same.")]
     public required string SecondNewPassword { get; set; }
 }

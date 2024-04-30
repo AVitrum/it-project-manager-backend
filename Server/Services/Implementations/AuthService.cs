@@ -2,7 +2,6 @@ using System.Security.Authentication;
 using EmailService;
 using OAuthService;
 using Server.Data.Models;
-using Server.Exceptions;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 using Server.Repositories.Interfaces;
@@ -13,7 +12,10 @@ using static UserHelper.PasswordHelper;
 
 namespace Server.Services.Implementations;
 
-public class AuthService(IConfiguration configuration, IEmailSender emailSender, IUserRepository userRepository)
+public class AuthService(
+    IConfiguration configuration,
+    IEmailSender emailSender,
+    IUserRepository userRepository)
     : IAuthService
 {
     public async Task RegisterAsync(RegistrationRequest request)
@@ -91,7 +93,7 @@ public class AuthService(IConfiguration configuration, IEmailSender emailSender,
         };
 
         await userRepository.CreateAsync(newUser);
-
+        
         await emailSender.SendEmailAsync(
             googleUserInfoResponse.Email,
             "Change your password!",

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Server.Config;
@@ -11,9 +12,11 @@ using Server.Config;
 namespace Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240428114946_added_image_to_user")]
+    partial class added_image_to_user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,58 +52,6 @@ namespace Server.Migrations
                         .IsUnique();
 
                     b.ToTable("Companies");
-                });
-
-            modelBuilder.Entity("Server.Data.Models.PositionInCompany", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("CompanyId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("Permissions")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("PositionInCompanies");
-                });
-
-            modelBuilder.Entity("Server.Data.Models.ProfilePhoto", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("PictureLink")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PictureName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("ProfilePhotos");
                 });
 
             modelBuilder.Entity("Server.Data.Models.RefreshToken", b =>
@@ -164,6 +115,9 @@ namespace Server.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("PictureLink")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -201,41 +155,17 @@ namespace Server.Migrations
                     b.Property<long>("CompanyId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("PositionInCompanyId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
 
-                    b.Property<double>("Salary")
+                    b.Property<double?>("Salary")
                         .HasColumnType("double precision");
 
                     b.HasKey("UserId", "CompanyId");
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("PositionInCompanyId");
-
                     b.ToTable("UserCompanies");
-                });
-
-            modelBuilder.Entity("Server.Data.Models.PositionInCompany", b =>
-                {
-                    b.HasOne("Server.Data.Models.Company", "Company")
-                        .WithMany("PositionInCompanies")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("Server.Data.Models.ProfilePhoto", b =>
-                {
-                    b.HasOne("Server.Data.Models.User", "User")
-                        .WithOne("ProfilePhoto")
-                        .HasForeignKey("Server.Data.Models.ProfilePhoto", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Server.Data.Models.RefreshToken", b =>
@@ -257,12 +187,6 @@ namespace Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Server.Data.Models.PositionInCompany", "PositionInCompany")
-                        .WithMany("UserCompanies")
-                        .HasForeignKey("PositionInCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Server.Data.Models.User", "User")
                         .WithMany("UserCompanies")
                         .HasForeignKey("UserId")
@@ -271,28 +195,16 @@ namespace Server.Migrations
 
                     b.Navigation("Company");
 
-                    b.Navigation("PositionInCompany");
-
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Server.Data.Models.Company", b =>
-                {
-                    b.Navigation("PositionInCompanies");
-
-                    b.Navigation("UserCompanies");
-                });
-
-            modelBuilder.Entity("Server.Data.Models.PositionInCompany", b =>
                 {
                     b.Navigation("UserCompanies");
                 });
 
             modelBuilder.Entity("Server.Data.Models.User", b =>
                 {
-                    b.Navigation("ProfilePhoto")
-                        .IsRequired();
-
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("UserCompanies");

@@ -1,3 +1,4 @@
+using FileService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Payload.Requests;
@@ -11,32 +12,51 @@ namespace Server.Controllers;
 [Authorize]
 public class UserController(IUserService userService) : ControllerBase
 {
-    [HttpGet("getResetPasswordToken")]
+    [HttpGet("profile")]
+    public async Task<IActionResult> UserProfile()
+    {
+        return Ok(await userService.UserProfileAsync());
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateInfo(UserUpdateRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    [HttpPut("profileImage")]
+    public async Task<IActionResult> ProfileImage([FromForm] IFormFile file)
+    {
+        await userService.ChangeProfileImage(file);
+        return Ok();
+    }
+
+    [HttpPost("sendResetPasswordToken")]
     [AllowAnonymous]
-    public async Task<IActionResult> CreateResetPasswordToken(TokenRequest request)
+    public async Task<IActionResult> SendResetPasswordToken(TokenRequest request)
     {
         await userService.CreateResetPasswordTokenAsync(request.Email!);
-        return Ok("The token has been sent!");
+        return Ok(new 
+        {
+            message = "The token has been sent!"
+        });
     }
-    
+
     [HttpPut("resetPassword")]
     [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
     {
         await userService.ResetPasswordAsync(request);
-        return Ok("Changed!");
+        return Ok(new 
+        {
+            message = "Changed!"
+        });
     }
-    
-    
+
+
     [HttpPut("changePassword")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
-        return Ok(await userService.ChangePasswordAsync(request));
-    }
-
-    [HttpGet("profile")]
-    public async Task<IActionResult> UserProfile()
-    {
-        return Ok(await userService.UserProfileAsync());
+        return Ok(new {message = await userService.ChangePasswordAsync(request)});
     }
 }
