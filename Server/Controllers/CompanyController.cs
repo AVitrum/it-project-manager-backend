@@ -16,7 +16,13 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         await companyService.CreateAsync(request);
         return Ok("Created");
     }
-    
+
+    [HttpGet("{companyId:long}")]
+    public async Task<IActionResult> GetById(long companyId)
+    {
+        return Ok(await companyService.GetAsync(companyId));
+    }
+
     [HttpPost("{companyId:long}/addUser")]
     public async Task<IActionResult> AddUser(long companyId, AddUserToCompanyRequest request)
     {
@@ -29,12 +35,6 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     {
         await companyService.CreatePositionAsync(companyId, request);
         return Ok("Created");
-    }
-
-    [HttpGet("{companyId:long}")]
-    public async Task<IActionResult> GetById(long companyId)
-    {
-        return Ok(await companyService.GetAsync(companyId));
     }
 
     [HttpGet("{companyId:long}/{positionId:long}")]

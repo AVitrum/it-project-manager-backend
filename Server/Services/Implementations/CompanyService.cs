@@ -7,7 +7,10 @@ using Server.Services.Interfaces;
 
 namespace Server.Services.Implementations;
 
-public class CompanyService(ICompanyRepository companyRepository, IUserRepository userRepository) : ICompanyService
+public class CompanyService(
+    ICompanyRepository companyRepository,
+    IUserRepository userRepository) 
+    : ICompanyService
 {
     public async Task CreateAsync(CompanyCreationRequest request)
     {
@@ -40,6 +43,19 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         await companyRepository.SaveUserInCompanyAsync(newUserCompany);
     }
 
+    public async Task<CompanyResponse> GetAsync(long id)
+    {
+        var company = await companyRepository.GetByIdAsync(id);
+        
+        return new CompanyResponse
+        {
+            Id = company.Id,
+            Name = company.Name,
+            Users = company.UserCompanies!
+                .Select(UserCompanyResponse.ConvertToResponse).ToList()
+        };
+    }
+
     public async Task CreatePositionAsync(long companyId, CreatePositionRequest request)
     {
         var position = new PositionInCompany
@@ -55,10 +71,10 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
 
         await companyRepository.CreatePositionAsync(position);
     }
-    
+
     public async Task<PositionPermissionsResponse> GetPositionAsync(long companyId, long positionId)
     {
-        var position = await companyRepository.FindPositionByIdAndCompanyIdAsync(positionId, companyId);
+        var position = await companyRepository.GetPositionByIdAndCompanyIdAsync(positionId, companyId);
 
         return new PositionPermissionsResponse
         {
@@ -71,14 +87,13 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         };
     }
 
-
     public async Task AddUserAsync(long companyId, AddUserToCompanyRequest request)
     {
         var company = await companyRepository.GetByIdAsync(companyId);
         var userToAdd = await userRepository.GetByEmailAsync(request.Email);
 
         var currentUser = await userRepository.GetByJwtAsync();
-        var employee = await companyRepository.FindByUserAndCompanyAsync(currentUser, company);
+        var employee = await companyRepository.GetByUserAndCompanyAsync(currentUser, company);
 
         if ((employee.PositionInCompany?.Permissions & PositionPermissions.AddUser) == 0)
             throw new Exception("You don't have this permission");
@@ -86,7 +101,7 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         if (await companyRepository.ExistsByUserAndCompanyAsync(userToAdd, company))
             throw new ArgumentException("User already in this company");
         
-        var position = await companyRepository.FindPositionByNameAndCompanyIdAsync(request.PositionName, companyId);
+        var position = await companyRepository.GetPositionByNameAndCompanyIdAsync(request.PositionName, companyId);
 
         var userTeam = new UserCompany
         {
@@ -96,18 +111,5 @@ public class CompanyService(ICompanyRepository companyRepository, IUserRepositor
         };
 
         await companyRepository.SaveUserInCompanyAsync(userTeam);
-    }
-
-    public async Task<CompanyResponse> GetAsync(long id)
-    {
-        var company = await companyRepository.GetByIdAsync(id);
-        
-        return new CompanyResponse
-        {
-            Id = company.Id,
-            Name = company.Name,
-            Users = company.UserCompanies!
-                .Select(UserCompanyResponse.ConvertToResponse).ToList()
-        };
     }
 }

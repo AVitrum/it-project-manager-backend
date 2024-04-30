@@ -12,7 +12,10 @@ using static UserHelper.PasswordHelper;
 
 namespace Server.Services.Implementations;
 
-public class AuthService(IConfiguration configuration, IEmailSender emailSender, IUserRepository userRepository)
+public class AuthService(
+    IConfiguration configuration,
+    IEmailSender emailSender,
+    IUserRepository userRepository)
     : IAuthService
 {
     public async Task RegisterAsync(RegistrationRequest request)

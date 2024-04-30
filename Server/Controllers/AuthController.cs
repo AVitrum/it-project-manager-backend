@@ -12,7 +12,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> Register(RegistrationRequest request)
     {
         await authService.RegisterAsync(request);
-        return Ok("Registered!");
+        return Ok(new {message = "Registered!"});
     }
 
     [HttpPost("login")]
@@ -31,13 +31,19 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<IActionResult> SendVerificationToken(TokenRequest request)
     {
         await authService.SendVerificationToken(request.Email!);
-        return Ok("The token has been sent!");
+        return Ok(new 
+        { 
+            message = "The token has been sent!"
+        });
     }
 
     [HttpPost("verify")]
     public async Task<IActionResult> VerifyAccountAsync(TokenRequest request)
     {
         await authService.VerifyAccountAsync(request.Token!);
-        return Ok("Verified");
+        return Ok(new 
+        {
+            message = "Verified"
+        });
     }
 }

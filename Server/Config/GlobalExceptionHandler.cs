@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Security.Authentication;
+using FileService;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using OAuthService;
@@ -45,6 +46,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             EntityNotFoundException => (StatusCodes.Status400BadRequest, exception.Message),
             GoogleOAuthException => (StatusCodes.Status504GatewayTimeout, exception.Message),
             UserException => (StatusCodes.Status400BadRequest, exception.Message),
+            FileException => (StatusCodes.Status400BadRequest, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };
     }
