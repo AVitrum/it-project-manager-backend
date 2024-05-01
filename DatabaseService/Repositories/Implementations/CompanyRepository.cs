@@ -1,4 +1,5 @@
 using DatabaseService.Data.Models;
+using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,12 +44,24 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
 
     public async Task<Company> GetByIdAsync(long id)
     {
-        return await dbContext.Companies
-                   .Include(e => e.UserCompanies)!
-                   .ThenInclude(e => e.User)
-                   .Include(e => e.PositionInCompanies)
-                   .FirstOrDefaultAsync(e => e.Id == id)
-               ?? throw new EntityNotFoundException(nameof(Company));
+        var query =
+            from company in dbContext.Companies
+            where company.Id == id
+            select new
+            {
+                Company = company,
+                UserCompanies = company.UserCompanies.Select(uc => new
+                {
+                    UserCompany = uc, uc.User, uc.PositionInCompany
+                })
+            };
+        var result = await query.FirstOrDefaultAsync() 
+                     ?? throw new EntityNotFoundException(nameof(Company));
+
+        var companyEntity = result.Company;
+        companyEntity.UserCompanies = result.UserCompanies
+            .Select(uc => uc.UserCompany).ToList();
+        return companyEntity;
     }
 
     public async Task<Company> GetByNameAsync(string name)
@@ -60,7 +73,7 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
                ?? throw new EntityNotFoundException(nameof(Company));
     }
 
-    public async Task<UserCompany> GetByUserAndCompanyAsync(User user, Company company)
+    public async Task<UserCompany> GetUserCompanyByUserAndCompanyAsync(User user, Company company)
     {
         var userCompany = await dbContext.UserCompanies
             .FirstOrDefaultAsync(e => e.UserId == user.Id && e.CompanyId == company.Id)
@@ -88,5 +101,14 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
     {
         return await dbContext.UserCompanies
             .AnyAsync(e => e.UserId == userToAdd.Id && e.CompanyId == company.Id);
+    }
+
+    public async Task<bool> PositionExistsByNameAndCompanyIdAsync(string name, long companyId)
+    {
+        var query =
+            from positionInCompany in dbContext.PositionInCompanies
+            where positionInCompany.Name == name && positionInCompany.CompanyId == companyId
+            select new { positionInCompany };
+        return await query.AnyAsync();
     }
 }

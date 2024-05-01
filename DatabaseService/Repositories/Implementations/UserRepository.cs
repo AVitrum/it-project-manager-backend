@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using DatabaseService.Data.Models;
+using DatabaseService.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Server.Repositories.Interfaces;

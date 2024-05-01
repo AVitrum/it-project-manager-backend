@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Security.Authentication;
 using DatabaseService;
+using DatabaseService.Exceptions;
 using FileService;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Server.Payload.Requests;
 using Server.Services.Interfaces;
 
@@ -21,6 +22,16 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
     public async Task<IActionResult> GetById(long companyId)
     {
         return Ok(await companyService.GetAsync(companyId));
+    }
+    
+    [HttpPut("{companyId:long}/updateBudget")]
+    public async Task<IActionResult> UpdateBudget(long companyId, BudgetRequest request)
+    {
+        await companyService.UpdateBudget(request.Budget, companyId);
+        return Ok(new
+        {
+            message = "Performed"
+        });
     }
 
     [HttpPost("{companyId:long}/addUser")]

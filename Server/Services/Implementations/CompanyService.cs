@@ -57,8 +57,61 @@ public class CompanyService(
         };
     }
 
+    public async Task AddUserAsync(long companyId, AddUserToCompanyRequest request)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+        var userToAdd = await userRepository.GetByEmailAsync(request.Email);
+
+        var currentUser = await userRepository.GetByJwtAsync();
+        var employee = await companyRepository.GetUserCompanyByUserAndCompanyAsync(currentUser, company);
+
+        if (!PositionPermissionsHelper.HasPermissions(
+                employee.PositionInCompany!.Permissions, PositionPermissions.AddUser))
+            throw new Exception("You don't have this permission");
+
+        if (await companyRepository.ExistsByUserAndCompanyAsync(userToAdd, company))
+            throw new ArgumentException("User already in this company");
+        
+        var position = await companyRepository.GetPositionByNameAndCompanyIdAsync(request.PositionName, companyId);
+
+        var userTeam = new UserCompany
+        {
+            UserId = userToAdd.Id,
+            CompanyId = company.Id,
+            PositionInCompanyId = position.Id,
+        };
+
+        await companyRepository.SaveUserInCompanyAsync(userTeam);
+    }
+
+    public async Task UpdateBudget(double budget, long companyId)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+
+        var performer = await companyRepository.GetUserCompanyByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+
+        if ((!PositionPermissionsHelper.HasPermissions(performer.PositionInCompany!.Permissions,
+                PositionPermissions.AddBudget) || company.Budget != 0)
+            && (!PositionPermissionsHelper.HasPermissions(performer.PositionInCompany!.Permissions,
+                PositionPermissions.UpdateBudget) || !(company.Budget > 0)))
+        {
+            throw new ArgumentException("You do not have permission to perform this action");
+        }
+
+
+        company.Budget = budget;
+        await companyRepository.UpdateAsync(company);
+    }
+
     public async Task CreatePositionAsync(long companyId, CreatePositionRequest request)
     {
+
+        if (await companyRepository.PositionExistsByNameAndCompanyIdAsync(request.Name, companyId))
+        {
+            throw new ArgumentException("Position exists by name!");
+        }
+        
         var position = new PositionInCompany
         {
             CompanyId = companyId,
@@ -84,33 +137,9 @@ public class CompanyService(
             UpdateProject = (position.Permissions & PositionPermissions.UpdateProject) != 0,
             DeleteProject = (position.Permissions & PositionPermissions.DeleteProject) != 0,
             AddUser = (position.Permissions & PositionPermissions.AddUser) != 0,
-            DeleteUser = (position.Permissions & PositionPermissions.DeleteUser) != 0
+            DeleteUser = (position.Permissions & PositionPermissions.DeleteUser) != 0,
+            AddBudget = (position.Permissions & PositionPermissions.AddBudget) != 0,
+            UpdateBudget = (position.Permissions & PositionPermissions.UpdateBudget) != 0,
         };
-    }
-
-    public async Task AddUserAsync(long companyId, AddUserToCompanyRequest request)
-    {
-        var company = await companyRepository.GetByIdAsync(companyId);
-        var userToAdd = await userRepository.GetByEmailAsync(request.Email);
-
-        var currentUser = await userRepository.GetByJwtAsync();
-        var employee = await companyRepository.GetByUserAndCompanyAsync(currentUser, company);
-
-        if ((employee.PositionInCompany?.Permissions & PositionPermissions.AddUser) == 0)
-            throw new Exception("You don't have this permission");
-
-        if (await companyRepository.ExistsByUserAndCompanyAsync(userToAdd, company))
-            throw new ArgumentException("User already in this company");
-        
-        var position = await companyRepository.GetPositionByNameAndCompanyIdAsync(request.PositionName, companyId);
-
-        var userTeam = new UserCompany
-        {
-            UserId = userToAdd.Id,
-            CompanyId = company.Id,
-            PositionInCompanyId = position.Id,
-        };
-
-        await companyRepository.SaveUserInCompanyAsync(userTeam);
     }
 }

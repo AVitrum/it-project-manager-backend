@@ -1,4 +1,4 @@
-namespace DatabaseService;
+namespace DatabaseService.Exceptions;
 
 public class UserException(string message) : DatabaseException(message);
 
