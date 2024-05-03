@@ -1,3 +1,5 @@
+using DatabaseService.Data.DTOs;
+using Server.Payload.DTOs;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 
@@ -7,7 +9,7 @@ public interface ICompanyService
 {
     Task CreateAsync(CompanyCreationRequest request);
     Task<CompanyResponse> GetAsync(long id);
-    Task CreatePositionAsync(long companyId, CreatePositionRequest request);
-    Task<PositionPermissionsResponse> GetPositionAsync(long companyId, long positionId);
-    Task AddUserAsync(long companyId, AddUserToCompanyRequest request);
+    Task CreatePositionAsync(long companyId, PositionInCompanyDto positionInCompanyDto);
+    Task UpdatePositionAsync(long companyId, PositionInCompanyDto inCompanyDto);
+    Task UpdateBudget(double budget, long companyId);
 }

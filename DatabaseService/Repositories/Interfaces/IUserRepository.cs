@@ -1,6 +1,6 @@
 using DatabaseService.Data.Models;
 
-namespace Server.Repositories.Interfaces;
+namespace DatabaseService.Repositories.Interfaces;
 
 public interface IUserRepository
 {

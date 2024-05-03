@@ -15,7 +15,10 @@ namespace FileService
 
             var cancellation = new CancellationTokenSource();
 
-            if (file.Length <= 0) throw new Exception("No content in the file");
+            if (file.Length <= 0)
+            {
+                throw new FileException("No content in the file");
+            }
 
             var stream = file.OpenReadStream();
 
@@ -35,7 +38,7 @@ namespace FileService
 
             var cancellation = new CancellationTokenSource();
 
-            if (file.Length <= 0) throw new Exception("No content in the file");
+            if (file.Length <= 0) throw new FileException("No content in the file");
 
             var stream = file.OpenReadStream();
 

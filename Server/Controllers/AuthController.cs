@@ -21,10 +21,10 @@ public class AuthController(IAuthService authService) : ControllerBase
         return Ok(await authService.LoginAsync(request));
     }
 
-    [HttpPost("refresh")]
-    public async Task<IActionResult> RefreshToken(RefreshRequest request)
+    [HttpGet("refresh/{refreshToken}")]
+    public async Task<IActionResult> RefreshToken(string refreshToken)
     {
-        return Ok(await authService.RefreshJwtAsync(request));
+        return Ok(await authService.RefreshJwtAsync(refreshToken));
     }
 
     [HttpPost("sendToken")]

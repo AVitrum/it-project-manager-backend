@@ -1,9 +1,9 @@
 using DatabaseService.Data.Models;
+using DatabaseService.Repositories.Interfaces;
 using EmailService;
 using FileService;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
-using Server.Repositories.Interfaces;
 using Server.Services.Interfaces;
 using static UserHelper.UserHelper;
 using static UserHelper.PasswordHelper;
@@ -13,13 +13,13 @@ namespace Server.Services.Implementations;
 public class UserService(
     IEmailSender emailSender,
     IFileService fileService,
-    IUserRepository userRepository) 
+    IUserRepository userRepository)
     : IUserService
 {
     public async Task<UserInfoResponse> UserProfileAsync()
     {
         var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
-        
+
         var profile = new UserInfoResponse
         {
             Id = user.Id,
@@ -30,9 +30,7 @@ public class UserService(
         };
 
         if (picture != null)
-        {
             profile.ImageUrl = picture.PictureLink;
-        }
 
         return profile;
     }
@@ -42,10 +40,8 @@ public class UserService(
         var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
 
         if (file.Length > 5e+6)
-        {
             throw new FileToLargeException("The file size must be less than 5 MB!");
-        }
-        
+
         var imageFormats = new HashSet<string>
         {
             "image/jpeg",
@@ -55,15 +51,11 @@ public class UserService(
         };
 
         if (!imageFormats.Contains(file.ContentType))
-        {
             throw new FileInvalidFormatException("Unsupported picture format!");
-        }
-        
+
         if (picture != null)
-        {
             await fileService.DeleteAsync(picture.PictureName);
-        }
-        
+
         var imageUrl = await fileService.UploadAsync(user.Username, file);
 
         var newPicture = new ProfilePhoto
@@ -94,12 +86,12 @@ public class UserService(
         if (user.ResetTokenExpires < DateTime.UtcNow) throw new ArgumentException("The token is not valid!");
 
         GeneratePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
-        
+
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;
         user.PasswordResetToken = null;
         user.ResetTokenExpires = null;
-        
+
         await userRepository.UpdateAsync(user);
     }
 
@@ -114,5 +106,4 @@ public class UserService(
         await userRepository.UpdateAsync(user);
         return "Updated";
     }
-    
 }

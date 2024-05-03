@@ -8,15 +8,10 @@ public enum PositionPermissions
     UpdateProject = 1 << 1,
     DeleteProject = 1 << 2,
     AddUser = 1 << 3,
-    DeleteUser = 1 << 4
-}
-
-public static class PositionPermissionsHelper
-{
-    public static void AddAllPermissions(ref PositionPermissions permissions)
-    {
-        permissions = Enum.GetValues(typeof(PositionPermissions)).Cast<PositionPermissions>()
-            .Where(perm => perm != PositionPermissions.None)
-            .Aggregate(permissions, (current, perm) => current | perm);
-    }
+    UpdateUser = 1 << 4,
+    DeleteUser = 1 << 5,
+    AddBudget = 1 << 6,
+    UpdateBudget = 1 << 7,
+    CreatePosition = 1 << 8,
+    UpdatePosition = 1 << 9
 }

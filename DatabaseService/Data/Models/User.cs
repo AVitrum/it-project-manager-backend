@@ -20,9 +20,9 @@ public class User
     public DateTime? VerifiedAt { get; set; }
     [MaxLength(128)] public string? PasswordResetToken { get; set; }
     public DateTime? ResetTokenExpires { get; set; }
-    
-    
-    public IEnumerable<RefreshToken> RefreshTokens { get; } = new List<RefreshToken>();
+
+
     public ProfilePhoto ProfilePhoto { get; set; }
-    public ICollection<UserCompany> UserCompanies { get; init; }
+    public IEnumerable<RefreshToken> RefreshTokens { get; } = new List<RefreshToken>();
+    public IEnumerable<UserCompany> UserCompanies { get; } = new List<UserCompany>();
 }

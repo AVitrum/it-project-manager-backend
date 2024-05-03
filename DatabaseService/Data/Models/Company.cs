@@ -8,7 +8,7 @@ public class Company
     public required string Name { get; set; }
     public required DateTime  RegistrationDate { get; set; }
     public string? Description { get; set; }
-    public double? Budget { get; set; }
+    public double Budget { get; set; } = 0;
 
     public ICollection<PositionInCompany>? PositionInCompanies { get; set; }
     public ICollection<UserCompany>? UserCompanies { get; set; }

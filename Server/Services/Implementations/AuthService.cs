@@ -1,11 +1,11 @@
 using System.Security.Authentication;
-using DatabaseService;
 using DatabaseService.Data.Models;
+using DatabaseService.Exceptions;
+using DatabaseService.Repositories.Interfaces;
 using EmailService;
 using OAuthService;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
-using Server.Repositories.Interfaces;
 using Server.Services.Interfaces;
 using UserHelper;
 using static UserHelper.UserHelper;
@@ -150,9 +150,9 @@ public class AuthService(
         await userRepository.UpdateAsync(user);
     }
 
-    public async Task<LoginResponse> RefreshJwtAsync(RefreshRequest request)
+    public async Task<LoginResponse> RefreshJwtAsync(string refreshToken)
     {
-        var (user, token) = await userRepository.GetByRefreshToken(request.RefreshToken);
+        var (user, token) = await userRepository.GetByRefreshToken(refreshToken);
 
         if (token.Expires < DateTime.UtcNow)
         {
@@ -161,8 +161,8 @@ public class AuthService(
             throw new AuthenticationException("RefreshToken Expired");
         }
 
-        GenerateRefreshToken(out var refreshToken);
-        await SetRefreshToken(user, refreshToken);
+        GenerateRefreshToken(out var newRefreshToken);
+        await SetRefreshToken(user, newRefreshToken);
 
         return new LoginResponse
         {
@@ -171,7 +171,7 @@ public class AuthService(
                 Username = user.Username,
                 Email = user.Email
             }),
-            RefreshToken = refreshToken.Token
+            RefreshToken = newRefreshToken.Token
         };
     }
 
