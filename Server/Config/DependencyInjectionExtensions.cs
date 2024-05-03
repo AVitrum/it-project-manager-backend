@@ -5,7 +5,6 @@ using EmailService;
 using FileService;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Server.Repositories.Interfaces;
 using Server.Services.Implementations;
 using Server.Services.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
@@ -25,6 +24,8 @@ public static class DependencyInjectionExtensions
         serviceCollection.AddScoped<IEmailSender, EmailSender>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
         serviceCollection.AddScoped<IFileService, FileService.FileService>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IEmployeeService, EmployeeService>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
 
         return serviceCollection;

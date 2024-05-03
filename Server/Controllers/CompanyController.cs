@@ -1,6 +1,7 @@
+using DatabaseService.Data.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using Server.Payload.DTOs;
 using Server.Payload.Requests;
 using Server.Services.Interfaces;
 
@@ -9,13 +10,16 @@ namespace Server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize]
-public class CompanyController(ICompanyService companyService) : ControllerBase
+public class CompanyController(ICompanyService companyService, IEmployeeService employeeService) : ControllerBase
 {
     [HttpPost("create")]
     public async Task<IActionResult> Create(CompanyCreationRequest request)
     {
         await companyService.CreateAsync(request);
-        return Ok("Created");
+        return Ok(new
+        {
+            message = "Created"
+        });
     }
 
     [HttpGet("{companyId:long}")]
@@ -34,23 +38,59 @@ public class CompanyController(ICompanyService companyService) : ControllerBase
         });
     }
 
-    [HttpPost("{companyId:long}/addUser")]
-    public async Task<IActionResult> AddUser(long companyId, AddUserToCompanyRequest request)
+    [HttpPost("{companyId:long}/addEmployee")]
+    public async Task<IActionResult> AddUser(long companyId, EmployeeDto request)
     {
-        await companyService.AddUserAsync(companyId, request);
-        return Ok("Added");
+        await employeeService.AddEmployeeAsync(companyId, request);
+        return Ok(new 
+        {
+            message = "Added"
+        });
+    }
+
+    [HttpPut("{companyId:long}/updateEmployee")]
+    public async Task<IActionResult> UpdateUser(long companyId, EmployeeDto request)
+    {
+        await employeeService.UpdateEmployeeAsync(companyId, request);
+        return Ok(new
+        {
+            message = "Updated"
+        });
+    }
+
+    [HttpDelete("{companyId:long}/removeEmployee")]
+    public async Task<IActionResult> RemoveUser(long companyId, EmployeeDto request)
+    {
+        await employeeService.RemoveEmployeeAsync(companyId, request);
+        return Ok(new
+        {
+            message = "Removed"
+        });
     }
 
     [HttpPost("{companyId:long}/addPosition")]
-    public async Task<IActionResult> AddPosition(long companyId, CreatePositionRequest request)
+    public async Task<IActionResult> AddPosition(long companyId, PositionInCompanyDto inCompanyDto)
     {
-        await companyService.CreatePositionAsync(companyId, request);
-        return Ok("Created");
+        await companyService.CreatePositionAsync(companyId, inCompanyDto);
+        return Ok(new
+        {
+            message = "Created"
+        });
+    }
+    
+    [HttpPut("{companyId:long}/updatePosition")]
+    public async Task<IActionResult> UpdatePosition(long companyId, PositionInCompanyDto inCompanyDto)
+    {
+        await companyService.UpdatePositionAsync(companyId, inCompanyDto);
+        return Ok(new
+        {
+            message = "Updated"
+        });
     }
 
     [HttpGet("{companyId:long}/{positionId:long}")]
     public async Task<IActionResult> GetPositionById(long companyId, long positionId)
     {
-        return Ok(await companyService.GetPositionAsync(companyId, positionId));
+        return Ok(await employeeService.GetEmployeePositionAsync(companyId, positionId));
     }
 }

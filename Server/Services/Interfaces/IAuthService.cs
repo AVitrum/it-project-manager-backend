@@ -12,6 +12,6 @@ public interface IAuthService
     Task<LoginResponse> GoogleOAuthLoginAsync(string email);
     Task SendVerificationToken(string email);
     Task VerifyAccountAsync(string token);
-    Task<LoginResponse> RefreshJwtAsync(RefreshRequest request);
+    Task<LoginResponse> RefreshJwtAsync(string refreshToken);
     Task<bool> ExistsByEmail(string email);
 }

@@ -8,6 +8,7 @@ public class UserCompanyResponse
     public required string Username { get; set; }
     public required string Email { get; set; }
     public required string Position { get; set; }
+    public required double Salary { get; set; }
 
     public static UserCompanyResponse ConvertToResponse(UserCompany userCompany)
     {
@@ -17,6 +18,7 @@ public class UserCompanyResponse
             Username = userCompany.User.Username,
             Email = userCompany.User.Email,
             Position = userCompany.PositionInCompany!.Name,
+            Salary = userCompany.Salary
         };
     }
 }

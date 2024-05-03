@@ -32,9 +32,9 @@ public static class UserHelper
             expires: DateTime.Now.AddDays(1),
             signingCredentials: credentials
         );
-
+        
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-        return jwt;
+        return jwt; 
     }
 
     public static void GenerateRefreshToken(out RefreshTokenDto refreshTokenDto)

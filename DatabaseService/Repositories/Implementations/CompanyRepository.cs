@@ -36,9 +36,27 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
         return await GetPositionByNameAndCompanyIdAsync("CEO", positionInCompany.CompanyId);
     }
 
+    public async Task UpdatePositionAsync(PositionInCompany position)
+    {
+        dbContext.PositionInCompanies.Update(position);
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task SaveUserInCompanyAsync(UserCompany userCompany)
     {
         await dbContext.UserCompanies.AddAsync(userCompany);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task UpdateEmployeeAsync(UserCompany userCompany)
+    {
+        dbContext.UserCompanies.Update(userCompany);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task RemoveUserFromCompanyAsync(UserCompany userCompany)
+    {
+        dbContext.UserCompanies.Remove(userCompany);
         await dbContext.SaveChangesAsync();
     }
 
@@ -50,7 +68,7 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
             select new
             {
                 Company = company,
-                UserCompanies = company.UserCompanies.Select(uc => new
+                UserCompanies = company.UserCompanies!.Select(uc => new
                 {
                     UserCompany = uc, uc.User, uc.PositionInCompany
                 })
@@ -73,7 +91,7 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
                ?? throw new EntityNotFoundException(nameof(Company));
     }
 
-    public async Task<UserCompany> GetUserCompanyByUserAndCompanyAsync(User user, Company company)
+    public async Task<UserCompany> GetEmployeeByUserAndCompanyAsync(User user, Company company)
     {
         var userCompany = await dbContext.UserCompanies
             .FirstOrDefaultAsync(e => e.UserId == user.Id && e.CompanyId == company.Id)
