@@ -22,10 +22,10 @@ public class EmployeeService(
         var employer = await companyRepository.GetEmployeeByUserAndCompanyAsync(currentUser, company);
 
         if (!employer.PositionInCompany!.HasPermissions(PositionPermissions.AddUser))
-            throw new Exception("You don't have this permission");
+            throw new PermissionException("You don't have this permission");
 
         if (await companyRepository.ExistsByUserAndCompanyAsync(userToAdd, company))
-            throw new ArgumentException("User already in this company");
+            throw new CompanyException("User already in this company");
 
         var position = await companyRepository.GetPositionByNameAndCompanyIdAsync(employeeDto.Position!, companyId);
 
