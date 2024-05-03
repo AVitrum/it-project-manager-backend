@@ -13,7 +13,7 @@ namespace Server.Controllers;
 public class CompanyController(ICompanyService companyService, IEmployeeService employeeService) : ControllerBase
 {
     [HttpPost("create")]
-    public async Task<IActionResult> Create(CompanyCreationRequest request)
+    public async Task<IActionResult> Create(CompanyDto request)
     {
         await companyService.CreateAsync(request);
         return Ok(new
@@ -22,20 +22,20 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
         });
     }
 
-    [HttpGet("{companyId:long}")]
-    public async Task<IActionResult> GetById(long companyId)
+    [HttpPut("{companyId:long}/updateCompany")]
+    public async Task<IActionResult> UpdateCompany(long companyId, CompanyDto request)
     {
-        return Ok(await companyService.GetAsync(companyId));
-    }
-    
-    [HttpPut("{companyId:long}/updateBudget")]
-    public async Task<IActionResult> UpdateBudget(long companyId, BudgetRequest request)
-    {
-        await companyService.UpdateBudget(request.Budget, companyId);
+        await companyService.UpdateCompany(companyId, request);
         return Ok(new
         {
             message = "Performed"
         });
+    }
+
+    [HttpGet("{companyId:long}")]
+    public async Task<IActionResult> GetById(long companyId)
+    {
+        return Ok(await companyService.GetAsync(companyId));
     }
 
     [HttpPost("{companyId:long}/addEmployee")]

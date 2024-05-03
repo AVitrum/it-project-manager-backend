@@ -14,11 +14,11 @@ public class CompanyService(
     IUserRepository userRepository)
     : ICompanyService
 {
-    public async Task CreateAsync(CompanyCreationRequest request)
+    public async Task CreateAsync(CompanyDto companyDto)
     {
         var newCompany = new Company
         {
-            Name = request.Name,
+            Name = companyDto.Name!,
             RegistrationDate = DateTime.UtcNow
         };
         var company = await companyRepository.CreateAsync(newCompany);
@@ -43,7 +43,43 @@ public class CompanyService(
 
         await companyRepository.SaveUserInCompanyAsync(newUserCompany);
     }
- 
+
+    public async Task UpdateCompany(long companyId, CompanyDto companyDto)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+        
+        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateProject))
+        {
+            throw new PermissionException("You do not have permission to perform this action");
+        }
+
+        if (companyDto.Name != null)
+        {
+            company.Name = companyDto.Name;
+        }
+        
+        if (companyDto.Description != null)
+        {
+            company.Description = companyDto.Description;
+        }
+
+        if (companyDto.Budget != null)
+        {
+            if ((!performer.PositionInCompany!.HasPermissions(PositionPermissions.AddBudget) || company.Budget != 0) 
+                && (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateBudget) || !(company.Budget > 0)))
+            {
+                throw new PermissionException("You do not have permission to perform this action");
+            }
+            
+            company.Budget = (double)companyDto.Budget;
+        }
+        
+        await companyRepository.UpdateAsync(company);
+    }
+
     public async Task<CompanyResponse> GetAsync(long id)
     {
         var company = await companyRepository.GetByIdAsync(id);
@@ -97,22 +133,5 @@ public class CompanyService(
         
         position.SetPermissions(inCompanyDto);
         await companyRepository.UpdatePositionAsync(position);
-    }
-
-    public async Task UpdateBudget(double budget, long companyId)
-    {
-        var company = await companyRepository.GetByIdAsync(companyId);
-
-        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
-            await userRepository.GetByJwtAsync(), company);
-
-        if ((!performer.PositionInCompany!.HasPermissions(PositionPermissions.AddBudget) || company.Budget != 0) 
-            && (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateBudget) || !(company.Budget > 0)))
-        {
-            throw new PermissionException("You do not have permission to perform this action");
-        }
-        
-        company.Budget = budget;
-        await companyRepository.UpdateAsync(company);
     }
 }

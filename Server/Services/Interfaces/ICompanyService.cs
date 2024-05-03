@@ -7,9 +7,9 @@ namespace Server.Services.Interfaces;
 
 public interface ICompanyService
 {
-    Task CreateAsync(CompanyCreationRequest request);
+    Task CreateAsync(CompanyDto companyDto);
+    Task UpdateCompany(long companyId, CompanyDto companyDto);
     Task<CompanyResponse> GetAsync(long id);
     Task CreatePositionAsync(long companyId, PositionInCompanyDto positionInCompanyDto);
     Task UpdatePositionAsync(long companyId, PositionInCompanyDto inCompanyDto);
-    Task UpdateBudget(double budget, long companyId);
 }
