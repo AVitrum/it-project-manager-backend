@@ -7,12 +7,12 @@ public class User
     [Key] public long Id { get; init; }
 
     [MaxLength(50)]
-    public required string Username { get; init; }
+    public required string Username { get; set; }
 
     [MaxLength(64)]
     [EmailAddress(ErrorMessage = "Invalid Email Address")]
     public required string Email { get; init; }
-    [MaxLength(20)] public string? PhoneNumber { get; init; }
+    [MaxLength(20)] public string? PhoneNumber { get; set; }
     public required DateTime RegistrationDate { get; init; }
     public required byte[] PasswordHash { get; set; } = new byte[64];
     public required byte[] PasswordSalt { get; set; } = new byte[128];

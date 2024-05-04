@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Payload.Requests;
 using Server.Services.Interfaces;
+using UserHelper;
 using ResetPasswordRequest = Server.Payload.Requests.ResetPasswordRequest;
 
 namespace Server.Controllers;
@@ -17,10 +18,14 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(await userService.UserProfileAsync());
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateInfo(UserUpdateRequest request)
+    [HttpPut("updateInfo")]
+    public async Task<IActionResult> UpdateInfo(UserDto request)
     {
-        throw new NotImplementedException();
+        await userService.UpdateUser(request);
+        return Ok(new
+        {
+            message = "Updated"
+        });
     }
 
     [HttpPut("profileImage")]

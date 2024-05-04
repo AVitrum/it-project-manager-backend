@@ -5,6 +5,7 @@ using FileService;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 using Server.Services.Interfaces;
+using UserHelper;
 using static UserHelper.UserHelper;
 using static UserHelper.PasswordHelper;
 
@@ -16,6 +17,23 @@ public class UserService(
     IUserRepository userRepository)
     : IUserService
 {
+    public async Task UpdateUser(UserDto userDto)
+    {
+        var currentUser = await userRepository.GetByJwtAsync();
+
+        if (userDto.Phone != null)
+        {
+            currentUser.PhoneNumber = userDto.Phone;
+        }
+
+        if (!string.IsNullOrEmpty(userDto.Username))
+        {
+            currentUser.Username = userDto.Username;
+        }
+
+        await userRepository.UpdateAsync(currentUser);
+    }
+
     public async Task<UserInfoResponse> UserProfileAsync()
     {
         var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
@@ -104,6 +122,12 @@ public class UserService(
         user.PasswordHash = passwordHash;
         user.PasswordSalt = passwordSalt;
         await userRepository.UpdateAsync(user);
+
+        await emailSender.SendEmailAsync(
+            user.Email,
+            "Password",
+            "Your password has been changed");
+        
         return "Updated";
     }
 }
