@@ -24,9 +24,9 @@ public class EmailSender : IEmailSender
             Subject = subject,
             Body = "<html>" +
                     "<body>" +
-                        $"{subject}:" +
-                        $"<h2>{message}</h2>" +
-                        "<p>If you did not send this request," +
+                        $"<h1>{subject}:</h1>" +
+                        $"<h3>{message}</h3>" +
+                        "<p>If you did not perform this action," +
                         " then contact our technical support," +
                         " you may have been hacked!</p>" +
                     "</body>" +
