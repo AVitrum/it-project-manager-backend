@@ -42,61 +42,57 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task SaveUserInCompanyAsync(UserCompany userCompany)
+    public async Task SaveUserInCompanyAsync(Employee employee)
     {
-        await dbContext.UserCompanies.AddAsync(userCompany);
+        await dbContext.Employees.AddAsync(employee);
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateEmployeeAsync(UserCompany userCompany)
+    public async Task UpdateEmployeeAsync(Employee employee)
     {
-        dbContext.UserCompanies.Update(userCompany);
+        dbContext.Employees.Update(employee);
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task RemoveUserFromCompanyAsync(UserCompany userCompany)
+    public async Task RemoveUserFromCompanyAsync(Employee employee)
     {
-        dbContext.UserCompanies.Remove(userCompany);
+        dbContext.Employees.Remove(employee);
         await dbContext.SaveChangesAsync();
     }
 
     public async Task<Company> GetByIdAsync(long id)
     {
-        var query =
-            from company in dbContext.Companies
-            where company.Id == id
-            select new
-            {
-                Company = company,
-                UserCompanies = company.UserCompanies!.Select(uc => new
-                {
-                    UserCompany = uc, uc.User, uc.PositionInCompany
-                })
-            };
-        var result = await query.FirstOrDefaultAsync() 
-                     ?? throw new EntityNotFoundException(nameof(Company));
-
-        var companyEntity = result.Company;
-        companyEntity.UserCompanies = result.UserCompanies
-            .Select(uc => uc.UserCompany).ToList();
-        return companyEntity;
+        return await dbContext.Companies
+            .Include(e => e.Users)
+            .FirstOrDefaultAsync(e => e.Id == id) ?? throw new EntityNotFoundException(nameof(Company));
     }
 
     public async Task<Company> GetByNameAsync(string name)
     {
         return await dbContext.Companies
-                   .Include(e => e.UserCompanies)!
-                   .ThenInclude(e => e.User)
+                   .Include(e => e.Users)
                    .FirstOrDefaultAsync(e => e.Name == name)
                ?? throw new EntityNotFoundException(nameof(Company));
     }
 
-    public async Task<UserCompany> GetEmployeeByUserAndCompanyAsync(User user, Company company)
+    public async Task<Employee> GetEmployeeByUserAndCompanyAsync(User user, Company company)
     {
-        var userCompany = await dbContext.UserCompanies
+        var employee = await dbContext.Employees
+                .Include(e => e.PositionInCompany)
             .FirstOrDefaultAsync(e => e.UserId == user.Id && e.CompanyId == company.Id)
             ?? throw new EntityNotFoundException("Employee");
-        return userCompany;
+        return employee;
+    }
+
+    public async Task<List<Employee>> GetAllEmployeesByCompany(Company company)
+    {
+        var employees = await dbContext.Employees
+            .Include(e => e.User)
+            .Include(e => e.PositionInCompany)
+            .Where(e => e.CompanyId == company.Id)
+            .ToListAsync();
+
+        return employees;
     }
 
     public async Task<PositionInCompany> GetPositionByIdAndCompanyIdAsync(long positionId, long companyId)
@@ -117,7 +113,7 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
 
     public async Task<bool> ExistsByUserAndCompanyAsync(User userToAdd, Company company)
     {
-        return await dbContext.UserCompanies
+        return await dbContext.Employees
             .AnyAsync(e => e.UserId == userToAdd.Id && e.CompanyId == company.Id);
     }
 

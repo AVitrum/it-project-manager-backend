@@ -34,14 +34,15 @@ public class CompanyService(
         newPositionInCompany.AddAllPermissions();
         var positionInCompany = await companyRepository.CreatePositionAsync(newPositionInCompany);
 
-        var newUserCompany = new UserCompany
+        var newEmployee = new Employee
         {
             UserId = user.Id,
             CompanyId = newCompany.Id,
             PositionInCompanyId = positionInCompany.Id,
+            PositionInCompany = newPositionInCompany
         };
 
-        await companyRepository.SaveUserInCompanyAsync(newUserCompany);
+        await companyRepository.SaveUserInCompanyAsync(newEmployee);
     }
 
     public async Task UpdateCompany(long companyId, CompanyDto companyDto)
@@ -51,9 +52,9 @@ public class CompanyService(
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
             await userRepository.GetByJwtAsync(), company);
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateProject))
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateProject))
         {
-            throw new PermissionException("You do not have permission to perform this action");
+            throw new PermissionException();
         }
 
         if (companyDto.Name != null)
@@ -68,10 +69,10 @@ public class CompanyService(
 
         if (companyDto.Budget != null)
         {
-            if ((!performer.PositionInCompany!.HasPermissions(PositionPermissions.AddBudget) || company.Budget != 0) 
-                && (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateBudget) || !(company.Budget > 0)))
+            if ((!performer.PositionInCompany.HasPermissions(PositionPermissions.AddBudget) || company.Budget != 0) 
+                && (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateBudget) || !(company.Budget > 0)))
             {
-                throw new PermissionException("You do not have permission to perform this action");
+                throw new PermissionException();
             }
             
             company.Budget = (double)companyDto.Budget;
@@ -84,12 +85,13 @@ public class CompanyService(
     {
         var company = await companyRepository.GetByIdAsync(id);
 
+        var employees = await companyRepository.GetAllEmployeesByCompany(company);
+        
         return new CompanyResponse
         {
             Id = company.Id,
             Name = company.Name,
-            Users = company.UserCompanies!
-                .Select(UserCompanyResponse.ConvertToResponse).ToList()
+            Employees = employees.Select(EmployeeResponse.ConvertToResponse).ToList()
         };
     }
 
@@ -101,8 +103,8 @@ public class CompanyService(
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
             await userRepository.GetByJwtAsync(), await companyRepository.GetByIdAsync(companyId));
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.CreatePosition))
-            throw new PermissionException("You do not have permission to perform this action");
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.CreatePosition))
+            throw new PermissionException();
         
         var position = new PositionInCompany
         {
@@ -124,11 +126,11 @@ public class CompanyService(
 
         var position = await companyRepository.GetPositionByNameAndCompanyIdAsync(inCompanyDto.Name, companyId);
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdatePosition) ||
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdatePosition) ||
             (performer.PositionInCompany.Name == position.Name && position.Name != "CEO") ||
             (performer.PositionInCompany.Priority >= position.Priority && position.Name != "CEO"))
         {
-            throw new PermissionException("You do not have permission to perform this action");
+            throw new PermissionException();
         }
         
         position.SetPermissions(inCompanyDto);

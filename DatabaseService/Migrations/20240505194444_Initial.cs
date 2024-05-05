@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatabaseService.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,7 +21,7 @@ namespace DatabaseService.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     RegistrationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Budget = table.Column<double>(type: "double precision", nullable: true)
+                    Budget = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,7 +57,8 @@ namespace DatabaseService.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CompanyId = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
+                    Priority = table.Column<long>(type: "bigint", nullable: false),
                     Permissions = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -116,9 +117,11 @@ namespace DatabaseService.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserCompanies",
+                name: "Employees",
                 columns: table => new
                 {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     CompanyId = table.Column<long>(type: "bigint", nullable: false),
                     PositionInCompanyId = table.Column<long>(type: "bigint", nullable: false),
@@ -126,23 +129,79 @@ namespace DatabaseService.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserCompanies", x => new { x.UserId, x.CompanyId });
+                    table.PrimaryKey("PK_Employees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserCompanies_Companies_CompanyId",
+                        name: "FK_Employees_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserCompanies_PositionInCompanies_PositionInCompanyId",
+                        name: "FK_Employees_PositionInCompanies_PositionInCompanyId",
                         column: x => x.PositionInCompanyId,
                         principalTable: "PositionInCompanies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserCompanies_Users_UserId",
+                        name: "FK_Employees_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatorId = table.Column<long>(type: "bigint", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    Name = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    Description = table.Column<string>(type: "character varying(1200)", maxLength: 1200, nullable: false),
+                    Budget = table.Column<double>(type: "double precision", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Projects_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Projects_Employees_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectPerformers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EmployeeId = table.Column<long>(type: "bigint", nullable: false),
+                    ProjectId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectPerformers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectPerformers_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectPerformers_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -152,6 +211,21 @@ namespace DatabaseService.Migrations
                 table: "Companies",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_CompanyId",
+                table: "Employees",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_PositionInCompanyId",
+                table: "Employees",
+                column: "PositionInCompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_UserId",
+                table: "Employees",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PositionInCompanies_CompanyId",
@@ -165,19 +239,29 @@ namespace DatabaseService.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefreshTokens_UserId",
-                table: "RefreshTokens",
-                column: "UserId");
+                name: "IX_ProjectPerformers_EmployeeId",
+                table: "ProjectPerformers",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserCompanies_CompanyId",
-                table: "UserCompanies",
+                name: "IX_ProjectPerformers_ProjectId",
+                table: "ProjectPerformers",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_CompanyId",
+                table: "Projects",
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserCompanies_PositionInCompanyId",
-                table: "UserCompanies",
-                column: "PositionInCompanyId");
+                name: "IX_Projects_CreatorId",
+                table: "Projects",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -199,10 +283,16 @@ namespace DatabaseService.Migrations
                 name: "ProfilePhotos");
 
             migrationBuilder.DropTable(
+                name: "ProjectPerformers");
+
+            migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "UserCompanies");
+                name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
 
             migrationBuilder.DropTable(
                 name: "PositionInCompanies");

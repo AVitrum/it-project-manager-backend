@@ -14,4 +14,7 @@ public class PositionInCompanyDto
     public bool UpdateBudget { get; set; }
     public bool CreatePosition { get; set; }
     public bool UpdatePosition { get; set; }
+    public bool CreateTask { get; set; }
+    public bool UpdateTask { get; set; }
+    public bool DeleteTask { get; set; }
 }

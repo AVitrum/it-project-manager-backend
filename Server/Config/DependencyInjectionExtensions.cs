@@ -1,4 +1,5 @@
 using System.Text;
+using DatabaseService;
 using DatabaseService.Repositories.Implementations;
 using DatabaseService.Repositories.Interfaces;
 using EmailService;
@@ -27,14 +28,20 @@ public static class DependencyInjectionExtensions
             .AddExceptionHandler<GlobalExceptionHandler>();
         serviceCollection.AddScoped<IEmployeeService, EmployeeService>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IProjectService, ProjectService>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
 
         return serviceCollection;
     }
     
     public static IServiceCollection AddFeatureAddCustomRepositories(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IUserRepository, UserRepository>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
-        serviceCollection.AddScoped<ICompanyRepository, CompanyRepository>().AddProblemDetails().AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IUserRepository, UserRepository>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<ICompanyRepository, CompanyRepository>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IProjectRepository, ProjectRepository>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
 
         return serviceCollection;
     }

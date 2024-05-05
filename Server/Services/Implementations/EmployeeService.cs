@@ -1,10 +1,10 @@
+using DatabaseService.Data.DTOs;
 using DatabaseService.Data.Enums;
 using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
 using Server.Payload.DTOs;
 using EmailService;
-using Server.Payload.Responses;
 using Server.Services.Interfaces;
 
 namespace Server.Services.Implementations;
@@ -23,19 +23,20 @@ public class EmployeeService(
         var currentUser = await userRepository.GetByJwtAsync();
         var employer = await companyRepository.GetEmployeeByUserAndCompanyAsync(currentUser, company);
 
-        if (!employer.PositionInCompany!.HasPermissions(PositionPermissions.AddUser))
-            throw new PermissionException("You don't have this permission");
+        if (!employer.PositionInCompany.HasPermissions(PositionPermissions.AddUser))
+            throw new PermissionException();
 
         if (await companyRepository.ExistsByUserAndCompanyAsync(userToAdd, company))
             throw new CompanyException("User already in this company");
 
         var position = await companyRepository.GetPositionByNameAndCompanyIdAsync(employeeDto.Position!, companyId);
 
-        var userTeam = new UserCompany
+        var userTeam = new Employee
         {
             UserId = userToAdd.Id,
             CompanyId = company.Id,
             PositionInCompanyId = position.Id,
+            PositionInCompany = position,
         };
 
         await companyRepository.SaveUserInCompanyAsync(userTeam);
@@ -52,8 +53,8 @@ public class EmployeeService(
         var currentUser = await userRepository.GetByJwtAsync();
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(currentUser, company);
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateUser))
-            throw new PermissionException("You don't have this permission");
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateUser))
+            throw new PermissionException();
         
         var userToUpdate = await userRepository.GetByEmailAsync(employeeDto.Email!);
         var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(userToUpdate, company);
@@ -83,8 +84,8 @@ public class EmployeeService(
         var currentUser = await userRepository.GetByJwtAsync();
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(currentUser, company);
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.DeleteUser))
-            throw new PermissionException("You don't have this permission");
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.DeleteUser))
+            throw new PermissionException();
         
         var userToRemove = await userRepository.GetByEmailAsync(employeeDto.Email!);
         var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(userToRemove, company);
@@ -100,17 +101,18 @@ public class EmployeeService(
             "You have been removed from the company");
     }
 
-    public async Task<PositionPermissionsResponse> GetEmployeePositionAsync(long companyId, long positionId)
+    public async Task<PositionInCompanyDto> GetEmployeePositionAsync(long companyId, long positionId)
     {
         var position = await companyRepository.GetPositionByIdAndCompanyIdAsync(positionId, companyId);
         
-        var permissions = new PositionPermissionsResponse
+        var permissions = new PositionInCompanyDto
         {
-            PositionName = position.Name
+            Name = position.Name,
+            Priority = position.Priority
         };
 
-        var properties = typeof(PositionPermissionsResponse).GetProperties()
-            .Where(prop => prop.Name != "PositionName");
+        var properties = typeof(PositionInCompanyDto).GetProperties()
+            .Where(prop => prop.Name != "Name" && prop.Name != "Priority");
 
         foreach (var prop in properties)
         {

@@ -11,6 +11,6 @@ public class Company
     public double Budget { get; set; } = 0;
 
     public ICollection<PositionInCompany>? PositionInCompanies { get; set; }
-    public ICollection<UserCompany>? UserCompanies { get; set; }
+    public ICollection<User>? Users { get; set; }
 }
 

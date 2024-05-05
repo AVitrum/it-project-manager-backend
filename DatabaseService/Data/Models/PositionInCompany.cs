@@ -11,7 +11,7 @@ public class PositionInCompany
     public long Id { get; init; }
     public required long CompanyId { get; init; }
     public Company Company { get; init; } = null!;
-    public IEnumerable<UserCompany> UserCompanies { get; } = new List<UserCompany>();
+    public IEnumerable<Employee> Employees { get; } = new List<Employee>();
     
     [MaxLength(30)]
     public required string Name { get; init; }
@@ -19,7 +19,7 @@ public class PositionInCompany
     public required long Priority { get; set; }
 
     [Column(TypeName = "bigint")]
-    public PositionPermissions Permissions { get; private set; } = PositionPermissions.None;
+    public PositionPermissions Permissions { get; set; } = PositionPermissions.None;
 
     public void AddAllPermissions()
     {
@@ -45,7 +45,10 @@ public class PositionInCompany
             { dto => dto.AddBudget, PositionPermissions.AddBudget },
             { dto => dto.UpdateBudget, PositionPermissions.UpdateBudget },
             { dto => dto.CreatePosition, PositionPermissions.CreatePosition },
-            { dto => dto.UpdatePosition, PositionPermissions.UpdatePosition }
+            { dto => dto.UpdatePosition, PositionPermissions.UpdatePosition },
+            { dto => dto.CreateTask, PositionPermissions.CreateTask },
+            { dto => dto.UpdateTask, PositionPermissions.UpdateTask },
+            { dto => dto.DeleteTask, PositionPermissions.DeleteTask },
         };
 
         var newPermissions = actions

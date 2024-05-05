@@ -51,6 +51,37 @@ namespace DatabaseService.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("DatabaseService.Data.Models.Employee", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("CompanyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PositionInCompanyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("Salary")
+                        .HasColumnType("double precision");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("PositionInCompanyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Employees");
+                });
+
             modelBuilder.Entity("DatabaseService.Data.Models.PositionInCompany", b =>
                 {
                     b.Property<long>("Id")
@@ -105,6 +136,68 @@ namespace DatabaseService.Migrations
                         .IsUnique();
 
                     b.ToTable("ProfilePhotos");
+                });
+
+            modelBuilder.Entity("DatabaseService.Data.Models.Project", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<double>("Budget")
+                        .HasColumnType("double precision");
+
+                    b.Property<long>("CompanyId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("CreatorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1200)
+                        .HasColumnType("character varying(1200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("DatabaseService.Data.Models.ProjectPerformer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("EmployeeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProjectId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectPerformers");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.RefreshToken", b =>
@@ -197,27 +290,31 @@ namespace DatabaseService.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DatabaseService.Data.Models.UserCompany", b =>
+            modelBuilder.Entity("DatabaseService.Data.Models.Employee", b =>
                 {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
+                    b.HasOne("DatabaseService.Data.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<long>("CompanyId")
-                        .HasColumnType("bigint");
+                    b.HasOne("DatabaseService.Data.Models.PositionInCompany", "PositionInCompany")
+                        .WithMany("Employees")
+                        .HasForeignKey("PositionInCompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<long>("PositionInCompanyId")
-                        .HasColumnType("bigint");
+                    b.HasOne("DatabaseService.Data.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<double>("Salary")
-                        .HasColumnType("double precision");
+                    b.Navigation("Company");
 
-                    b.HasKey("UserId", "CompanyId");
+                    b.Navigation("PositionInCompany");
 
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("PositionInCompanyId");
-
-                    b.ToTable("UserCompanies");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.PositionInCompany", b =>
@@ -242,6 +339,44 @@ namespace DatabaseService.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DatabaseService.Data.Models.Project", b =>
+                {
+                    b.HasOne("DatabaseService.Data.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseService.Data.Models.Employee", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("DatabaseService.Data.Models.ProjectPerformer", b =>
+                {
+                    b.HasOne("DatabaseService.Data.Models.Employee", "Employee")
+                        .WithMany("ProjectPerformers")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseService.Data.Models.Project", "Project")
+                        .WithMany("ProjectPerformers")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("DatabaseService.Data.Models.RefreshToken", b =>
                 {
                     b.HasOne("DatabaseService.Data.Models.User", "User")
@@ -253,53 +388,31 @@ namespace DatabaseService.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DatabaseService.Data.Models.UserCompany", b =>
-                {
-                    b.HasOne("DatabaseService.Data.Models.Company", "Company")
-                        .WithMany("UserCompanies")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseService.Data.Models.PositionInCompany", "PositionInCompany")
-                        .WithMany("UserCompanies")
-                        .HasForeignKey("PositionInCompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DatabaseService.Data.Models.User", "User")
-                        .WithMany("UserCompanies")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("PositionInCompany");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("DatabaseService.Data.Models.Company", b =>
                 {
                     b.Navigation("PositionInCompanies");
+                });
 
-                    b.Navigation("UserCompanies");
+            modelBuilder.Entity("DatabaseService.Data.Models.Employee", b =>
+                {
+                    b.Navigation("ProjectPerformers");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.PositionInCompany", b =>
                 {
-                    b.Navigation("UserCompanies");
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("DatabaseService.Data.Models.Project", b =>
+                {
+                    b.Navigation("ProjectPerformers");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.User", b =>
                 {
-                    b.Navigation("ProfilePhoto")
-                        .IsRequired();
+                    b.Navigation("ProfilePhoto");
 
                     b.Navigation("RefreshTokens");
-
-                    b.Navigation("UserCompanies");
                 });
 #pragma warning restore 612, 618
         }

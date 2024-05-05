@@ -3,16 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseService;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) 
+public class AppDbContext(DbContextOptions<AppDbContext> options)
     : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<ProfilePhoto> ProfilePhotos => Set<ProfilePhoto>();
     public DbSet<Company> Companies => Set<Company>();
-    public DbSet<UserCompany> UserCompanies => Set<UserCompany>();
+    public DbSet<Project> Projects => Set<Project>();
+    public DbSet<Employee> Employees => Set<Employee>();
+    public DbSet<ProjectPerformer> ProjectPerformers => Set<ProjectPerformer>();
     public DbSet<PositionInCompany> PositionInCompanies => Set<PositionInCompany>();
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,7 +24,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         modelBuilder.Entity<User>()
             .HasIndex(e => e.Email)
             .IsUnique();
-        
+
         modelBuilder.Entity<Company>()
             .HasIndex(e => e.Name)
             .IsUnique();
@@ -33,32 +34,29 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .WithOne(e => e.User)
             .HasForeignKey(e => e.UserId)
             .IsRequired();
-        
+
         modelBuilder.Entity<User>()
             .HasOne(e => e.ProfilePhoto)
             .WithOne(e => e.User)
             .HasForeignKey<ProfilePhoto>(e => e.UserId)
             .IsRequired();
 
-        modelBuilder.Entity<UserCompany>()
-            .HasKey(e => new { e.UserId, e.CompanyId });
+        modelBuilder.Entity<Company>()
+            .HasMany(e => e.Users)
+            .WithMany(e => e.Companies)
+            .UsingEntity<Employee>();
 
-        modelBuilder.Entity<UserCompany>()
-            .HasOne(e => e.User)
-            .WithMany(e => e.UserCompanies)
-            .HasForeignKey(e => e.UserId);
+        modelBuilder.Entity<ProjectPerformer>()
+            .HasOne(e => e.Project)
+            .WithMany(e => e.ProjectPerformers)
+            .HasForeignKey(e => e.ProjectId);
 
-        modelBuilder.Entity<UserCompany>()
-            .HasOne(e => e.Company)
-            .WithMany(e => e.UserCompanies)
-            .HasForeignKey(e => e.CompanyId);
-
-        modelBuilder.Entity<PositionInCompany>()
-            .HasMany(e => e.UserCompanies)
-            .WithOne(e => e.PositionInCompany)
-            .HasForeignKey(e => e.PositionInCompanyId)
+        modelBuilder.Entity<Employee>()
+            .HasMany(e => e.ProjectPerformers)
+            .WithOne(e => e.Employee)
+            .HasForeignKey(e => e.EmployeeId)
             .IsRequired();
-        
+
         modelBuilder.Entity<Company>()
             .HasMany(e => e.PositionInCompanies)
             .WithOne(e => e.Company)

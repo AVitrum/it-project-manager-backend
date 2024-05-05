@@ -11,15 +11,15 @@ public interface ICompanyRepository
     Task<PositionInCompany> CreatePositionAsync(PositionInCompany positionInCompany);
     Task UpdatePositionAsync(PositionInCompany position);
     
-    Task SaveUserInCompanyAsync(UserCompany userCompany);
-    Task UpdateEmployeeAsync(UserCompany userCompany);
-    Task RemoveUserFromCompanyAsync(UserCompany userCompany);
+    Task SaveUserInCompanyAsync(Employee employee);
+    Task UpdateEmployeeAsync(Employee employee);
+    Task RemoveUserFromCompanyAsync(Employee employee);
 
     Task<Company> GetByIdAsync(long id);
     Task<Company> GetByNameAsync(string name);
 
-    Task<UserCompany> GetEmployeeByUserAndCompanyAsync(User user, Company company);
-
+    Task<Employee> GetEmployeeByUserAndCompanyAsync(User user, Company company);
+    Task<List<Employee>> GetAllEmployeesByCompany(Company company);
     Task<PositionInCompany> GetPositionByIdAndCompanyIdAsync(long positionId, long companyId);
     Task<PositionInCompany> GetPositionByNameAndCompanyIdAsync(string name, long companyId);
 

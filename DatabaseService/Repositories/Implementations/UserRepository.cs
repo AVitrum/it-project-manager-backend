@@ -4,10 +4,16 @@ using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace DatabaseService.Repositories.Implementations;
 
-public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserRepository
+public class UserRepository(
+    IHttpContextAccessor httpContextAccessor, 
+    IConfiguration configuration,
+    AppDbContext dbContext) 
+    : IUserRepository
 {
     public async Task CreateAsync(User user)
     {
@@ -74,16 +80,58 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
 
     public async Task<(User, RefreshToken)> GetByRefreshToken(string refreshToken)
     {
-        var query = 
-            from user in dbContext.Users 
-            join token in dbContext.RefreshTokens on user.Id equals token.UserId 
-            where token.Token == refreshToken 
-            select new { user, token };
+        await using var connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        await connection.OpenAsync();
 
-        var result = await query.FirstOrDefaultAsync() ?? throw new EntityNotFoundException(nameof(User));
-        return (result.user, result.token);
+        await using var command = new NpgsqlCommand(
+            """
+            
+                    SELECT u."Id", u."Email", u."PasswordHash", u."PasswordResetToken", u."PasswordSalt", u."PhoneNumber",
+                           u."RegistrationDate", u."ResetTokenExpires", u."Username", u."VerificationToken", u."VerifiedAt",
+                           r."Id", r."Created", r."Expired", r."Expires", r."Token", r."UserId"
+                    FROM "Users" AS u
+                    INNER JOIN "RefreshTokens" AS r ON u."Id" = r."UserId"
+                    WHERE r."Token" = @refreshToken
+                    LIMIT 1
+                    
+            """,
+            connection);
+
+        command.Parameters.AddWithValue("refreshToken", refreshToken);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        if (!await reader.ReadAsync())
+        {
+            throw new EntityNotFoundException(nameof(User));
+        }
+
+        var user = new User
+        {
+            Id = reader.GetInt64(0),
+            Email = reader.GetString(1),
+            PasswordHash = (reader.IsDBNull(2) ? null : reader.GetFieldValue<byte[]>(2))!,
+            PasswordResetToken = reader.IsDBNull(3) ? null : reader.GetString(3),
+            PasswordSalt = (reader.IsDBNull(4) ? null : reader.GetFieldValue<byte[]>(4))!,
+            PhoneNumber = reader.IsDBNull(5) ? null : reader.GetString(5),
+            RegistrationDate = reader.GetDateTime(6),
+            Username = reader.GetString(8),
+            VerificationToken = reader.IsDBNull(9) ? null : reader.GetString(9),
+            VerifiedAt = reader.IsDBNull(10) ? null : reader.GetDateTime(10)
+        };
+
+        var refreshTokenEntity = new RefreshToken
+        {
+            Id = reader.GetInt64(11),
+            Created = reader.GetDateTime(12),
+            Expired = reader.GetBoolean(13),
+            Expires = reader.GetDateTime(14),
+            Token = reader.GetString(15),
+            UserId = reader.GetInt64(16)
+        };
+
+        return (user, refreshTokenEntity);
     }
-
 
     public async Task<User> GetByIdAsync(long id)
     {
@@ -95,6 +143,7 @@ public class UserRepository(IHttpContextAccessor httpContextAccessor, AppDbConte
     public async Task<User> GetByEmailAsync(string email)
     {
         return await dbContext.Users
+                   .Include(u => u.ProfilePhoto)
                    .FirstOrDefaultAsync(u => u.Email.Equals(email))
                ?? throw new UserNotFoundException(email);
     }
