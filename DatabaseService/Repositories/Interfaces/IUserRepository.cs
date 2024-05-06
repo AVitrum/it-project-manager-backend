@@ -1,5 +1,4 @@
 using DatabaseService.Data.Models;
-
 namespace DatabaseService.Repositories.Interfaces;
 
 public interface IUserRepository

@@ -11,8 +11,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ProfilePhoto> ProfilePhotos => Set<ProfilePhoto>();
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<Project> Projects => Set<Project>();
+    public DbSet<Assignment> Assignments => Set<Assignment>();
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<ProjectPerformer> ProjectPerformers => Set<ProjectPerformer>();
+    public DbSet<AssignmentPerformer> AssignmentPerformers => Set<AssignmentPerformer>();
     public DbSet<PositionInCompany> PositionInCompanies => Set<PositionInCompany>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,11 +47,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasMany(e => e.Users)
             .WithMany(e => e.Companies)
             .UsingEntity<Employee>();
-
+        
         modelBuilder.Entity<ProjectPerformer>()
             .HasOne(e => e.Project)
             .WithMany(e => e.ProjectPerformers)
             .HasForeignKey(e => e.ProjectId);
+
+        modelBuilder.Entity<AssignmentPerformer>()
+            .HasOne(e => e.Assignment)
+            .WithMany(e => e.Performers)
+            .HasForeignKey(e => e.AssignmentId);
 
         modelBuilder.Entity<Employee>()
             .HasMany(e => e.ProjectPerformers)

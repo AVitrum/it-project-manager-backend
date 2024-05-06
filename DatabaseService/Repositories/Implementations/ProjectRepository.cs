@@ -12,7 +12,7 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
         await dbContext.Projects.AddAsync(project);
         await dbContext.SaveChangesAsync();
 
-        return project;
+        return await GetByNameAsync(project.Name);
     }
 
     public async Task UpdateAsync(Project project)
@@ -30,14 +30,26 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
 
     public async Task<Project> GetByIdAsync(long projectId)
     {
-        var project = await dbContext.Projects
+        return await dbContext.Projects
             .Include(e => e.Creator)
             .Include(e => e.ProjectPerformers)!
             .ThenInclude(e => e.Employee)
-            .ThenInclude(e => e!.User)
+            .ThenInclude(e => e.User)
             .Include(e => e.Company)
-            .FirstOrDefaultAsync(e => e.Id == projectId) ?? throw new EntityNotFoundException(nameof(Project));
-        return project;
+            .FirstOrDefaultAsync(e => e.Id == projectId) 
+               ?? throw new EntityNotFoundException(nameof(Project));
+    }
+
+    public async Task<Project> GetByNameAsync(string name)
+    {
+        return await dbContext.Projects
+            .Include(e => e.Creator)
+            .Include(e => e.ProjectPerformers)!
+            .ThenInclude(e => e.Employee)
+            .ThenInclude(e => e.User)
+            .Include(e => e.Company)
+            .FirstOrDefaultAsync(e => e.Name == name) 
+               ?? throw new EntityNotFoundException(nameof(Project));
     }
 
     public async Task AddPerformer(ProjectPerformer performer)
@@ -46,11 +58,20 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
         await dbContext.SaveChangesAsync();
     }
 
+    public async Task<ProjectPerformer> GetPerformerByEmployeeAndProjectAsync(Employee employee, Project project)
+    {
+        return await dbContext.ProjectPerformers
+            .Include(e => e.Employee)
+            .ThenInclude(e => e.PositionInCompany)
+            .FirstOrDefaultAsync(e => e.EmployeeId == employee.Id && e.ProjectId == project.Id)
+            ?? throw new EntityNotFoundException(nameof(ProjectPerformer));
+    }
+    
     public async Task<bool> PerformerExistsByEmail(string email)
     {
         return await dbContext.ProjectPerformers
             .Include(e => e.Employee)
-            .ThenInclude(e => e!.User)
-            .AnyAsync(e => e.Employee!.User!.Email == email);
+            .ThenInclude(e => e.User)
+            .AnyAsync(e => e.Employee.User!.Email == email);
     }
 }
