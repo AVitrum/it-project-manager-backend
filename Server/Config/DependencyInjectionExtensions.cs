@@ -30,7 +30,9 @@ public static class DependencyInjectionExtensions
             .AddExceptionHandler<GlobalExceptionHandler>();
         serviceCollection.AddScoped<IProjectService, ProjectService>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
-
+        serviceCollection.AddScoped<IAssignmentService, AssignmentService>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        
         return serviceCollection;
     }
     
@@ -41,6 +43,8 @@ public static class DependencyInjectionExtensions
         serviceCollection.AddScoped<ICompanyRepository, CompanyRepository>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
         serviceCollection.AddScoped<IProjectRepository, ProjectRepository>().AddProblemDetails()
+            .AddExceptionHandler<GlobalExceptionHandler>();
+        serviceCollection.AddScoped<IAssignmentRepository, AssignmentRepository>().AddProblemDetails()
             .AddExceptionHandler<GlobalExceptionHandler>();
 
         return serviceCollection;

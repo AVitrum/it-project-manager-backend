@@ -22,6 +22,65 @@ namespace DatabaseService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DatabaseService.Data.Models.Assignment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<double?>("Budget")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1200)
+                        .HasColumnType("character varying(1200)");
+
+                    b.Property<long>("ProjectId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Assignments");
+                });
+
+            modelBuilder.Entity("DatabaseService.Data.Models.AssignmentPerformer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AssignmentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProjectPerformerId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignmentId");
+
+                    b.HasIndex("ProjectPerformerId");
+
+                    b.ToTable("AssignmentPerformers");
+                });
+
             modelBuilder.Entity("DatabaseService.Data.Models.Company", b =>
                 {
                     b.Property<long>("Id")
@@ -34,11 +93,14 @@ namespace DatabaseService.Migrations
                         .HasColumnType("double precision");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(1200)
+                        .HasColumnType("character varying(1200)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("timestamp with time zone");
@@ -290,6 +352,36 @@ namespace DatabaseService.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("DatabaseService.Data.Models.Assignment", b =>
+                {
+                    b.HasOne("DatabaseService.Data.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("DatabaseService.Data.Models.AssignmentPerformer", b =>
+                {
+                    b.HasOne("DatabaseService.Data.Models.Assignment", "Assignment")
+                        .WithMany("Performers")
+                        .HasForeignKey("AssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseService.Data.Models.ProjectPerformer", "ProjectPerformer")
+                        .WithMany()
+                        .HasForeignKey("ProjectPerformerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignment");
+
+                    b.Navigation("ProjectPerformer");
+                });
+
             modelBuilder.Entity("DatabaseService.Data.Models.Employee", b =>
                 {
                     b.HasOne("DatabaseService.Data.Models.Company", "Company")
@@ -386,6 +478,11 @@ namespace DatabaseService.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DatabaseService.Data.Models.Assignment", b =>
+                {
+                    b.Navigation("Performers");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.Company", b =>

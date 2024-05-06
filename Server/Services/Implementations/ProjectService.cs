@@ -25,23 +25,38 @@ public class ProjectService(
             throw new PermissionException();
         }
 
+        if (company.Budget - projectDto.Budget < 0)
+        {
+            throw new ProjectException("You don't have enough money");
+        }
+
         var newProject = new Project
         {
             Budget = projectDto.Budget,
-            CreatorId = performer.UserId,
+            CreatorId = performer.Id,
             CompanyId = company.Id,
             Name = projectDto.Name!,
-            CreationDate = DateTime.UtcNow
+            CreationDate = DateTime.UtcNow,
+            Creator = performer,
+            Company = company
         };
+        var project = await projectRepository.CreateAsync(newProject);
 
-        await projectRepository.CreateAsync(newProject);
+        var projectPerformer = new ProjectPerformer
+        {
+            EmployeeId = performer.Id,
+            Employee = performer,
+            ProjectId = project.Id,
+            Project = project
+        };
+        await projectRepository.AddPerformer(projectPerformer);
     }
 
     public async Task UpdateAsync(long projectId, ProjectDto projectDto)
     {
         var user = await userRepository.GetByJwtAsync();
         var project = await projectRepository.GetByIdAsync(projectId);
-        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(user, project.Company!);
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(user, project.Company);
 
         if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateProject))
         {
@@ -64,6 +79,11 @@ public class ProjectService(
             {
                 throw new PermissionException();
             }
+            
+            if (project.Company.Budget - projectDto.Budget < 0)
+            {
+                throw new ProjectException("You don't have enough money");
+            }
 
             project.Budget = projectDto.Budget;
         }
@@ -82,7 +102,7 @@ public class ProjectService(
             Description = project.Description,
             Budget = project.Budget,
             Performers = project.ProjectPerformers!
-                .Select(performer => EmployeeResponse.ConvertToResponse(performer.Employee!)).ToList(),
+                .Select(performer => EmployeeResponse.ConvertToResponse(performer.Employee)).ToList(),
         };
     }
 
@@ -102,7 +122,9 @@ public class ProjectService(
         await projectRepository.AddPerformer(new ProjectPerformer
         {
             EmployeeId = employeeToAdd.Id,
-            ProjectId = projectId
+            ProjectId = projectId,
+            Employee = employeeToAdd,
+            Project = project
         });
     }
 }

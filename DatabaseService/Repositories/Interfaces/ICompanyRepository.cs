@@ -1,4 +1,5 @@
 using DatabaseService.Data.Models;
+using Task = System.Threading.Tasks.Task;
 
 namespace DatabaseService.Repositories.Interfaces;
 
