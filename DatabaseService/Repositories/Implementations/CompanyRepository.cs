@@ -75,6 +75,14 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
                ?? throw new EntityNotFoundException(nameof(Company));
     }
 
+    public async Task<List<Company>> GetAllByUserAsync(User user)
+    {
+        return await dbContext.Companies
+            .Include(company => company.Projects)
+            .Where(company => company.Users!.Any(u => u.Id == user.Id))
+            .ToListAsync();
+    }
+
     public async Task<Employee> GetEmployeeByUserAndCompanyAsync(User user, Company company)
     {
         var employee = await dbContext.Employees

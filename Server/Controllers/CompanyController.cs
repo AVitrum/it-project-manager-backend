@@ -31,11 +31,24 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
             message = "Performed"
         });
     }
+    
+    [HttpPut("{companyId:long}/Image")]
+    public async Task<IActionResult> UploadImage([FromForm] IFormFile file, long companyId)
+    {
+        await companyService.ChangeCompanyImage(companyId, file);
+        return Ok();
+    }
 
     [HttpGet("{companyId:long}")]
     public async Task<IActionResult> GetById(long companyId)
     {
         return Ok(await companyService.GetAsync(companyId));
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllByUser()
+    {
+        return Ok(await companyService.GetAllUserCompaniesAsync());
     }
 
     [HttpPost("{companyId:long}/addEmployee")]

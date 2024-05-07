@@ -3,6 +3,7 @@ using DatabaseService.Data.Enums;
 using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
+using FileService;
 using Server.Payload.Responses;
 using Server.Services.Interfaces;
 
@@ -11,7 +12,8 @@ namespace Server.Services.Implementations;
 public class ProjectService(
     IProjectRepository projectRepository,
     ICompanyRepository companyRepository, 
-    IUserRepository userRepository) 
+    IUserRepository userRepository,
+    IFileService fileService) 
     : IProjectService
 {
     public async Task CreateAsync(long companyId, ProjectDto projectDto)
@@ -91,6 +93,22 @@ public class ProjectService(
         await projectRepository.UpdateAsync(project);
     }
 
+    public async Task ChangeProjectImage(long projectId, IFormFile file)
+    {
+        var project = await projectRepository.GetByIdAsync(projectId);
+        
+        fileService.CheckImage(file);
+        
+        if (project.PictureName != null)
+            await fileService.DeleteAsync(project.PictureName);
+        
+        var imageUrl = await fileService.UploadAsync(project.Name, file);
+
+        project.PictureLink = imageUrl;
+        project.PictureName = $"{project.Name}_{file.FileName}";
+        await projectRepository.UpdateAsync(project);
+    }
+    
     public async Task<ProjectResponse> GetProjectInfoAsync(long projectId)
     {
         var project = await projectRepository.GetByIdAsync(projectId);
@@ -102,7 +120,9 @@ public class ProjectService(
             Description = project.Description,
             Budget = project.Budget,
             Performers = project.ProjectPerformers!
-                .Select(performer => EmployeeResponse.ConvertToResponse(performer.Employee)).ToList(),
+                .Select(performer => EmployeeResponse.ConvertToResponse(performer.Employee))
+                .ToList(),
+            Image = project.PictureLink,
         };
     }
 

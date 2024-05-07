@@ -56,20 +56,8 @@ public class UserService(
     public async Task ChangeProfileImage(IFormFile file)
     {
         var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
-
-        if (file.Length > 5e+6)
-            throw new FileToLargeException("The file size must be less than 5 MB!");
-
-        var imageFormats = new HashSet<string>
-        {
-            "image/jpeg",
-            "image/png",
-            "image/gif",
-            "image/bmp",
-        };
-
-        if (!imageFormats.Contains(file.ContentType))
-            throw new FileInvalidFormatException("Unsupported picture format!");
+        
+        fileService.CheckImage(file);
 
         if (picture != null)
             await fileService.DeleteAsync(picture.PictureName);

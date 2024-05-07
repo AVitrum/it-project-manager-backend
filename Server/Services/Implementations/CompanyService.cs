@@ -3,6 +3,7 @@ using DatabaseService.Data.Enums;
 using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
+using FileService;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 using Server.Services.Interfaces;
@@ -11,7 +12,9 @@ namespace Server.Services.Implementations;
 
 public class CompanyService(
     ICompanyRepository companyRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IProjectRepository projectRepository,
+    IFileService fileService)
     : ICompanyService
 {
     public async Task CreateAsync(CompanyDto companyDto)
@@ -19,7 +22,9 @@ public class CompanyService(
         var newCompany = new Company
         {
             Name = companyDto.Name!,
-            RegistrationDate = DateTime.UtcNow
+            Description = companyDto.Description!,
+            Budget = (double)companyDto.Budget!,
+            RegistrationDate = DateTime.UtcNow,
         };
         var company = await companyRepository.CreateAsync(newCompany);
 
@@ -81,18 +86,68 @@ public class CompanyService(
         await companyRepository.UpdateAsync(company);
     }
 
+    public async Task ChangeCompanyImage(long companyId, IFormFile file)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+        
+        fileService.CheckImage(file);
+        
+        if (company.PictureName != null)
+            await fileService.DeleteAsync(company.PictureName);
+        
+        var imageUrl = await fileService.UploadAsync(company.Name, file);
+
+        company.PictureLink = imageUrl;
+        company.PictureName = $"{company.Name}_{file.FileName}";
+        await companyRepository.UpdateAsync(company);
+    }
+
     public async Task<CompanyResponse> GetAsync(long id)
     {
         var company = await companyRepository.GetByIdAsync(id);
 
         var employees = await companyRepository.GetAllEmployeesByCompany(company);
-        
+        var projects = await projectRepository.GetAllByCompanyAsync(company);
         return new CompanyResponse
         {
             Id = company.Id,
             Name = company.Name,
-            Employees = employees.Select(EmployeeResponse.ConvertToResponse).ToList()
+            Picture = company.PictureLink,
+            Employees = employees.Select(EmployeeResponse.ConvertToResponse)
+                .ToList(),
+            Projects = projects.Select(ProjectResponse.ConvertToResponse)
+                .ToList(),
+            Description = company.Description,
+            Budget = company.Budget
         };
+    }
+
+    public async Task<List<CompanyResponse>> GetAllUserCompaniesAsync()
+    {
+        var companies = await companyRepository.GetAllByUserAsync(await userRepository.GetByJwtAsync());
+
+        var responses = new List<CompanyResponse>();
+
+        foreach (var company in companies)
+        {
+            var employees = await companyRepository.GetAllEmployeesByCompany(company);
+            var projects = await projectRepository.GetAllByCompanyAsync(company);
+            responses.Add(new CompanyResponse
+            {
+                Id = company.Id,
+                Name = company.Name,
+                Picture = company.PictureLink,
+                Employees = employees.Select(EmployeeResponse.ConvertToResponse)
+                    .ToList(),
+                Projects = projects.Select(ProjectResponse.ConvertToResponse)
+                    .ToList(),
+                Description = company.Description,
+                Budget = company.Budget
+            });
+        }
+        
+        responses.Sort((a, b) => a.Id.CompareTo(b.Id));
+        return responses;
     }
 
     public async Task CreatePositionAsync(long companyId, PositionInCompanyDto positionInCompanyDto)

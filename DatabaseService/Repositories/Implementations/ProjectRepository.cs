@@ -12,7 +12,7 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
         await dbContext.Projects.AddAsync(project);
         await dbContext.SaveChangesAsync();
 
-        return await GetByNameAsync(project.Name);
+        return await GetByNameAndCompanyAsync(project.Name, project.Company);
     }
 
     public async Task UpdateAsync(Project project)
@@ -40,7 +40,7 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
                ?? throw new EntityNotFoundException(nameof(Project));
     }
 
-    public async Task<Project> GetByNameAsync(string name)
+    public async Task<Project> GetByNameAndCompanyAsync(string name, Company company)
     {
         return await dbContext.Projects
             .Include(e => e.Creator)
@@ -48,8 +48,20 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
             .ThenInclude(e => e.Employee)
             .ThenInclude(e => e.User)
             .Include(e => e.Company)
-            .FirstOrDefaultAsync(e => e.Name == name) 
+            .FirstOrDefaultAsync(e => e.Name == name && e.CompanyId == company.Id) 
                ?? throw new EntityNotFoundException(nameof(Project));
+    }
+    
+    public async Task<List<Project>> GetAllByCompanyAsync(Company company)
+    {
+        return await dbContext.Projects
+            .Include(e => e.ProjectPerformers)!
+            .ThenInclude(e => e.Employee)
+            .ThenInclude(e => e.User)
+            .Include(e => e.Creator)
+            .ThenInclude(e => e.User)
+            .Where(e => e.CompanyId == company.Id)
+            .ToListAsync();
     }
 
     public async Task AddPerformer(ProjectPerformer performer)
@@ -74,4 +86,5 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
             .ThenInclude(e => e.User)
             .AnyAsync(e => e.Employee.User!.Email == email);
     }
+    
 }

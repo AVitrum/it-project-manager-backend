@@ -69,5 +69,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .WithOne(e => e.Company)
             .HasForeignKey(e => e.CompanyId)
             .IsRequired();
+
+        modelBuilder.Entity<Company>()
+            .HasMany(e => e.Projects)
+            .WithOne(e => e.Company)
+            .HasForeignKey(e => e.CompanyId)
+            .IsRequired();
     }
 }

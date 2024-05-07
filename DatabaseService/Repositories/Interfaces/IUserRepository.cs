@@ -10,6 +10,7 @@ public interface IUserRepository
     Task UpdateRefreshTokenAsync(RefreshToken refreshToken);
     
     Task AddProfilePhoto(ProfilePhoto profilePhoto);
+    
     Task<bool> DeleteProfilePhotoAsync(ProfilePhoto profilePhoto);
 
     Task<User> GetByIdAsync(long id);

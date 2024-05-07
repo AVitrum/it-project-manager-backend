@@ -10,7 +10,7 @@ namespace Server.Controllers;
 [Authorize]
 public class ProjectController(IProjectService projectService) : ControllerBase
 {
-    [HttpPost("{companyId:long}/create")]
+    [HttpPost("{companyId:long}/createProject")]
     public async Task<IActionResult> Create(long companyId, ProjectDto request)
     {
         await projectService.CreateAsync(companyId, request);
@@ -18,6 +18,13 @@ public class ProjectController(IProjectService projectService) : ControllerBase
         {
             message = "Created"
         });
+    }
+    
+    [HttpPut("{projectId:long}/Image")]
+    public async Task<IActionResult> UploadImage(long projectId, [FromForm] IFormFile file)
+    {
+        await projectService.ChangeProjectImage(projectId, file);
+        return Ok();
     }
     
     [HttpPost("{companyId:long}/addPerformer")]

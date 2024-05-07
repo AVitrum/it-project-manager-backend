@@ -30,7 +30,7 @@ namespace FileService
             return link;
         }
 
-        public async Task<string> UploadAsync(string username, IFormFile file)
+        public async Task<string> UploadAsync(string name, IFormFile file)
         {
             GetFirebaseAuth(out var apiKey, out var bucket, out var authEmail, out var authPassword);
 
@@ -45,7 +45,7 @@ namespace FileService
             
             var link = await storage
                 .Child("images")
-                .Child($"{username}_{file.FileName}")
+                .Child($"{name}_{file.FileName}")
                 .PutAsync(stream, cancellation.Token);
             
             return link;
@@ -63,6 +63,23 @@ namespace FileService
                 .GetDownloadUrlAsync();
 
             return downloadUrl;
+        }
+
+        public void CheckImage(IFormFile file)
+        {
+            if (file.Length > 5e+6)
+                throw new FileToLargeException();
+
+            var imageFormats = new HashSet<string>
+            {
+                "image/jpeg",
+                "image/png",
+                "image/gif",
+                "image/bmp",
+            };
+
+            if (!imageFormats.Contains(file.ContentType))
+                throw new FileInvalidFormatException("Unsupported picture format!");
         }
 
         public async Task DeleteAsync(string fileName)
