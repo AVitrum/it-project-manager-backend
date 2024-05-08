@@ -19,6 +19,11 @@ public class CompanyService(
 {
     public async Task CreateAsync(CompanyDto companyDto)
     {
+        if (await companyRepository.ExistsByNameAsync(companyDto.Name!.Trim()))
+        {
+            throw new DatabaseException("Company exists by name");
+        }
+        
         var newCompany = new Company
         {
             Name = companyDto.Name!,
@@ -54,6 +59,11 @@ public class CompanyService(
     {
         var company = await companyRepository.GetByIdAsync(companyId);
 
+        if (await companyRepository.ExistsByNameAsync(companyDto.Name!.Trim()) && companyDto.Name != company.Name)
+        {
+            throw new DatabaseException("Company exists by name");
+        }
+        
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
             await userRepository.GetByJwtAsync(), company);
         
@@ -89,6 +99,14 @@ public class CompanyService(
     public async Task ChangeCompanyImage(long companyId, IFormFile file)
     {
         var company = await companyRepository.GetByIdAsync(companyId);
+
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateProject))
+        {
+            throw new PermissionException();
+        }
         
         fileService.CheckImage(file);
         

@@ -9,6 +9,7 @@ public class EmployeeResponse
     public required string Email { get; set; }
     public required string Position { get; set; }
     public required double Salary { get; set; }
+    public string? Picture { get; set; }
 
     public static EmployeeResponse ConvertToResponse(Employee employee)
     {
@@ -18,7 +19,8 @@ public class EmployeeResponse
             Username = employee.User.Username,
             Email = employee.User.Email,
             Position = employee.PositionInCompany!.Name,
-            Salary = employee.Salary
+            Salary = employee.Salary,
+            Picture = employee.User.ProfilePhoto?.PictureLink
         };
     }
 }

@@ -25,6 +25,7 @@ public interface ICompanyRepository
     Task<PositionInCompany> GetPositionByIdAndCompanyIdAsync(long positionId, long companyId);
     Task<PositionInCompany> GetPositionByNameAndCompanyIdAsync(string name, long companyId);
 
+    Task<bool> ExistsByNameAsync(string name);
     Task<bool> ExistsByUserAndCompanyAsync(User userToAdd, Company company);
     Task<bool> PositionExistsByNameAndCompanyIdAsync(string name, long companyId);
 }

@@ -96,6 +96,7 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
     {
         var employees = await dbContext.Employees
             .Include(e => e.User)
+            .ThenInclude(e => e!.ProfilePhoto)
             .Include(e => e.PositionInCompany)
             .Where(e => e.CompanyId == company.Id)
             .ToListAsync();
@@ -117,6 +118,12 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
                            .FirstOrDefaultAsync(e => e.CompanyId == companyId && e.Name == name) 
                        ?? throw new EntityNotFoundException(nameof(PositionInCompany));
         return position;
+    }
+
+    public async Task<bool> ExistsByNameAsync(string name)
+    {
+        return await dbContext.Companies
+            .AnyAsync(e => e.Name == name);
     }
 
     public async Task<bool> ExistsByUserAndCompanyAsync(User userToAdd, Company company)
