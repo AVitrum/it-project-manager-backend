@@ -15,5 +15,5 @@ public interface IProjectRepository
     Task<ProjectPerformer> GetPerformerByEmployeeAndProjectAsync(Employee employee, Project project);
 
     Task<bool> PerformerExistsByEmail(string email);
-    Task<List<Project>> GetAllByCompanyAsync(Company company);
+    Task<List<Project>> GetAllByCompanyAsync(long companyId);
 }

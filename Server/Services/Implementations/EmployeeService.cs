@@ -5,6 +5,7 @@ using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
 using Server.Payload.DTOs;
 using EmailService;
+using Server.Payload.Responses;
 using Server.Services.Interfaces;
 
 namespace Server.Services.Implementations;
@@ -50,23 +51,34 @@ public class EmployeeService(
     public async Task UpdateEmployeeAsync(long companyId, EmployeeDto employeeDto)
     {
         var company = await companyRepository.GetByIdAsync(companyId);
+        
         var currentUser = await userRepository.GetByJwtAsync();
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(currentUser, company);
         
-        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateUser))
-            throw new PermissionException();
-        
         var userToUpdate = await userRepository.GetByEmailAsync(employeeDto.Email!);
         var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(userToUpdate, company);
+        
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateUser))
+            throw new PermissionException();
 
         if (employeeDto.Position != null)
         {
-            employee.PositionInCompany = await companyRepository
+            var newPosition = await companyRepository
                 .GetPositionByNameAndCompanyIdAsync(employeeDto.Position, companyId);
+            
+            if (performer.PositionInCompany.Priority >= employee.PositionInCompany.Priority
+                || performer.PositionInCompany.Priority >= newPosition.Priority)
+            {
+                throw new PermissionException();
+            }
+
+            employee.PositionInCompany = newPosition;
         }
 
         if (employeeDto.Salary != null)
         {
+            if (employeeDto.Salary >= company.Budget)
+                throw new CompanyException("You don't have enough money!");
             employee.Salary = (double)employeeDto.Salary;
         }
 
@@ -78,27 +90,11 @@ public class EmployeeService(
             "Changes have been made to your position");
     }
 
-    public async Task RemoveEmployeeAsync(long companyId, EmployeeDto employeeDto)
+    public async Task<EmployeeResponse> GetEmployeeAsync(long employeeId)
     {
-        var company = await companyRepository.GetByIdAsync(companyId);
-        var currentUser = await userRepository.GetByJwtAsync();
-        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(currentUser, company);
+        var employee = await companyRepository.GetEmployeeById(employeeId);
         
-        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.DeleteUser))
-            throw new PermissionException();
-        
-        var userToRemove = await userRepository.GetByEmailAsync(employeeDto.Email!);
-        var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(userToRemove, company);
-
-        if (!await companyRepository.ExistsByUserAndCompanyAsync(userToRemove, company))
-            throw new EntityNotFoundException("Employee");
-
-        await companyRepository.RemoveUserFromCompanyAsync(employee);
-        
-        await emailSender.SendEmailAsync(
-            userToRemove.Email,
-            company.Name,
-            "You have been removed from the company");
+        return EmployeeResponse.ConvertToResponse(employee);
     }
 
     public async Task<PositionInCompanyDto> GetEmployeePositionAsync(long companyId, long positionId)
@@ -121,5 +117,44 @@ public class EmployeeService(
         }
 
         return permissions;
+    }
+
+    public async Task<List<PositionInCompanyDto>> GetAllPositionsAsync(long companyId)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+
+        var positionsResponse = new List<PositionInCompanyDto>();
+
+        foreach (var position in company.PositionInCompanies!)
+        {
+            positionsResponse.Add(await GetEmployeePositionAsync(companyId, position.Id));
+        }
+
+        return positionsResponse;
+    }
+
+    public async Task RemoveEmployeeAsync(long companyId, EmployeeDto employeeDto)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+        
+        var currentUser = await userRepository.GetByJwtAsync();
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(currentUser, company);
+        
+        var userToRemove = await userRepository.GetByEmailAsync(employeeDto.Email!);
+        var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(userToRemove, company);
+        
+        if (employee.PositionInCompany.Name == "CEO")
+            throw new CompanyException("You can't leave the company");
+        
+        if ((!performer.PositionInCompany.HasPermissions(PositionPermissions.DeleteUser) && performer.Id != employee.Id) 
+            || performer.PositionInCompany.Priority >= employee.PositionInCompany.Priority)
+            throw new PermissionException();
+        
+        await companyRepository.RemoveUserFromCompanyAsync(employee);
+        
+        await emailSender.SendEmailAsync(
+            userToRemove.Email,
+            company.Name,
+            "You have been removed from the company");
     }
 }

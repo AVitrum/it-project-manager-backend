@@ -52,7 +52,7 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
                ?? throw new EntityNotFoundException(nameof(Project));
     }
     
-    public async Task<List<Project>> GetAllByCompanyAsync(Company company)
+    public async Task<List<Project>> GetAllByCompanyAsync(long companyId)
     {
         return await dbContext.Projects
             .Include(e => e.ProjectPerformers)!
@@ -60,7 +60,7 @@ public class ProjectRepository(AppDbContext dbContext) : IProjectRepository
             .ThenInclude(e => e.User)
             .Include(e => e.Creator)
             .ThenInclude(e => e.User)
-            .Where(e => e.CompanyId == company.Id)
+            .Where(e => e.CompanyId == companyId)
             .ToListAsync();
     }
 

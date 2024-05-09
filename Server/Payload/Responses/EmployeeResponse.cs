@@ -15,8 +15,8 @@ public class EmployeeResponse
     {
         return new EmployeeResponse
         {
-            Id = employee.User!.Id,
-            Username = employee.User.Username,
+            Id = employee.Id,
+            Username = employee.User!.Username,
             Email = employee.User.Email,
             Position = employee.PositionInCompany!.Name,
             Salary = employee.Salary,

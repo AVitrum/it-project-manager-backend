@@ -86,7 +86,7 @@ public class AuthService(
         var newUser = new User
         {
             Email = googleUserInfoResponse.Email,
-            Username = googleUserInfoResponse.Name,
+            Username = googleUserInfoResponse.Name + "#" + new Random().Next(9999, 999999),
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             RegistrationDate = DateTime.UtcNow,

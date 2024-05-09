@@ -22,6 +22,7 @@ public interface ICompanyRepository
 
     Task<Employee> GetEmployeeByUserAndCompanyAsync(User user, Company company);
     Task<List<Employee>> GetAllEmployeesByCompany(Company company);
+    Task<Employee> GetEmployeeById(long employeeId);
     Task<PositionInCompany> GetPositionByIdAndCompanyIdAsync(long positionId, long companyId);
     Task<PositionInCompany> GetPositionByNameAndCompanyIdAsync(string name, long companyId);
 

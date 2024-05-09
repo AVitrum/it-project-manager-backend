@@ -147,4 +147,14 @@ public class ProjectService(
             Project = project
         });
     }
+
+    public async Task<List<ProjectResponse>> GetAllProjectsAsync(long companyId)
+    {
+        var company = await companyRepository.GetByIdAsync(companyId);
+        var projects = await projectRepository.GetAllByCompanyAsync(companyId);
+
+        var response = projects.Select(ProjectResponse.ConvertToResponse).ToList();
+
+        return response;
+    }
 }

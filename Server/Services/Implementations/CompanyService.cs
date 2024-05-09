@@ -44,6 +44,14 @@ public class CompanyService(
         newPositionInCompany.AddAllPermissions();
         var positionInCompany = await companyRepository.CreatePositionAsync(newPositionInCompany);
 
+        var newPositionInCompany2 = new PositionInCompany
+        {
+            CompanyId = company.Id,
+            Name = "Default",
+            Priority = int.MaxValue,
+        };
+        await companyRepository.CreatePositionAsync(newPositionInCompany2);
+
         var newEmployee = new Employee
         {
             UserId = user.Id,
@@ -125,7 +133,7 @@ public class CompanyService(
         var company = await companyRepository.GetByIdAsync(id);
 
         var employees = await companyRepository.GetAllEmployeesByCompany(company);
-        var projects = await projectRepository.GetAllByCompanyAsync(company);
+        var projects = await projectRepository.GetAllByCompanyAsync(company.Id);
         return new CompanyResponse
         {
             Id = company.Id,
@@ -149,7 +157,7 @@ public class CompanyService(
         foreach (var company in companies)
         {
             var employees = await companyRepository.GetAllEmployeesByCompany(company);
-            var projects = await projectRepository.GetAllByCompanyAsync(company);
+            var projects = await projectRepository.GetAllByCompanyAsync(company.Id);
             responses.Add(new CompanyResponse
             {
                 Id = company.Id,

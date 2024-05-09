@@ -81,6 +81,12 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
         });
     }
 
+    [HttpGet("getEmployee/{employeeId:long}")]
+    public async Task<IActionResult> GetUser(long employeeId)
+    {
+        return Ok(await employeeService.GetEmployeeAsync(employeeId));
+    }
+
     [HttpPost("{companyId:long}/addPosition")]
     public async Task<IActionResult> AddPosition(long companyId, PositionInCompanyDto inCompanyDto)
     {
@@ -105,5 +111,11 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
     public async Task<IActionResult> GetPositionById(long companyId, long positionId)
     {
         return Ok(await employeeService.GetEmployeePositionAsync(companyId, positionId));
+    }
+    
+    [HttpGet("{companyId:long}/getAllPositions")]
+    public async Task<IActionResult> GetAllPositions(long companyId)
+    {
+        return Ok(await employeeService.GetAllPositionsAsync(companyId));
     }
 }

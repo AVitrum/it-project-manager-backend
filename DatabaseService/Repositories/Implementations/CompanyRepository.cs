@@ -64,6 +64,7 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
     {
         return await dbContext.Companies
             .Include(e => e.Users)
+            .Include(e => e.PositionInCompanies)
             .FirstOrDefaultAsync(e => e.Id == id) ?? throw new EntityNotFoundException(nameof(Company));
     }
 
@@ -89,6 +90,17 @@ public class CompanyRepository(AppDbContext dbContext) : ICompanyRepository
                 .Include(e => e.PositionInCompany)
             .FirstOrDefaultAsync(e => e.UserId == user.Id && e.CompanyId == company.Id)
             ?? throw new EntityNotFoundException("Employee");
+        return employee;
+    }
+
+    public async Task<Employee> GetEmployeeById(long employeeId)
+    {
+        var employee = await dbContext.Employees
+                           .Include(e => e.PositionInCompany)
+                           .Include(e => e.User)
+                           .ThenInclude(e => e!.ProfilePhoto)
+                           .FirstOrDefaultAsync(e => e.Id == employeeId)
+                       ?? throw new EntityNotFoundException("Employee");
         return employee;
     }
 
