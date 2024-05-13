@@ -45,10 +45,10 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
         return Ok(await companyService.GetAsync(companyId));
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetAllByUser()
+    [HttpGet("getAllCompany/{order}")]
+    public async Task<IActionResult> GetAllByUser(string order)
     {
-        return Ok(await companyService.GetAllUserCompaniesAsync());
+        return Ok(await companyService.GetAllUserCompaniesAsync(order));
     }
 
     [HttpPost("{companyId:long}/addEmployee")]
@@ -92,7 +92,7 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
     {
         await companyService.CreatePositionAsync(companyId, inCompanyDto);
         return Ok(new
-        {
+        { 
             message = "Created"
         });
     }

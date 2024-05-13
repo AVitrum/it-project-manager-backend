@@ -53,6 +53,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .WithMany(e => e.ProjectPerformers)
             .HasForeignKey(e => e.ProjectId);
 
+        modelBuilder.Entity<Project>()
+            .HasMany(e => e.Assignments)
+            .WithOne(e => e.Project)
+            .HasForeignKey(e => e.ProjectId);
+        
         modelBuilder.Entity<AssignmentPerformer>()
             .HasOne(e => e.Assignment)
             .WithMany(e => e.Performers)

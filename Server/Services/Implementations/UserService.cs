@@ -14,7 +14,8 @@ namespace Server.Services.Implementations;
 public class UserService(
     IEmailSender emailSender,
     IFileService fileService,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    ICompanyRepository companyRepository)
     : IUserService
 {
     public async Task UpdateUser(UserDto userDto)
@@ -37,7 +38,8 @@ public class UserService(
     public async Task<UserInfoResponse> UserProfileAsync()
     {
         var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
-
+        var avgSalary = await companyRepository.GetAverageUserSalary(user);
+        
         var profile = new UserInfoResponse
         {
             Id = user.Id,
@@ -45,6 +47,7 @@ public class UserService(
             Email = user.Email,
             CreationDate = user.RegistrationDate,
             PhoneNumber = user.PhoneNumber,
+            AverageSalary = double.Round(avgSalary)
         };
 
         if (picture != null)

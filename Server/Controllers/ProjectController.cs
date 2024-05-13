@@ -46,4 +46,10 @@ public class ProjectController(IProjectService projectService) : ControllerBase
             message = "Performed"
         });
     }
+
+    [HttpGet("{projectId:long}")]
+    public async Task<IActionResult> GetProject(long projectId)
+    {
+        return Ok(await projectService.GetProjectInfoAsync(projectId));
+    }
 }

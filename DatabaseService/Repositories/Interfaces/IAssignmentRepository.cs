@@ -10,6 +10,7 @@ public interface IAssignmentRepository
     Task<bool> DeleteAsync(Assignment assignment);
     Task<Assignment> GetByIdAsync(long assignmentId);
     Task<Assignment> GetByThemeAsync(string theme);
+    Task<List<Assignment>> GetAllByProjectIdAsync(long projectId);
 
     Task AddPerformer(AssignmentPerformer performer);
 

@@ -7,13 +7,13 @@ public class Assignment
     [Key] public long Id { get; init; }
     
     public required long ProjectId { get; set; }
-    public required Project Project { get; set; }
+    public Project? Project { get; set; }
     
     [MaxLength(60)]
     public required string Theme { get; set; }
     [MaxLength(1200)]
     public string? Description { get; set; } = string.Empty;
-    public double? Budget { get; set; } = 0; 
+    public double Budget { get; set; } = 0; 
     public required DateTime CreatedAt { get; set; }
     public required DateTime Deadline { get; set; }
     

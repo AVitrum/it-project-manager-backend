@@ -9,11 +9,13 @@ public class ProjectResponse
     public required string Description { get; set; }
     public required string Image { get; set; }
     public required double Budget { get; set; }
-    public required List<EmployeeResponse> Performers { get; set; }
+
+    public required List<AssignmentResponse> Assignments { get; set; } = [];
+    // public required List<EmployeeResponse> Performers { get; set; }
     
     public static ProjectResponse ConvertToResponse(Project project)
     {
-        var performers = project.ProjectPerformers!.Select(performer => performer.Employee).ToList();
+        // var performers = project.ProjectPerformers!.Select(performer => performer.Employee).ToList();
 
         return new ProjectResponse
         {
@@ -21,9 +23,10 @@ public class ProjectResponse
             Name = project.Name,
             Description = project.Description,
             Budget = project.Budget,
-            Performers = performers.Select(EmployeeResponse.ConvertToResponse)
-                .ToList(),
-            Image = project.PictureLink
+            // Performers = performers.Select(EmployeeResponse.ConvertToResponse)
+            //     .ToList(),
+            Image = project.PictureLink,
+            Assignments = project.Assignments.Select(AssignmentResponse.ConvertToResponse).ToList()
         };
     }
 }

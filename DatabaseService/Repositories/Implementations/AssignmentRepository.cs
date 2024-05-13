@@ -2,10 +2,12 @@ using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace DatabaseService.Repositories.Implementations;
 
-public class AssignmentRepository(AppDbContext dbContext) : IAssignmentRepository
+public class AssignmentRepository(AppDbContext dbContext, IConfiguration configuration) : IAssignmentRepository
 {
     public async Task CreateAsync(Assignment assignment)
     {
@@ -25,6 +27,48 @@ public class AssignmentRepository(AppDbContext dbContext) : IAssignmentRepositor
         await dbContext.SaveChangesAsync();
         return true;
     }
+
+    public async Task<List<Assignment>> GetAllByProjectIdAsync(long projectId)
+    {
+        await using var connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        await connection.OpenAsync();
+        
+        await using var command = new NpgsqlCommand(
+            """
+            
+                        SELECT a.* 
+                        FROM "Assignments" as a
+                        WHERE a."ProjectId" = @id
+                        ORDER BY a."Deadline" 
+                        
+            """,
+            connection);
+        command.Parameters.AddWithValue("id", projectId);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        var assignments = new List<Assignment>();
+
+        while (await reader.ReadAsync())
+        {
+            var assignment = new Assignment
+            {
+                Id = reader.GetInt64(reader.GetOrdinal("Id")),
+                Description = reader.IsDBNull(reader.GetOrdinal("Description")) 
+                    ? string.Empty
+                    : reader.GetString(reader.GetOrdinal("Description")),
+                ProjectId = projectId,
+                Theme = reader.GetString(reader.GetOrdinal("Theme")),
+                CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),
+                Budget = reader.GetDouble(reader.GetOrdinal("Budget")),
+                Deadline = reader.GetDateTime(reader.GetOrdinal("Deadline"))
+            };
+            
+            assignments.Add(assignment);
+        }
+
+        return assignments;
+    } 
 
     public async Task<Assignment> GetByIdAsync(long assignmentId)
     {

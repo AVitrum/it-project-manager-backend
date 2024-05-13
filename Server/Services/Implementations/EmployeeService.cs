@@ -66,8 +66,9 @@ public class EmployeeService(
             var newPosition = await companyRepository
                 .GetPositionByNameAndCompanyIdAsync(employeeDto.Position, companyId);
             
-            if (performer.PositionInCompany.Priority >= employee.PositionInCompany.Priority
-                || performer.PositionInCompany.Priority >= newPosition.Priority)
+            if ((performer.PositionInCompany.Priority >= employee.PositionInCompany.Priority
+                || performer.PositionInCompany.Priority >= newPosition.Priority) 
+                && performer.PositionInCompany.Name != "CEO")
             {
                 throw new PermissionException();
             }
@@ -101,6 +102,20 @@ public class EmployeeService(
     {
         var position = await companyRepository.GetPositionByIdAndCompanyIdAsync(positionId, companyId);
         
+        var permissions = ConvertToPositionInCompanyDto(position);
+
+        return permissions;
+    }
+
+    public async Task<List<PositionInCompanyDto>> GetAllPositionsAsync(long companyId)
+    {
+        var positions = await companyRepository.GetPositionsByCompanyIdAsync(companyId);
+
+        return positions.Select(ConvertToPositionInCompanyDto).ToList();
+    }
+
+    private static PositionInCompanyDto ConvertToPositionInCompanyDto(PositionInCompany position)
+    {
         var permissions = new PositionInCompanyDto
         {
             Name = position.Name,
@@ -117,20 +132,6 @@ public class EmployeeService(
         }
 
         return permissions;
-    }
-
-    public async Task<List<PositionInCompanyDto>> GetAllPositionsAsync(long companyId)
-    {
-        var company = await companyRepository.GetByIdAsync(companyId);
-
-        var positionsResponse = new List<PositionInCompanyDto>();
-
-        foreach (var position in company.PositionInCompanies!)
-        {
-            positionsResponse.Add(await GetEmployeePositionAsync(companyId, position.Id));
-        }
-
-        return positionsResponse;
     }
 
     public async Task RemoveEmployeeAsync(long companyId, EmployeeDto employeeDto)

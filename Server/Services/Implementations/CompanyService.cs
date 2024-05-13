@@ -65,8 +65,7 @@ public class CompanyService(
 
     public async Task UpdateCompany(long companyId, CompanyDto companyDto)
     {
-        var company = await companyRepository.GetByIdAsync(companyId);
-
+        var company = await companyRepository.GetByIdForOperations(companyId);
         if (await companyRepository.ExistsByNameAsync(companyDto.Name!.Trim()) && companyDto.Name != company.Name)
         {
             throw new DatabaseException("Company exists by name");
@@ -106,7 +105,7 @@ public class CompanyService(
 
     public async Task ChangeCompanyImage(long companyId, IFormFile file)
     {
-        var company = await companyRepository.GetByIdAsync(companyId);
+        var company = await companyRepository.GetByIdForOperations(companyId);
 
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
             await userRepository.GetByJwtAsync(), company);
@@ -133,7 +132,7 @@ public class CompanyService(
         var company = await companyRepository.GetByIdAsync(id);
 
         var employees = await companyRepository.GetAllEmployeesByCompany(company);
-        var projects = await projectRepository.GetAllByCompanyAsync(company.Id);
+        var projects = await projectRepository.GetAllByCompanyIdSql(company.Id);
         return new CompanyResponse
         {
             Id = company.Id,
@@ -144,20 +143,25 @@ public class CompanyService(
             Projects = projects.Select(ProjectResponse.ConvertToResponse)
                 .ToList(),
             Description = company.Description,
-            Budget = company.Budget
+            Budget = company.Budget,
+            MaxSalary = await companyRepository.GetMaxSalaryInCompany(company),
+            MinSalary = await companyRepository.GetMinSalaryInCompany(company),
+            TotalCosts = await companyRepository.GetAllCostsInCompany(company),
+            AverageSalary = await companyRepository.GetAverageSalaryInCompany(company)
         };
     }
 
-    public async Task<List<CompanyResponse>> GetAllUserCompaniesAsync()
+    public async Task<List<CompanyResponse>> GetAllUserCompaniesAsync(string order)
     {
-        var companies = await companyRepository.GetAllByUserAsync(await userRepository.GetByJwtAsync());
+        var companies = await companyRepository
+            .GetAllByUserAsync(await userRepository.GetByJwtAsync(), order);
 
         var responses = new List<CompanyResponse>();
 
         foreach (var company in companies)
         {
             var employees = await companyRepository.GetAllEmployeesByCompany(company);
-            var projects = await projectRepository.GetAllByCompanyAsync(company.Id);
+            var projects = await projectRepository.GetAllByCompanyIdAsync(company.Id);
             responses.Add(new CompanyResponse
             {
                 Id = company.Id,
@@ -168,11 +172,14 @@ public class CompanyService(
                 Projects = projects.Select(ProjectResponse.ConvertToResponse)
                     .ToList(),
                 Description = company.Description,
-                Budget = company.Budget
+                Budget = company.Budget,
+                MaxSalary = await companyRepository.GetMaxSalaryInCompany(company),
+                MinSalary = await companyRepository.GetMinSalaryInCompany(company),
+                TotalCosts = await companyRepository.GetAllCostsInCompany(company),
+                AverageSalary = await companyRepository.GetAverageSalaryInCompany(company)
             });
         }
         
-        responses.Sort((a, b) => a.Id.CompareTo(b.Id));
         return responses;
     }
 
@@ -215,6 +222,7 @@ public class CompanyService(
         }
         
         position.SetPermissions(inCompanyDto);
+        position.Priority = inCompanyDto.Priority;
         await companyRepository.UpdatePositionAsync(position);
     }
 }
