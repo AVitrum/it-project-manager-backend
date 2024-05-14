@@ -286,43 +286,10 @@ public class CompanyRepository(AppDbContext dbContext, IConfiguration configurat
 
     public async Task<Employee> GetEmployeeByUserAndCompanyAsync(User user, Company company)
     {
-        await using var connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
-        await connection.OpenAsync();
-
-        await using var command = new NpgsqlCommand(
-            """
-            
-                    SELECT e.*, p.*
-                    FROM "Employees" e
-                    JOIN "PositionInCompanies" p ON e."PositionInCompanyId" = p."Id"
-                    WHERE e."UserId" = @userId AND e."CompanyId" = @companyId
-                
-            """,
-            connection);
-        command.Parameters.AddWithValue("userId", user.Id);
-        command.Parameters.AddWithValue("companyId", company.Id);
-
-        await using var reader = await command.ExecuteReaderAsync();
-
-        if (!await reader.ReadAsync()) throw new EntityNotFoundException(nameof(Employee));
-        var positionInCompany = new PositionInCompany
-        {
-            Id = reader.GetInt64(reader.GetOrdinal("Id")),
-            CompanyId = company.Id,
-            Name = reader.GetString(reader.GetOrdinal("Name")),
-            Priority = reader.GetInt64(reader.GetOrdinal("Priority")),
-            Permissions = (PositionPermissions) reader.GetInt64(reader.GetOrdinal("Permissions"))
-        };
-
-        return new Employee
-        {
-            Id = reader.GetInt64(reader.GetOrdinal("Id")),
-            PositionInCompany = positionInCompany,
-            UserId = user.Id,
-            CompanyId = company.Id,
-            Salary = reader.GetDouble(reader.GetOrdinal("Salary")),
-            PositionInCompanyId = positionInCompany.Id
-        };
+        return await dbContext.Employees
+            .Include(e => e.PositionInCompany)
+            .Include(e => e.User)
+            .FirstOrDefaultAsync(e => e.CompanyId == company.Id && e.User.Id == user.Id);
     }
     
     public async Task<Employee> GetEmployeeById(long employeeId)

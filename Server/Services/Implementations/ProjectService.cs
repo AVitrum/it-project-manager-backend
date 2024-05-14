@@ -108,16 +108,16 @@ public class ProjectService(
     
     public async Task<ProjectResponse> GetProjectInfoAsync(long projectId)
     {
-        var project = await projectRepository.GetByIdSql(projectId);
-
-        return ProjectResponse.ConvertToResponse(project);
+        var project = await projectRepository.GetByIdAsync(projectId);
+        var res = ProjectResponse.ConvertToResponse(project);
+        return res;
     }
 
     public async Task AddPerformerAsync(long projectId, PerformerDto performerDto)
     {
         var project = await projectRepository.GetByIdAsync(projectId);
 
-        if (await projectRepository.PerformerExistsByEmail(performerDto.Email))
+        if (await projectRepository.PerformerExistsByEmail(performerDto.Email, projectId))
         {
             throw new ProjectException("Performer Already In Project");
         }

@@ -20,17 +20,17 @@ public class ProjectController(IProjectService projectService) : ControllerBase
         });
     }
     
-    [HttpPut("{projectId:long}/Image")]
+    [HttpPut("{projectId:long}/image")]
     public async Task<IActionResult> UploadImage(long projectId, [FromForm] IFormFile file)
     {
         await projectService.ChangeProjectImage(projectId, file);
         return Ok();
     }
     
-    [HttpPost("{companyId:long}/addPerformer")]
-    public async Task<IActionResult> AddPerformer(long companyId, PerformerDto request)
+    [HttpPost("{projectId:long}/addPerformer")]
+    public async Task<IActionResult> AddPerformer(long projectId, PerformerDto request)
     {
-        await projectService.AddPerformerAsync(companyId, request);
+        await projectService.AddPerformerAsync(projectId, request);
         return Ok(new
         {
             message = "Added"
