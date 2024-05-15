@@ -29,7 +29,7 @@ public class CompanyService(
             Name = companyDto.Name!,
             Description = companyDto.Description!,
             Budget = (double)companyDto.Budget!,
-            RegistrationDate = DateTime.UtcNow,
+            RegistrationDate = DateTime.UtcNow.AddHours(3)
         };
         var company = await companyRepository.CreateAsync(newCompany);
 

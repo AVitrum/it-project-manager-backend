@@ -12,6 +12,7 @@ public interface IProjectRepository
     Task<Project> GetByNameAndCompanyAsync(string name, long companyId);
 
     Task AddPerformer(ProjectPerformer performer);
+    Task RemovePerformerAsync(ProjectPerformer performerToRemove);
     Task<ProjectPerformer> GetPerformerByEmployeeAndProjectAsync(Employee employee, Project project);
 
     Task<bool> PerformerExistsByEmail(string email, long projectId);

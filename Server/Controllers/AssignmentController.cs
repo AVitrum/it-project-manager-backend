@@ -6,11 +6,11 @@ using Server.Services.Interfaces;
 namespace Server.Controllers;
 
 [ApiController]
-[Route("api/[controller]/{projectId:long}")]
+[Route("api/[controller]")]
 [Authorize]
 public class AssignmentController(IAssignmentService assignmentService) : ControllerBase
 {
-    [HttpPost("createAssignment")]
+    [HttpPost("{projectId:long}/createAssignment")]
     public async Task<IActionResult> CreateAssignment(long projectId, AssignmentDto request)
     {
         await assignmentService.CreateAssignment(projectId, request);
@@ -20,7 +20,23 @@ public class AssignmentController(IAssignmentService assignmentService) : Contro
         });
     }
 
-    [HttpGet("getAll")]
+    [HttpPut("{id:long}/update")]
+    public async Task<IActionResult> UpdateAssignment(long id, AssignmentDto request)
+    {
+        await assignmentService.UpdateAssignment(id, request);
+        return Ok(new
+        {
+            message = "Updated"
+        });
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetAssignment(long id)
+    {
+        return Ok(await assignmentService.GetAssignmentAsync(id));
+    }
+
+    [HttpGet("{projectId:long}/getAll")]
     public async Task<IActionResult> GetAllAssignments(long projectId)
     {
         return Ok(await assignmentService.GetAllAssignmentsAsync(projectId));

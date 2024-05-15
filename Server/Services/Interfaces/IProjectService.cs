@@ -1,5 +1,4 @@
 using DatabaseService.Data.DTOs;
-using Microsoft.AspNetCore.Mvc;
 using Server.Payload.Responses;
 
 namespace Server.Services.Interfaces;
@@ -13,4 +12,5 @@ public interface IProjectService
     Task<List<ProjectResponse>> GetAllProjectsAsync(long companyId);
 
     Task AddPerformerAsync(long projectId, PerformerDto performerDto);
+    Task RemovePerformerAsync(long projectId, PerformerDto performerDto);
 }

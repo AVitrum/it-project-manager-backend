@@ -37,7 +37,7 @@ public class AuthService(
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             VerificationToken = CreateRandomToken(),
-            RegistrationDate = DateTime.UtcNow,
+            RegistrationDate = DateTime.UtcNow.AddHours(3)
         };
         await userRepository.CreateAsync(newUser);
     }
@@ -89,7 +89,7 @@ public class AuthService(
             Username = googleUserInfoResponse.Name + "#" + new Random().Next(9999, 999999),
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
-            RegistrationDate = DateTime.UtcNow,
+            RegistrationDate = DateTime.UtcNow.AddHours(3),
             VerifiedAt = DateTime.UtcNow,
             PhoneNumber = string.Empty,
         };

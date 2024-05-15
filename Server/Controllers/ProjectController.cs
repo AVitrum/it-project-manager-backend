@@ -36,6 +36,16 @@ public class ProjectController(IProjectService projectService) : ControllerBase
             message = "Added"
         });
     }
+    
+    [HttpDelete("{projectId:long}/removePerformer")]
+    public async Task<IActionResult> RemovePerformer(long projectId, PerformerDto request)
+    {
+        await projectService.RemovePerformerAsync(projectId, request);
+        return Ok(new
+        {
+            message = "Removed"
+        });
+    }
 
     [HttpPut("{projectId:long}/update")]
     public async Task<IActionResult> UpdateCompany(long projectId, ProjectDto request)

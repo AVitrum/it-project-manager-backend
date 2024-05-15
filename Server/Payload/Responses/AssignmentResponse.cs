@@ -10,9 +10,15 @@ public class AssignmentResponse
     public required double Budget { get; set; }
     public required DateTime CreatedAt { get; set; }
     public required DateTime Deadline { get; set; }
+    public required List<EmployeeResponse> Performers { get; set; }
     
     public static AssignmentResponse ConvertToResponse(Assignment assignment)
     {
+        var projectPerformers = assignment.Performers
+            .Select(ap => ap.ProjectPerformer).ToList();
+
+        var employee = projectPerformers.Select(pp => pp.Employee).ToList();
+
         return new AssignmentResponse
         {
             Id = assignment.Id,
@@ -21,6 +27,7 @@ public class AssignmentResponse
             CreatedAt = assignment.CreatedAt,
             Deadline = assignment.Deadline,
             Budget = assignment.Budget,
+            Performers = employee.Select(EmployeeResponse.ConvertToResponse).ToList(),
         };
     }
 }

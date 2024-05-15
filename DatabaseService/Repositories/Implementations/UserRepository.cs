@@ -141,61 +141,9 @@ public class UserRepository(
 
     public async Task<User> GetByEmailAsync(string email)
     {
-        await using var connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
-        await connection.OpenAsync();
-
-        await using var command = new NpgsqlCommand(
-            """
-            
-                    SELECT u.*,
-                    ph."Id" as "PhotoId", ph."PictureLink", ph."PictureName"
-                    FROM "Users" u
-                    LEFT JOIN "ProfilePhotos" ph ON ph."UserId" = u."Id"
-                    WHERE u."Email" = @email;
-                
-            """,
-            connection);
-        command.Parameters.AddWithValue("email", email);
-
-        await using var reader = await command.ExecuteReaderAsync();
-
-        while (await reader.ReadAsync())
-        {
-            var user = new User
-            {
-                Id = reader.GetInt64(reader.GetOrdinal("Id")),
-                Email = reader.GetString(reader.GetOrdinal("Email")),
-                PasswordHash = (reader.IsDBNull(reader.GetOrdinal("PasswordHash"))
-                    ? null
-                    : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordHash")))!,
-                PasswordSalt = (reader.IsDBNull(reader.GetOrdinal("PasswordSalt"))
-                    ? null
-                    : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordSalt")))!,
-                PhoneNumber = reader.IsDBNull(reader.GetOrdinal("PhoneNumber"))
-                    ? null
-                    : reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                RegistrationDate = reader.GetDateTime(reader.GetOrdinal("RegistrationDate")),
-                Username = reader.GetString(reader.GetOrdinal("Username")),
-                VerificationToken = reader.IsDBNull(reader.GetOrdinal("VerificationToken"))
-                ? null
-                : reader.GetString(reader.GetOrdinal("VerificationToken")),
-                VerifiedAt = reader.IsDBNull(reader.GetOrdinal("VerifiedAt"))
-                    ? null
-                    : reader.GetDateTime(reader.GetOrdinal("VerifiedAt"))
-            };
-
-            if (reader.IsDBNull(reader.GetOrdinal("PictureLink"))) return user;
-            var photo = new ProfilePhoto
-            {
-                Id = reader.GetInt64(reader.GetOrdinal("PhotoId")),
-                PictureName = reader.GetString(reader.GetOrdinal("PictureName")),
-                PictureLink = reader.GetString(reader.GetOrdinal("PictureLink")),
-            };
-            user.ProfilePhoto = photo;
-            return user;
-        }
-
-        throw new UserNotFoundException(email);
+        return await dbContext.Users
+            .Include(e => e.ProfilePhoto)
+            .FirstOrDefaultAsync(e => e.Email == email) ?? throw new UserNotFoundException(email);
     }
 
     public async Task<User> GetByTokenAsync(string token)

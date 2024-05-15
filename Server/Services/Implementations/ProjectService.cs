@@ -55,7 +55,8 @@ public class ProjectService(
     {
         var user = await userRepository.GetByJwtAsync();
         var project = await projectRepository.GetByIdAsync(projectId);
-        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(user, project.Company!);
+        var company = await companyRepository.GetByIdAsync(project.CompanyId);
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(user, company);
 
         if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateProject))
         {
@@ -79,7 +80,7 @@ public class ProjectService(
                 throw new PermissionException();
             }
             
-            if (project.Company!.Budget - projectDto.Budget < 0)
+            if (company.Budget - projectDto.Budget < 0)
             {
                 throw new ProjectException("You don't have enough money");
             }
@@ -133,6 +134,20 @@ public class ProjectService(
             Employee = employeeToAdd,
             Project = project
         });
+    }
+
+    public async Task RemovePerformerAsync(long projectId, PerformerDto performerDto)
+    {
+        var project = await projectRepository.GetByIdAsync(projectId);
+
+        var employeeToRemove = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByEmailAsync(performerDto.Email),
+            await companyRepository.GetByIdAsync(project.CompanyId));
+
+        var performerToRemove =
+            await projectRepository.GetPerformerByEmployeeAndProjectAsync(employeeToRemove, project);
+
+        await projectRepository.RemovePerformerAsync(performerToRemove);
     }
 
     public async Task<List<ProjectResponse>> GetAllProjectsAsync(long companyId)

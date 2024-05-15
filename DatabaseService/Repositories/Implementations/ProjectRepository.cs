@@ -80,6 +80,12 @@ public class ProjectRepository(AppDbContext dbContext, IConfiguration configurat
         await dbContext.SaveChangesAsync();
     }
 
+    public async Task RemovePerformerAsync(ProjectPerformer performerToRemove)
+    {
+        dbContext.ProjectPerformers.Remove(performerToRemove);
+        await dbContext.SaveChangesAsync();
+    }
+
     public async Task<ProjectPerformer> GetPerformerByEmployeeAndProjectAsync(Employee employee, Project project)
     {
         return await dbContext.ProjectPerformers
@@ -92,6 +98,8 @@ public class ProjectRepository(AppDbContext dbContext, IConfiguration configurat
     public async Task<bool> PerformerExistsByEmail(string email, long projectId)
     {
         return await dbContext.ProjectPerformers
+            .Include(e => e.Employee)
+            .ThenInclude(e => e.PositionInCompany)
             .Include(e => e.Employee)
             .ThenInclude(e => e.User)
             .AnyAsync(e => e.Employee.User!.Email == email && e.ProjectId == projectId);

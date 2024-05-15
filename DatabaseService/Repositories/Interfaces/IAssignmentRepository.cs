@@ -5,11 +5,11 @@ namespace DatabaseService.Repositories.Interfaces;
 
 public interface IAssignmentRepository
 {
-    Task CreateAsync(Assignment assignment);
+    Task<Assignment> CreateAsync(Assignment assignment);
     Task UpdateAsync(Assignment assignment);
     Task<bool> DeleteAsync(Assignment assignment);
     Task<Assignment> GetByIdAsync(long assignmentId);
-    Task<Assignment> GetByThemeAsync(string theme);
+    Task<Assignment> GetByThemeAndProjectIdAsync(string theme, long projectId);
     Task<List<Assignment>> GetAllByProjectIdAsync(long projectId);
 
     Task AddPerformer(AssignmentPerformer performer);
