@@ -3,6 +3,7 @@ using DatabaseService.Data.Enums;
 using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
+using FileService;
 using Server.Payload.Requests;
 using Server.Payload.Responses;
 using Server.Services.Interfaces;
@@ -11,15 +12,24 @@ namespace Server.Services.Implementations;
 
 public class CompanyService(
     ICompanyRepository companyRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IProjectRepository projectRepository,
+    IFileService fileService)
     : ICompanyService
 {
     public async Task CreateAsync(CompanyDto companyDto)
     {
+        if (await companyRepository.ExistsByNameAsync(companyDto.Name!.Trim()))
+        {
+            throw new DatabaseException("Company exists by name");
+        }
+        
         var newCompany = new Company
         {
             Name = companyDto.Name!,
-            RegistrationDate = DateTime.UtcNow
+            Description = companyDto.Description!,
+            Budget = (double)companyDto.Budget!,
+            RegistrationDate = DateTime.UtcNow.AddHours(3)
         };
         var company = await companyRepository.CreateAsync(newCompany);
 
@@ -34,26 +44,39 @@ public class CompanyService(
         newPositionInCompany.AddAllPermissions();
         var positionInCompany = await companyRepository.CreatePositionAsync(newPositionInCompany);
 
-        var newUserCompany = new UserCompany
+        var newPositionInCompany2 = new PositionInCompany
+        {
+            CompanyId = company.Id,
+            Name = "Default",
+            Priority = int.MaxValue,
+        };
+        await companyRepository.CreatePositionAsync(newPositionInCompany2);
+
+        var newEmployee = new Employee
         {
             UserId = user.Id,
             CompanyId = newCompany.Id,
             PositionInCompanyId = positionInCompany.Id,
+            PositionInCompany = newPositionInCompany
         };
 
-        await companyRepository.SaveUserInCompanyAsync(newUserCompany);
+        await companyRepository.SaveUserInCompanyAsync(newEmployee);
     }
 
     public async Task UpdateCompany(long companyId, CompanyDto companyDto)
     {
-        var company = await companyRepository.GetByIdAsync(companyId);
-
+        var company = await companyRepository.GetByIdForOperations(companyId);
+        if (await companyRepository.ExistsByNameAsync(companyDto.Name!.Trim()) && companyDto.Name != company.Name)
+        {
+            throw new DatabaseException("Company exists by name");
+        }
+        
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
             await userRepository.GetByJwtAsync(), company);
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateProject))
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateProject))
         {
-            throw new PermissionException("You do not have permission to perform this action");
+            throw new PermissionException();
         }
 
         if (companyDto.Name != null)
@@ -68,10 +91,10 @@ public class CompanyService(
 
         if (companyDto.Budget != null)
         {
-            if ((!performer.PositionInCompany!.HasPermissions(PositionPermissions.AddBudget) || company.Budget != 0) 
-                && (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdateBudget) || !(company.Budget > 0)))
+            if ((!performer.PositionInCompany.HasPermissions(PositionPermissions.AddBudget) || company.Budget != 0) 
+                && (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateBudget) || !(company.Budget > 0)))
             {
-                throw new PermissionException("You do not have permission to perform this action");
+                throw new PermissionException();
             }
             
             company.Budget = (double)companyDto.Budget;
@@ -80,17 +103,84 @@ public class CompanyService(
         await companyRepository.UpdateAsync(company);
     }
 
+    public async Task ChangeCompanyImage(long companyId, IFormFile file)
+    {
+        var company = await companyRepository.GetByIdForOperations(companyId);
+
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdateProject))
+        {
+            throw new PermissionException();
+        }
+        
+        fileService.CheckImage(file);
+        
+        if (company.PictureName != null)
+            await fileService.DeleteAsync(company.PictureName);
+        
+        var imageUrl = await fileService.UploadAsync(company.Name, file);
+
+        company.PictureLink = imageUrl;
+        company.PictureName = $"{company.Name}_{file.FileName}";
+        await companyRepository.UpdateAsync(company);
+    }
+
     public async Task<CompanyResponse> GetAsync(long id)
     {
         var company = await companyRepository.GetByIdAsync(id);
 
+        var employees = await companyRepository.GetAllEmployeesByCompany(company);
+        var projects = await projectRepository.GetAllByCompanyIdSql(company.Id);
         return new CompanyResponse
         {
             Id = company.Id,
             Name = company.Name,
-            Users = company.UserCompanies!
-                .Select(UserCompanyResponse.ConvertToResponse).ToList()
+            Picture = company.PictureLink,
+            Employees = employees.Select(EmployeeResponse.ConvertToResponse)
+                .ToList(),
+            Projects = projects.Select(ProjectResponse.ConvertToResponse)
+                .ToList(),
+            Description = company.Description,
+            Budget = company.Budget,
+            MaxSalary = await companyRepository.GetMaxSalaryInCompany(company),
+            MinSalary = await companyRepository.GetMinSalaryInCompany(company),
+            TotalCosts = await companyRepository.GetAllCostsInCompany(company),
+            AverageSalary = await companyRepository.GetAverageSalaryInCompany(company)
         };
+    }
+
+    public async Task<List<CompanyResponse>> GetAllUserCompaniesAsync(string order)
+    {
+        var companies = await companyRepository
+            .GetAllByUserAsync(await userRepository.GetByJwtAsync(), order);
+
+        var responses = new List<CompanyResponse>();
+
+        foreach (var company in companies)
+        {
+            var employees = await companyRepository.GetAllEmployeesByCompany(company);
+            var projects = await projectRepository.GetAllByCompanyIdAsync(company.Id);
+            responses.Add(new CompanyResponse
+            {
+                Id = company.Id,
+                Name = company.Name,
+                Picture = company.PictureLink,
+                Employees = employees.Select(EmployeeResponse.ConvertToResponse)
+                    .ToList(),
+                Projects = projects.Select(ProjectResponse.ConvertToResponse)
+                    .ToList(),
+                Description = company.Description,
+                Budget = company.Budget,
+                MaxSalary = await companyRepository.GetMaxSalaryInCompany(company),
+                MinSalary = await companyRepository.GetMinSalaryInCompany(company),
+                TotalCosts = await companyRepository.GetAllCostsInCompany(company),
+                AverageSalary = await companyRepository.GetAverageSalaryInCompany(company)
+            });
+        }
+        
+        return responses;
     }
 
     public async Task CreatePositionAsync(long companyId, PositionInCompanyDto positionInCompanyDto)
@@ -101,8 +191,8 @@ public class CompanyService(
         var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
             await userRepository.GetByJwtAsync(), await companyRepository.GetByIdAsync(companyId));
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.CreatePosition))
-            throw new PermissionException("You do not have permission to perform this action");
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.CreatePosition))
+            throw new PermissionException();
         
         var position = new PositionInCompany
         {
@@ -124,14 +214,15 @@ public class CompanyService(
 
         var position = await companyRepository.GetPositionByNameAndCompanyIdAsync(inCompanyDto.Name, companyId);
         
-        if (!performer.PositionInCompany!.HasPermissions(PositionPermissions.UpdatePosition) ||
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.UpdatePosition) ||
             (performer.PositionInCompany.Name == position.Name && position.Name != "CEO") ||
             (performer.PositionInCompany.Priority >= position.Priority && position.Name != "CEO"))
         {
-            throw new PermissionException("You do not have permission to perform this action");
+            throw new PermissionException();
         }
         
         position.SetPermissions(inCompanyDto);
+        position.Priority = inCompanyDto.Priority;
         await companyRepository.UpdatePositionAsync(position);
     }
 }

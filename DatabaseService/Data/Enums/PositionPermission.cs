@@ -13,5 +13,8 @@ public enum PositionPermissions
     AddBudget = 1 << 6,
     UpdateBudget = 1 << 7,
     CreatePosition = 1 << 8,
-    UpdatePosition = 1 << 9
+    UpdatePosition = 1 << 9,
+    CreateTask = 1 << 10,
+    UpdateTask = 1 << 11,
+    DeleteTask = 1 << 12,
 }

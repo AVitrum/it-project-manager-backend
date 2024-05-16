@@ -14,7 +14,8 @@ namespace Server.Services.Implementations;
 public class UserService(
     IEmailSender emailSender,
     IFileService fileService,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    ICompanyRepository companyRepository)
     : IUserService
 {
     public async Task UpdateUser(UserDto userDto)
@@ -37,7 +38,8 @@ public class UserService(
     public async Task<UserInfoResponse> UserProfileAsync()
     {
         var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
-
+        var avgSalary = await companyRepository.GetAverageUserSalary(user);
+        
         var profile = new UserInfoResponse
         {
             Id = user.Id,
@@ -45,6 +47,7 @@ public class UserService(
             Email = user.Email,
             CreationDate = user.RegistrationDate,
             PhoneNumber = user.PhoneNumber,
+            AverageSalary = double.Round(avgSalary)
         };
 
         if (picture != null)
@@ -56,20 +59,8 @@ public class UserService(
     public async Task ChangeProfileImage(IFormFile file)
     {
         var (user, picture) = await userRepository.GetByJwtWithPhotoAsync();
-
-        if (file.Length > 5e+6)
-            throw new FileToLargeException("The file size must be less than 5 MB!");
-
-        var imageFormats = new HashSet<string>
-        {
-            "image/jpeg",
-            "image/png",
-            "image/gif",
-            "image/bmp",
-        };
-
-        if (!imageFormats.Contains(file.ContentType))
-            throw new FileInvalidFormatException("Unsupported picture format!");
+        
+        fileService.CheckImage(file);
 
         if (picture != null)
             await fileService.DeleteAsync(picture.PictureName);

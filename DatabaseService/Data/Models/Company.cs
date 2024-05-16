@@ -5,12 +5,16 @@ namespace DatabaseService.Data.Models;
 public class Company
 {
     [Key] public long Id { get; init; }
-    public required string Name { get; set; }
-    public required DateTime  RegistrationDate { get; set; }
-    public string? Description { get; set; }
+    [MaxLength(40)] public required string Name { get; set; }
+    public required DateTime  RegistrationDate { get; init; }
+    [MaxLength(1200)] public string Description { get; set; } = string.Empty;
     public double Budget { get; set; } = 0;
+    
+    public string? PictureName { get; set; }
+    public string? PictureLink { get; set; }
 
+    public ICollection<Project> Projects { get; set; } = new List<Project>();
     public ICollection<PositionInCompany>? PositionInCompanies { get; set; }
-    public ICollection<UserCompany>? UserCompanies { get; set; }
+    public ICollection<User>? Users { get; set; }
 }
 

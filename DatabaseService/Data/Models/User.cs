@@ -22,7 +22,7 @@ public class User
     public DateTime? ResetTokenExpires { get; set; }
 
 
-    public ProfilePhoto ProfilePhoto { get; set; }
+    public ProfilePhoto? ProfilePhoto { get; set; }
     public IEnumerable<RefreshToken> RefreshTokens { get; } = new List<RefreshToken>();
-    public IEnumerable<UserCompany> UserCompanies { get; } = new List<UserCompany>();
+    public IEnumerable<Company> Companies { get; } = new List<Company>();
 }

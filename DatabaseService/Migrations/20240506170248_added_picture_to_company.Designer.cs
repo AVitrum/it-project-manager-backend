@@ -3,6 +3,7 @@ using System;
 using DatabaseService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatabaseService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240506170248_added_picture_to_company")]
+    partial class added_picture_to_company
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,12 +239,6 @@ namespace DatabaseService.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
 
-                    b.Property<string>("PictureLink")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PictureName")
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
@@ -367,7 +364,7 @@ namespace DatabaseService.Migrations
             modelBuilder.Entity("DatabaseService.Data.Models.Assignment", b =>
                 {
                     b.HasOne("DatabaseService.Data.Models.Project", "Project")
-                        .WithMany("Assignments")
+                        .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -446,7 +443,7 @@ namespace DatabaseService.Migrations
             modelBuilder.Entity("DatabaseService.Data.Models.Project", b =>
                 {
                     b.HasOne("DatabaseService.Data.Models.Company", "Company")
-                        .WithMany("Projects")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -500,8 +497,6 @@ namespace DatabaseService.Migrations
             modelBuilder.Entity("DatabaseService.Data.Models.Company", b =>
                 {
                     b.Navigation("PositionInCompanies");
-
-                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.Employee", b =>
@@ -516,8 +511,6 @@ namespace DatabaseService.Migrations
 
             modelBuilder.Entity("DatabaseService.Data.Models.Project", b =>
                 {
-                    b.Navigation("Assignments");
-
                     b.Navigation("ProjectPerformers");
                 });
 

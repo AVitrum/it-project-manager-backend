@@ -5,7 +5,7 @@
 namespace DatabaseService.Migrations
 {
     /// <inheritdoc />
-    public partial class updated_permission_1 : Migration
+    public partial class added_relation_from_project_to_assignments : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

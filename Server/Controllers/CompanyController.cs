@@ -31,11 +31,24 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
             message = "Performed"
         });
     }
+    
+    [HttpPut("{companyId:long}/Image")]
+    public async Task<IActionResult> UploadImage([FromForm] IFormFile file, long companyId)
+    {
+        await companyService.ChangeCompanyImage(companyId, file);
+        return Ok();
+    }
 
     [HttpGet("{companyId:long}")]
     public async Task<IActionResult> GetById(long companyId)
     {
         return Ok(await companyService.GetAsync(companyId));
+    }
+    
+    [HttpGet("getAllCompany/{order}")]
+    public async Task<IActionResult> GetAllByUser(string order)
+    {
+        return Ok(await companyService.GetAllUserCompaniesAsync(order));
     }
 
     [HttpPost("{companyId:long}/addEmployee")]
@@ -68,12 +81,18 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
         });
     }
 
+    [HttpGet("getEmployee/{employeeId:long}")]
+    public async Task<IActionResult> GetUser(long employeeId)
+    {
+        return Ok(await employeeService.GetEmployeeAsync(employeeId));
+    }
+
     [HttpPost("{companyId:long}/addPosition")]
     public async Task<IActionResult> AddPosition(long companyId, PositionInCompanyDto inCompanyDto)
     {
         await companyService.CreatePositionAsync(companyId, inCompanyDto);
         return Ok(new
-        {
+        { 
             message = "Created"
         });
     }
@@ -92,5 +111,11 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
     public async Task<IActionResult> GetPositionById(long companyId, long positionId)
     {
         return Ok(await employeeService.GetEmployeePositionAsync(companyId, positionId));
+    }
+    
+    [HttpGet("{companyId:long}/getAllPositions")]
+    public async Task<IActionResult> GetAllPositions(long companyId)
+    {
+        return Ok(await employeeService.GetAllPositionsAsync(companyId));
     }
 }

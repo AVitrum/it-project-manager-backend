@@ -8,4 +8,5 @@ public class UserInfoResponse
     public required DateTime CreationDate { get; set; }
     public string? PhoneNumber { get; set; }
     public string? ImageUrl { get; set; }
+    public double AverageSalary { get; set; }
 }

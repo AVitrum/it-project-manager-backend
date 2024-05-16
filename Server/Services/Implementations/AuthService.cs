@@ -37,7 +37,7 @@ public class AuthService(
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
             VerificationToken = CreateRandomToken(),
-            RegistrationDate = DateTime.UtcNow,
+            RegistrationDate = DateTime.UtcNow.AddHours(3)
         };
         await userRepository.CreateAsync(newUser);
     }
@@ -64,12 +64,13 @@ public class AuthService(
 
         return new LoginResponse
         {
-            AccessToken = GenerateBearerToken(configuration, new UserDto
-            {
-                Username = user.Username,
-                Email = user.Email
-            }),
-            RefreshToken = refreshToken.Token
+            AccessToken = GenerateBearerToken(configuration,
+                new UserDto
+                {
+                    Username = user.Username,
+                    Email = user.Email
+                }),
+            RefreshToken = refreshToken.Token,
         };
     }
 
@@ -85,10 +86,10 @@ public class AuthService(
         var newUser = new User
         {
             Email = googleUserInfoResponse.Email,
-            Username = googleUserInfoResponse.Name,
+            Username = googleUserInfoResponse.Name + "#" + new Random().Next(9999, 999999),
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt,
-            RegistrationDate = DateTime.UtcNow,
+            RegistrationDate = DateTime.UtcNow.AddHours(3),
             VerifiedAt = DateTime.UtcNow,
             PhoneNumber = string.Empty,
         };
@@ -115,12 +116,13 @@ public class AuthService(
         { RegistrationDate = user.RegistrationDate, VerifiedAt = user.VerifiedAt }))
             return new LoginResponse
             {
-                AccessToken = GenerateBearerToken(configuration, new UserDto
-                {
-                    Username = user.Username,
-                    Email = user.Email
-                }),
-                RefreshToken = refreshToken.Token
+                AccessToken = GenerateBearerToken(configuration,
+                    new UserDto
+                    {
+                        Username = user.Username,
+                        Email = user.Email
+                    }),
+                RefreshToken = refreshToken.Token,
             };
 
         user.VerifiedAt = DateTime.UtcNow;
@@ -128,12 +130,13 @@ public class AuthService(
 
         return new LoginResponse
         {
-            AccessToken = GenerateBearerToken(configuration, new UserDto
-            {
-                Username = user.Username,
-                Email = user.Email
-            }),
-            RefreshToken = refreshToken.Token
+            AccessToken = GenerateBearerToken(configuration,
+                new UserDto
+                {
+                    Username = user.Username,
+                    Email = user.Email
+                }),
+            RefreshToken = refreshToken.Token,
         };
     }
 
@@ -166,12 +169,13 @@ public class AuthService(
 
         return new LoginResponse
         {
-            AccessToken = GenerateBearerToken(configuration, new UserDto
-            {
-                Username = user.Username,
-                Email = user.Email
-            }),
-            RefreshToken = newRefreshToken.Token
+            AccessToken = GenerateBearerToken(configuration,
+                new UserDto
+                {
+                    Username = user.Username,
+                    Email = user.Email
+                }),
+            RefreshToken = newRefreshToken.Token,
         };
     }
 
