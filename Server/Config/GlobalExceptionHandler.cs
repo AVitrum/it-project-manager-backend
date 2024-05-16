@@ -47,6 +47,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             FileException => (StatusCodes.Status400BadRequest, exception.Message),
             CompanyException => (StatusCodes.Status400BadRequest, exception.Message),
             ProjectException => (StatusCodes.Status400BadRequest, exception.Message),
+            AssignmentException => (StatusCodes.Status400BadRequest, exception.Message),
             NotImplementedException => (StatusCodes.Status501NotImplemented, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };

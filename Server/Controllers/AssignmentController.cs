@@ -40,5 +40,15 @@ public class AssignmentController(IAssignmentService assignmentService) : Contro
     public async Task<IActionResult> GetAllAssignments(long projectId)
     {
         return Ok(await assignmentService.GetAllAssignmentsAsync(projectId));
-    } 
+    }
+
+    [HttpPost("{id:long}/addComment")]
+    public async Task<IActionResult> AddComment(long id, CommentDto request)
+    {
+        await assignmentService.AddComment(id, request);
+        return Ok(new
+        {
+            message = "Created"
+        });
+    }
 }

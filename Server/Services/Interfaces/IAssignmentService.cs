@@ -8,6 +8,7 @@ public interface IAssignmentService
 {
     Task CreateAssignment(long projectId, AssignmentDto assignmentDto);
     Task UpdateAssignment(long id, AssignmentDto assignmentDto);
+    Task AddComment(long id, CommentDto commentDto);
     Task<AssignmentResponse> GetAssignmentAsync(long id);
     Task<List<AssignmentResponse>> GetAllAssignmentsAsync(long projectId);
 }

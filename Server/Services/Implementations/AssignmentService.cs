@@ -35,6 +35,7 @@ public class AssignmentService(
         {
             throw new PermissionException();
         }
+        
         var dateTime = DateTime.Parse(assignmentDto.Deadline);
         var utcDateTime = dateTime.ToUniversalTime();
         
@@ -45,8 +46,9 @@ public class AssignmentService(
             Description = assignmentDto.Description,
             Budget = assignmentDto.Budget,
             Theme = assignmentDto.Theme!,
-            CreatedAt = DateTime.UtcNow.AddHours(3),
-            Deadline = utcDateTime.AddHours(-3)
+            CreatedAt = DateTime.UtcNow,
+            Deadline = utcDateTime.AddHours(-3),
+            UpdateAt = DateTime.UtcNow
         };
         var assignment = await assignmentRepository.CreateAsync(newAssignment);
 
@@ -76,20 +78,80 @@ public class AssignmentService(
             throw new PermissionException();
         }
         
+        var newChange = new AssignmentHistory
+        {
+            AssignmentId = assignment.Id,
+            UpdatedAt = DateTime.UtcNow,
+            Change = $"{employee.User!.Username} have updated"
+        };
+        
         var dateTime = DateTime.Parse(assignmentDto.Deadline);
         var utcDateTime = dateTime.ToUniversalTime();
+        
+        if (assignment.Deadline < DateTime.UtcNow.AddHours(3) && assignment.Deadline.Equals(utcDateTime.AddHours(-3)))
+        {
+            assignment.Type = AssignmentType.OVERDUE;
+            await assignmentRepository.UpdateAsync(assignment);
+            throw new AssignmentDeadlineException();
+        }
+        
+        if (!assignment.Deadline.Equals(utcDateTime.AddHours(-3)))
+        {
+            assignment.Deadline = utcDateTime.AddHours(-3);
+            newChange.Change += " deadline;";
+        }
 
-        assignment.Theme = assignmentDto.Theme!;
-        assignment.Description = assignmentDto.Description;
-        assignment.Budget = assignmentDto.Budget;
-        assignment.Deadline = utcDateTime.AddHours(-2);
+        if (assignment.Theme != assignmentDto.Theme && assignmentDto.Theme != null)
+        {
+            assignment.Theme = assignmentDto.Theme;
+            newChange.Change += " theme;";
+        }
 
+        if (assignment.Description != assignmentDto.Description && assignmentDto.Description != null)
+        {
+            assignment.Description = assignmentDto.Description;
+            newChange.Change += " description;";
+        }
+        
+        if (!((int)assignment.Budget).Equals((int)assignmentDto.Budget) && assignmentDto.Budget != 0)
+        {
+            assignment.Budget = assignmentDto.Budget;
+            newChange.Change += " budget;";
+        }
+
+        await assignmentRepository.AddChange(newChange);
+        
+        assignment.UpdateAt = DateTime.UtcNow;
         await assignmentRepository.UpdateAsync(assignment);
+    }
+
+    public async Task AddComment(long id, CommentDto commentDto)
+    {
+        var assignment = await assignmentRepository.GetByIdAsync(id);
+
+        var company = await companyRepository.GetByIdAsync(assignment.Project!.CompanyId);
+        var employee = 
+            await companyRepository.GetEmployeeByUserAndCompanyAsync(await userRepository.GetByJwtAsync(), company);
+        var projectPerformer = 
+            await projectRepository.GetPerformerByEmployeeAndProjectAsync(employee, assignment.Project);
+        var performer =
+            await assignmentRepository.GetPerformerByProjectPerformerAndAssignment(projectPerformer, assignment);
+        
+        var comment = new Comment
+        {
+            UserId = performer.Id,
+            Message = commentDto.Message,
+            CreatedAt = DateTime.UtcNow,
+            AssignmentId = id
+        };
+
+        await assignmentRepository.AddComment(comment);
     }
 
     public async Task<AssignmentResponse> GetAssignmentAsync(long id)
     {
         var assignment = await assignmentRepository.GetByIdAsync(id);
+        assignment.Changes = await assignmentRepository.GetChanges(assignment);
 
         return AssignmentResponse.ConvertToResponse(assignment);
     }
@@ -97,6 +159,16 @@ public class AssignmentService(
     public async Task<List<AssignmentResponse>> GetAllAssignmentsAsync(long projectId)
     {
         var assignments = await assignmentRepository.GetAllByProjectIdAsync(projectId);
+
+        foreach (var assignment in assignments)
+        {
+            assignment.Changes = await assignmentRepository.GetChanges(assignment);
+
+            if (assignment.Deadline >= DateTime.UtcNow.AddHours(3) 
+                || assignment.Type == AssignmentType.COMPLETED) continue;
+            assignment.Type = AssignmentType.OVERDUE;
+            await assignmentRepository.UpdateAsync(assignment);
+        }
 
         return assignments.Select(AssignmentResponse.ConvertToResponse).ToList();
     }

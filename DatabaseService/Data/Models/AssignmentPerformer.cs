@@ -10,4 +10,6 @@ public class AssignmentPerformer
     public required ProjectPerformer ProjectPerformer { get; set; }
     public required long AssignmentId { get; set; }
     public required Assignment Assignment { get; set; }
+
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }
