@@ -3,6 +3,7 @@ using DatabaseService.Data.Enums;
 using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
+using FileService;
 using Server.Payload.Responses;
 using Server.Services.Interfaces;
 
@@ -12,7 +13,8 @@ public class AssignmentService(
     IAssignmentRepository assignmentRepository,
     IProjectRepository projectRepository,
     ICompanyRepository companyRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IFileService fileService)
     : IAssignmentService
 {
     public async Task CreateAssignment(long projectId, AssignmentDto assignmentDto)
@@ -125,6 +127,35 @@ public class AssignmentService(
         await assignmentRepository.UpdateAsync(assignment);
     }
 
+    public async Task AddFile(long id, IFormFile file)
+    {
+        var assignment = await assignmentRepository.GetByIdAsync(id);
+
+        if (assignment.Type == AssignmentType.OVERDUE)
+        {
+            throw new AssignmentDeadlineException();
+        }
+
+        var company = await companyRepository.GetByIdAsync(assignment.Project!.CompanyId);
+        var employee = 
+            await companyRepository.GetEmployeeByUserAndCompanyAsync(await userRepository.GetByJwtAsync(), company);
+        var projectPerformer = 
+            await projectRepository.GetPerformerByEmployeeAndProjectAsync(employee, assignment.Project);
+        await assignmentRepository.GetPerformerByProjectPerformerAndAssignment(projectPerformer, assignment);
+
+        var folder = $"{company.Name}/{assignment.Project.Name}/{assignment.Theme}";
+        var (link, dbFileName) = await fileService.UploadFileAsync(folder, file);
+
+        var newFile = new AssignmentFile
+        {
+            AssignmentId = assignment.Id,
+            Name = file.FileName,
+            DbName = dbFileName,
+            Link = link
+        };
+        await assignmentRepository.AddFile(newFile);
+    }
+
     public async Task AddComment(long id, CommentDto commentDto)
     {
         var assignment = await assignmentRepository.GetByIdAsync(id);
@@ -152,6 +183,7 @@ public class AssignmentService(
     {
         var assignment = await assignmentRepository.GetByIdAsync(id);
         assignment.Changes = await assignmentRepository.GetChanges(assignment);
+        assignment.Files = await assignmentRepository.GetAllFiles(assignment);
 
         return AssignmentResponse.ConvertToResponse(assignment);
     }
@@ -163,7 +195,8 @@ public class AssignmentService(
         foreach (var assignment in assignments)
         {
             assignment.Changes = await assignmentRepository.GetChanges(assignment);
-
+            assignment.Files = await assignmentRepository.GetAllFiles(assignment);
+            
             if (assignment.Deadline >= DateTime.UtcNow.AddHours(3) 
                 || assignment.Type == AssignmentType.COMPLETED) continue;
             assignment.Type = AssignmentType.OVERDUE;

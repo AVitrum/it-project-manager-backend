@@ -18,6 +18,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<PositionInCompany> PositionInCompanies => Set<PositionInCompany>();
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<AssignmentHistory> AssignmentHistories => Set<AssignmentHistory>();
+    public DbSet<AssignmentFile> AssignmentFiles => Set<AssignmentFile>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -74,6 +75,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .HasOne(e => e.Assignment)
             .WithMany(e => e.Comments)
             .HasForeignKey(e => e.AssignmentId);
+        
+        modelBuilder.Entity<AssignmentFile>()
+            .HasOne(e => e.Assignment)
+            .WithMany(e => e.Files)
+            .HasForeignKey(e => e.AssignmentId);
+            
 
         modelBuilder.Entity<AssignmentHistory>()
             .HasOne(e => e.Assignment)

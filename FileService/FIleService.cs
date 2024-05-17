@@ -51,7 +51,24 @@ namespace FileService
             return link;
         }
 
-        public async Task<string> DownloadAsync(string fileName)
+        public async Task<(string, string)> UploadFileAsync(string folder, IFormFile file)
+        {
+            GetFirebaseAuth(out var apiKey, out var bucket, out var authEmail, out var authPassword);
+            var storage = await GetFireBaseStorage(apiKey, authEmail, authPassword, bucket);
+            var cancellation = new CancellationTokenSource();
+            
+            if (file.Length <= 0) throw new FileException("No content in the file");
+
+            var stream = file.OpenReadStream();
+            var id = Guid.NewGuid();
+            var fileName = $"{id}_{file.FileName}";
+
+            var link = await storage.Child(folder).Child(fileName).PutAsync(stream, cancellation.Token);
+            
+            return (link, fileName);
+        }
+
+        public async Task<string> DownloadAsync(string fileName, string folder)
         {
             GetFirebaseAuth(out var apiKey, out var bucket, out var authEmail, out var authPassword);
 

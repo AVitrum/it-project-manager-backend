@@ -113,6 +113,19 @@ public class AssignmentRepository(AppDbContext dbContext) : IAssignmentRepositor
             .ToListAsync();
     }
 
+    public async Task AddFile(AssignmentFile file)
+    {
+        await dbContext.AssignmentFiles.AddAsync(file);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<List<AssignmentFile>> GetAllFiles(Assignment assignment)
+    {
+        return await dbContext.AssignmentFiles
+            .Where(af => af.AssignmentId.Equals(assignment.Id))
+            .ToListAsync();
+    }
+
     public async Task<bool> PerformerExistsByEmail(string email)
     {
         return await dbContext.AssignmentPerformers

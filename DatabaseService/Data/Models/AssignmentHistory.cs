@@ -7,7 +7,7 @@ public class AssignmentHistory
     [Key] public long Id { get; init; }
     
     public required long AssignmentId { get; init; }
-    public Assignment? Assignment { get; set; }
+    public Assignment? Assignment { get; init; }
     
     public required DateTime UpdatedAt { get; init; }
 

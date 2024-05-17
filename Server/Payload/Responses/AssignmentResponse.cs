@@ -15,6 +15,7 @@ public class AssignmentResponse
     public required List<EmployeeResponse> Performers { get; set; }
     public required List<HistoryResponse> Histories { get; set; }
     public required List<CommentResponse> Comments { get; set; }
+    public required List<FileResponse> Files { get; set; }
 
 
     public static AssignmentResponse ConvertToResponse(Assignment assignment)
@@ -39,7 +40,9 @@ public class AssignmentResponse
                 .ToList(),
             Histories = assignment.Changes.Select(HistoryResponse.ConvertToResponse)
                 .ToList(),
-            Type = assignment.Type.ToString()
+            Type = assignment.Type.ToString(),
+            Files = assignment.Files.Select(FileResponse.ConvertToResponse)
+                .ToList(),
         };
     }
 }

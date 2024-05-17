@@ -19,6 +19,9 @@ public interface IAssignmentRepository
     
     Task AddChange(AssignmentHistory change);
     Task<List<AssignmentHistory>> GetChanges(Assignment assignment);
+
+    Task AddFile(AssignmentFile file);
+    Task<List<AssignmentFile>> GetAllFiles(Assignment assignment);
     
     Task<bool> PerformerExistsByEmail(string email);
 }

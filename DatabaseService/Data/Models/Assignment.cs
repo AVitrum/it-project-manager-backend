@@ -25,4 +25,5 @@ public class Assignment
     public ICollection<AssignmentPerformer> Performers { get; set; } = new List<AssignmentPerformer>();
     public ICollection<AssignmentHistory> Changes { get; set; } = new List<AssignmentHistory>();
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public ICollection<AssignmentFile> Files { get; set; } = new List<AssignmentFile>();
 }

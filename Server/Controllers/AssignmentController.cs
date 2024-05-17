@@ -30,6 +30,16 @@ public class AssignmentController(IAssignmentService assignmentService) : Contro
         });
     }
 
+    [HttpPost("{id:long}/addFile")]
+    public async Task<IActionResult> AddFile(long id, IFormFile file)
+    {
+        await assignmentService.AddFile(id, file);
+        return Ok(new
+        {
+            message = "Uploaded"
+        });
+    }
+
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetAssignment(long id)
     {
