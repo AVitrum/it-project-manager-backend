@@ -98,6 +98,14 @@ public class EmployeeService(
         return EmployeeResponse.ConvertToResponse(employee);
     }
 
+    public async Task<EmployeeResponse> GetPerformerAsync(long companyId)
+    {
+        var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), await companyRepository.GetByIdAsync(companyId));
+
+        return EmployeeResponse.ConvertToResponse(employee);
+    }
+
     public async Task<PositionInCompanyDto> GetEmployeePositionAsync(long companyId, long positionId)
     {
         var position = await companyRepository.GetPositionByIdAndCompanyIdAsync(positionId, companyId);

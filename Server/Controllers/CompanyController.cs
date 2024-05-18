@@ -44,6 +44,12 @@ public class CompanyController(ICompanyService companyService, IEmployeeService 
     {
         return Ok(await companyService.GetAsync(companyId));
     }
+
+    [HttpGet("{companyId:long}/getPerformer")]
+    public async Task<IActionResult> GetPerformer(long companyId)
+    {
+        return Ok(await employeeService.GetPerformerAsync(companyId));
+    }
     
     [HttpGet("getAllCompany/{order}")]
     public async Task<IActionResult> GetAllByUser(string order)

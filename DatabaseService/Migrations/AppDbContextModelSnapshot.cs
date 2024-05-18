@@ -203,6 +203,9 @@ namespace DatabaseService.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<double>("RemainingBudget")
+                        .HasColumnType("double precision");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -333,6 +336,9 @@ namespace DatabaseService.Migrations
 
                     b.Property<string>("PictureName")
                         .HasColumnType("text");
+
+                    b.Property<double>("RemainingBudget")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 

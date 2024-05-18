@@ -18,4 +18,5 @@ public interface IProjectRepository
     Task<bool> PerformerExistsByEmail(string email, long projectId);
     Task<List<Project>> GetAllByCompanyIdAsync(long companyId);
     Task<List<Project>> GetAllByCompanyIdSql(long companyId);
+    Task<List<Project>> GetAllByCompanyIdAndEmployeeAsync(long companyId, Employee employee);
 }

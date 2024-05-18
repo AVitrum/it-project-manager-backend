@@ -21,7 +21,7 @@ public class AssignmentService(
     {
         var project = await projectRepository.GetByIdAsync(projectId);
 
-        if (project.Budget < assignmentDto.Budget)
+        if (project.RemainingBudget < assignmentDto.Budget)
         {
             throw new ProjectException("You don't have enough money");
         }
@@ -62,11 +62,136 @@ public class AssignmentService(
             Assignment = assignment
         };
         await assignmentRepository.AddPerformer(assignmentPerformer);
+
+        project.RemainingBudget -= assignment.Budget;
+        await projectRepository.UpdateAsync(project);
+    }
+
+    public async Task AddPerformer(long assignmentId, PerformerDto performerDto)
+    {
+        var assignment = await assignmentRepository.GetByIdAsync(assignmentId);
+        var company = await companyRepository.GetByIdForOperations(assignment.Project!.CompanyId);
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+        
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.AddUser))
+        {
+            throw new PermissionException();
+        }
+
+        if (await assignmentRepository.PerformerExistsByEmail(performerDto.Email))
+        {
+            throw new ProjectException("Performer already exists!");
+        }
+
+        var employeeToAdd = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByEmailAsync(performerDto.Email), company);
+        var userToAdd = await projectRepository.GetPerformerByEmployeeAndProjectAsync(employeeToAdd, assignment.Project);
+        
+        var assignmentPerformer = new AssignmentPerformer
+        {
+            ProjectPerformerId = userToAdd.Id,
+            ProjectPerformer = userToAdd,
+            AssignmentId = assignment.Id,
+            Assignment = assignment
+        };
+        await assignmentRepository.AddPerformer(assignmentPerformer);
+    }
+
+    public async Task ToReview(long id)
+    {
+        var assignment = await assignmentRepository.GetByIdAsync(id);
+        
+        var company = await companyRepository.GetByIdForOperations(assignment.Project!.CompanyId);
+        
+        var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+        
+        var projectPerformer = await projectRepository.GetPerformerByEmployeeAndProjectAsync(employee, assignment.Project);
+
+        var performer =
+            await assignmentRepository.GetPerformerByProjectPerformerAndAssignment(projectPerformer, assignment);
+
+        if (!assignment.Performers.Contains(performer))
+        {
+            throw new PermissionException();
+        }
+
+        var newChange = new AssignmentHistory
+        {
+            AssignmentId = assignment.Id,
+            UpdatedAt = DateTime.UtcNow,
+            Change = $"{employee.User!.Username} sent in review"
+        };
+
+        assignment.Type = AssignmentType.IN_REVIEW;
+        await assignmentRepository.AddChange(newChange);
+        assignment.UpdateAt = DateTime.UtcNow;
+        await assignmentRepository.UpdateAsync(assignment);
+    }
+
+    public async Task MarkAsCompleted(long id)
+    {
+        var assignment = await assignmentRepository.GetByIdAsync(id);
+        
+        var company = await companyRepository.GetByIdForOperations(assignment.Project!.CompanyId);
+        
+        var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+        
+        if (!employee.PositionInCompany.HasPermissions(PositionPermissions.UpdateTask))
+        {
+            throw new PermissionException();
+        }
+        
+        var newChange = new AssignmentHistory
+        {
+            AssignmentId = assignment.Id,
+            UpdatedAt = DateTime.UtcNow,
+            Change = $"{employee.User!.Username} approved the assignment"
+        };
+
+        assignment.Type = AssignmentType.COMPLETED;
+        await assignmentRepository.AddChange(newChange);
+        assignment.UpdateAt = DateTime.UtcNow;
+        await assignmentRepository.UpdateAsync(assignment);
+    }
+    
+    public async Task ReturnTask(long id)
+    {
+        var assignment = await assignmentRepository.GetByIdAsync(id);
+        
+        var company = await companyRepository.GetByIdForOperations(assignment.Project!.CompanyId);
+        
+        var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+        
+        if (!employee.PositionInCompany.HasPermissions(PositionPermissions.UpdateTask))
+        {
+            throw new PermissionException();
+        }
+
+        var newChange = new AssignmentHistory
+        {
+            AssignmentId = assignment.Id,
+            UpdatedAt = DateTime.UtcNow,
+            Change = $"{employee.User!.Username} returned the assignment"
+        };
+
+        assignment.Type = AssignmentType.ASSIGNED;
+        await assignmentRepository.AddChange(newChange);
+        assignment.UpdateAt = DateTime.UtcNow;
+        await assignmentRepository.UpdateAsync(assignment);
     }
 
     public async Task UpdateAssignment(long id, AssignmentDto assignmentDto)
     {
         var assignment = await assignmentRepository.GetByIdAsync(id);
+
+        if (assignment.Type.Equals(AssignmentType.COMPLETED) || assignment.Type.Equals(AssignmentType.IN_REVIEW))
+        {
+            throw new PermissionException();
+        }
         
         var company = await companyRepository.GetByIdForOperations(assignment.Project!.CompanyId);
         
@@ -89,14 +214,14 @@ public class AssignmentService(
         
         var dateTime = DateTime.Parse(assignmentDto.Deadline);
         var utcDateTime = dateTime.ToUniversalTime();
-        
+
         if (assignment.Deadline < DateTime.UtcNow.AddHours(3) && assignment.Deadline.Equals(utcDateTime.AddHours(-3)))
         {
             assignment.Type = AssignmentType.OVERDUE;
             await assignmentRepository.UpdateAsync(assignment);
             throw new AssignmentDeadlineException();
         }
-        
+
         if (!assignment.Deadline.Equals(utcDateTime.AddHours(-3)))
         {
             assignment.Deadline = utcDateTime.AddHours(-3);
@@ -117,12 +242,24 @@ public class AssignmentService(
         
         if (!((int)assignment.Budget).Equals((int)assignmentDto.Budget) && assignmentDto.Budget != 0)
         {
+            if (!employee.PositionInCompany.HasPermissions(PositionPermissions.UpdateBudget))
+            {
+                throw new PermissionException();
+            }
+            
+            if (assignment.Project.RemainingBudget - assignmentDto.Budget + assignment.Budget < 0)
+            {
+                throw new ProjectException("You don't have enough money");
+            }
+            
+            assignment.Project.RemainingBudget = assignment.Project.RemainingBudget - assignmentDto.Budget + assignment.Budget;
+            await projectRepository.UpdateAsync(assignment.Project);
+            
             assignment.Budget = assignmentDto.Budget;
             newChange.Change += " budget;";
         }
 
         await assignmentRepository.AddChange(newChange);
-        
         assignment.UpdateAt = DateTime.UtcNow;
         await assignmentRepository.UpdateAsync(assignment);
     }
@@ -196,11 +333,19 @@ public class AssignmentService(
         {
             assignment.Changes = await assignmentRepository.GetChanges(assignment);
             assignment.Files = await assignmentRepository.GetAllFiles(assignment);
+
+            if (assignment.Type is AssignmentType.COMPLETED or AssignmentType.IN_REVIEW) continue;
             
-            if (assignment.Deadline >= DateTime.UtcNow.AddHours(3) 
-                || assignment.Type == AssignmentType.COMPLETED) continue;
-            assignment.Type = AssignmentType.OVERDUE;
-            await assignmentRepository.UpdateAsync(assignment);
+            if (assignment.Deadline < DateTime.UtcNow.AddHours(3))
+            {
+                assignment.Type = AssignmentType.OVERDUE;
+                await assignmentRepository.UpdateAsync(assignment);
+            } else if (assignment.Deadline > DateTime.UtcNow.AddHours(3) &&
+                       assignment.Type.Equals(AssignmentType.OVERDUE))
+            {
+                assignment.Type = AssignmentType.ASSIGNED;
+            }
+
         }
 
         return assignments.Select(AssignmentResponse.ConvertToResponse).ToList();

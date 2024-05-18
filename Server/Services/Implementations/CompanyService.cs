@@ -29,6 +29,7 @@ public class CompanyService(
             Name = companyDto.Name!,
             Description = companyDto.Description!,
             Budget = (double)companyDto.Budget!,
+            RemainingBudget = (double)companyDto.Budget!,
             RegistrationDate = DateTime.UtcNow.AddHours(3)
         };
         var company = await companyRepository.CreateAsync(newCompany);
@@ -96,7 +97,13 @@ public class CompanyService(
             {
                 throw new PermissionException();
             }
-            
+
+            if (company.RemainingBudget > companyDto.Budget)
+            {
+                throw new CompanyException("You will not be able to cover the costs");
+            }
+
+            company.RemainingBudget += (double)companyDto.Budget - company.Budget;
             company.Budget = (double)companyDto.Budget;
         }
         
@@ -153,15 +160,17 @@ public class CompanyService(
 
     public async Task<List<CompanyResponse>> GetAllUserCompaniesAsync(string order)
     {
+        var user = await userRepository.GetByJwtAsync();
         var companies = await companyRepository
-            .GetAllByUserAsync(await userRepository.GetByJwtAsync(), order);
-
+            .GetAllByUserAsync(user, order);
+        
         var responses = new List<CompanyResponse>();
 
         foreach (var company in companies)
         {
+            var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(user, company);
             var employees = await companyRepository.GetAllEmployeesByCompany(company);
-            var projects = await projectRepository.GetAllByCompanyIdAsync(company.Id);
+            var projects = await projectRepository.GetAllByCompanyIdAndEmployeeAsync(company.Id, employee);
             responses.Add(new CompanyResponse
             {
                 Id = company.Id,

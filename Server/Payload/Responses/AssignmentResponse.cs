@@ -5,6 +5,8 @@ namespace Server.Payload.Responses;
 public class AssignmentResponse
 {
     public required long Id { get; set; }
+    public required long CompanyId { get; set; }
+    public required long ProjectId { get; set; }
     public required string Theme { get; set; }
     public required string Description { get; set; }
     public required string Type { get; set; }
@@ -43,6 +45,8 @@ public class AssignmentResponse
             Type = assignment.Type.ToString(),
             Files = assignment.Files.Select(FileResponse.ConvertToResponse)
                 .ToList(),
+            CompanyId = assignment.Project!.CompanyId,
+            ProjectId = assignment.ProjectId,
         };
     }
 }

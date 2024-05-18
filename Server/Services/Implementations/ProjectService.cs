@@ -27,7 +27,7 @@ public class ProjectService(
             throw new PermissionException();
         }
 
-        if (company.Budget - projectDto.Budget < 0)
+        if (company.RemainingBudget - projectDto.Budget < 0)
         {
             throw new ProjectException("You don't have enough money");
         }
@@ -35,6 +35,7 @@ public class ProjectService(
         var newProject = new Project
         {
             Budget = projectDto.Budget,
+            RemainingBudget = projectDto.Budget,
             Description = projectDto.Description ?? string.Empty,
             CreatorId = performer.Id,
             CompanyId = company.Id,
@@ -49,6 +50,9 @@ public class ProjectService(
             ProjectId = project.Id,
         };
         await projectRepository.AddPerformer(projectPerformer);
+        
+        company.RemainingBudget -= project.Budget;
+        await companyRepository.UpdateAsync(company);
     }
 
     public async Task UpdateAsync(long projectId, ProjectDto projectDto)
@@ -79,12 +83,24 @@ public class ProjectService(
             {
                 throw new PermissionException();
             }
-            
-            if (company.Budget - projectDto.Budget < 0)
+
+            if (company.RemainingBudget - projectDto.Budget < 0)
             {
                 throw new ProjectException("You don't have enough money");
             }
 
+            var costs = project.Assignments.Sum(assignment => assignment.Budget);
+
+            if (costs > projectDto.Budget)
+            {
+                throw new ProjectException("You will not be able to cover the costs");
+            }
+
+            project.RemainingBudget = project.RemainingBudget + projectDto.Budget - project.Budget;
+            
+            company.RemainingBudget = company.RemainingBudget - projectDto.Budget + project.Budget;
+            await companyRepository.UpdateAsync(company);
+            
             project.Budget = projectDto.Budget;
         }
 
