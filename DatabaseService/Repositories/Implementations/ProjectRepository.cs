@@ -32,6 +32,7 @@ public class ProjectRepository(AppDbContext dbContext, IConfiguration configurat
     public async Task<Project> GetByIdAsync(long projectId)
     {
         return await dbContext.Projects
+                   .Include(e => e.Assignments)
             .Include(e => e.Creator)
             .Include(e => e.ProjectPerformers)
             .ThenInclude(e => e.Employee)
@@ -74,6 +75,15 @@ public class ProjectRepository(AppDbContext dbContext, IConfiguration configurat
         return projects;
     }
 
+    public async Task<List<Project>> GetAllByCompanyIdAndEmployeeAsync(long companyId, Employee employee)
+    {
+        return await dbContext.Projects
+            .Include(p => p.ProjectPerformers)
+            .Where(p => p.CompanyId == companyId 
+                        && p.ProjectPerformers.Any(pp => pp.EmployeeId == employee.Id))
+            .ToListAsync();
+    }
+
     public async Task AddPerformer(ProjectPerformer performer)
     {
         await dbContext.ProjectPerformers.AddAsync(performer);
@@ -92,7 +102,7 @@ public class ProjectRepository(AppDbContext dbContext, IConfiguration configurat
             .Include(e => e.Employee)
             .ThenInclude(e => e.PositionInCompany)
             .FirstOrDefaultAsync(e => e.EmployeeId == employee.Id && e.ProjectId == project.Id)
-            ?? throw new EntityNotFoundException(nameof(ProjectPerformer));
+            ?? throw new ProjectException("You are not the project performer");
     }
     
     public async Task<bool> PerformerExistsByEmail(string email, long projectId)

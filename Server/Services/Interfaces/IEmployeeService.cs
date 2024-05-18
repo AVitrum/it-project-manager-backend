@@ -12,4 +12,5 @@ public interface IEmployeeService
     Task<List<PositionInCompanyDto>> GetAllPositionsAsync(long companyId);
     Task UpdateEmployeeAsync(long companyId, EmployeeDto employeeDto);
     Task<EmployeeResponse> GetEmployeeAsync(long employeeId);
+    Task<EmployeeResponse> GetPerformerAsync(long companyId);
 }

@@ -3,6 +3,7 @@ using System;
 using DatabaseService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatabaseService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240516140325_added_history")]
+    partial class added_history
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,9 +54,6 @@ namespace DatabaseService.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("character varying(60)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -62,36 +62,6 @@ namespace DatabaseService.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Assignments");
-                });
-
-            modelBuilder.Entity("DatabaseService.Data.Models.AssignmentFile", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("AssignmentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("DbName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Link")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssignmentId");
-
-                    b.ToTable("AssignmentFiles");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.AssignmentHistory", b =>
@@ -202,9 +172,6 @@ namespace DatabaseService.Migrations
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<double>("RemainingBudget")
-                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
@@ -337,9 +304,6 @@ namespace DatabaseService.Migrations
                     b.Property<string>("PictureName")
                         .HasColumnType("text");
 
-                    b.Property<double>("RemainingBudget")
-                        .HasColumnType("double precision");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
@@ -471,17 +435,6 @@ namespace DatabaseService.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("DatabaseService.Data.Models.AssignmentFile", b =>
-                {
-                    b.HasOne("DatabaseService.Data.Models.Assignment", "Assignment")
-                        .WithMany("Files")
-                        .HasForeignKey("AssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assignment");
                 });
 
             modelBuilder.Entity("DatabaseService.Data.Models.AssignmentHistory", b =>
@@ -636,8 +589,6 @@ namespace DatabaseService.Migrations
                     b.Navigation("Changes");
 
                     b.Navigation("Comments");
-
-                    b.Navigation("Files");
 
                     b.Navigation("Performers");
                 });

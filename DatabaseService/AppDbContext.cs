@@ -16,6 +16,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ProjectPerformer> ProjectPerformers => Set<ProjectPerformer>();
     public DbSet<AssignmentPerformer> AssignmentPerformers => Set<AssignmentPerformer>();
     public DbSet<PositionInCompany> PositionInCompanies => Set<PositionInCompany>();
+    public DbSet<Comment> Comments => Set<Comment>();
+    public DbSet<AssignmentHistory> AssignmentHistories => Set<AssignmentHistory>();
+    public DbSet<AssignmentFile> AssignmentFiles => Set<AssignmentFile>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -63,6 +66,27 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
             .WithMany(e => e.Performers)
             .HasForeignKey(e => e.AssignmentId);
 
+        modelBuilder.Entity<Comment>()
+            .HasOne(e => e.User)
+            .WithMany(e => e.Comments)
+            .HasForeignKey(e => e.UserId);
+        
+        modelBuilder.Entity<Comment>()
+            .HasOne(e => e.Assignment)
+            .WithMany(e => e.Comments)
+            .HasForeignKey(e => e.AssignmentId);
+        
+        modelBuilder.Entity<AssignmentFile>()
+            .HasOne(e => e.Assignment)
+            .WithMany(e => e.Files)
+            .HasForeignKey(e => e.AssignmentId);
+            
+
+        modelBuilder.Entity<AssignmentHistory>()
+            .HasOne(e => e.Assignment)
+            .WithMany(e => e.Changes)
+            .HasForeignKey(e => e.AssignmentId);
+        
         modelBuilder.Entity<Employee>()
             .HasMany(e => e.ProjectPerformers)
             .WithOne(e => e.Employee)

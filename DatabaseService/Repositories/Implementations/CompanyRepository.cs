@@ -66,90 +66,97 @@ public class CompanyRepository(AppDbContext dbContext, IConfiguration configurat
 
     public async Task<Company> GetByIdAsync(long id)
     {
-        await using var connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
-        await connection.OpenAsync();
-        
-        await using var command = new NpgsqlCommand(
-            """
-            
-                        SELECT 
-                            t."Id", t."Budget", t."Description", t."Name", t."PictureLink", t."PictureName", 
-                            t."RegistrationDate", p."Id", p."CompanyId", p."Name", p."Permissions", p."Priority", 
-                            t0."Id", t0."CompanyId", t0."PositionInCompanyId", t0."Salary", t0."UserId", t0."Id0", 
-                            t0."Email", t0."PasswordHash", t0."PasswordResetToken", t0."PasswordSalt", t0."PhoneNumber", 
-                            t0."UserRegistrationDate", t0."ResetTokenExpires", t0."Username", t0."VerificationToken", t0."VerifiedAt"
-                        FROM (
-                            SELECT c."Id", c."Budget", c."Description", c."Name", c."PictureLink", c."PictureName", c."RegistrationDate"
-                            FROM "Companies" AS c
-                            WHERE c."Id" = @id
-                            LIMIT 1
-                        ) AS t
-                        LEFT JOIN "PositionInCompanies" AS p ON t."Id" = p."CompanyId"
-                        LEFT JOIN (
-                            SELECT e."Id", e."CompanyId", e."PositionInCompanyId", e."Salary", e."UserId", 
-                                   u."Id" AS "Id0", u."Email", u."PasswordHash", u."PasswordResetToken", 
-                                   u."PasswordSalt", u."PhoneNumber", u."RegistrationDate" as "UserRegistrationDate", 
-                                   u."ResetTokenExpires", u."Username", u."VerificationToken", u."VerifiedAt"
-                            FROM "Employees" AS e
-                            INNER JOIN "Users" AS u ON e."UserId" = u."Id"
-                        ) AS t0 ON t."Id" = t0."CompanyId"
-                        ORDER BY t."Id", p."Id", t0."Id"
-                        
-            """,
-            connection);
-        command.Parameters.AddWithValue("id", id);
-        
-        await using var reader = await command.ExecuteReaderAsync();
-        
-        Company? company = null;
-        while (await reader.ReadAsync())
-        {
-            company ??= new Company
-            {
-                Id = reader.GetInt64(reader.GetOrdinal("Id")),
-                Budget = reader.GetDouble(reader.GetOrdinal("Budget")),
-                Description = (reader.IsDBNull(reader.GetOrdinal("Description"))
-                    ? null
-                    : reader.GetString(reader.GetOrdinal("Description")))!,
-                Name = reader.GetString(reader.GetOrdinal("Name")),
-                RegistrationDate = reader.GetDateTime(reader.GetOrdinal("RegistrationDate")),
-                PictureLink = reader.IsDBNull(reader.GetOrdinal("PictureLink")) ? null
-                    : reader.GetString(reader.GetOrdinal("PictureLink")),
-                Users = new List<User>(),
-                PositionInCompanies = new List<PositionInCompany>()
-            };
-        
-            if (reader.IsDBNull(reader.GetOrdinal("UserId"))) continue;
-            var email = reader.GetString(reader.GetOrdinal("Email"));
-            if (company.Users!.Any(u => u.Email == email)) continue;
-            var user = new User
-            {
-                Id = reader.GetInt64(reader.GetOrdinal("UserId")),
-                Email = email,
-                PasswordHash = (reader.IsDBNull(reader.GetOrdinal("PasswordHash")) ? null : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordHash")))!,
-                PasswordSalt = (reader.IsDBNull(reader.GetOrdinal("PasswordSalt")) ? null : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordSalt")))!,
-                PhoneNumber =  reader.IsDBNull(reader.GetOrdinal("PhoneNumber")) ? null : reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                RegistrationDate = reader.GetDateTime(reader.GetOrdinal("UserRegistrationDate")),
-                Username = reader.GetString(reader.GetOrdinal("Username")),
-                VerifiedAt = reader.GetDateTime(reader.GetOrdinal("VerifiedAt")),
-            };
-            company.Users!.Add(user);
-        }
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.IsDBNull(reader.GetOrdinal("PositionInCompanyId"))) continue;
-            var position = new PositionInCompany
-            {
-                CompanyId = company!.Id,
-                Name = reader.GetString(reader.GetOrdinal("Name")),
-                Priority = reader.GetInt64(reader.GetOrdinal("Priority")),
-                Permissions = (PositionPermissions) reader.GetInt64(reader.GetOrdinal("Permissions"))
-            };
-            
-            company.PositionInCompanies!.Add(position);
-        }
+        var company = await dbContext.Companies
+            .Include(e => e.Users)!
+            .ThenInclude(e => e.ProfilePhoto)
+            .Include(e => e.PositionInCompanies)
+            .FirstOrDefaultAsync(e => e.Id == id);
         return company ?? throw new EntityNotFoundException(nameof(Company));
+        
+        // await using var connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        // await connection.OpenAsync();
+        //
+        // await using var command = new NpgsqlCommand(
+        //     """
+        //     
+        //                 SELECT 
+        //                     t."Id", t."Budget", t."Description", t."Name", t."PictureLink", t."PictureName", 
+        //                     t."RegistrationDate", p."Id", p."CompanyId", p."Name", p."Permissions", p."Priority", 
+        //                     t0."Id", t0."CompanyId", t0."PositionInCompanyId", t0."Salary", t0."UserId", t0."Id0", 
+        //                     t0."Email", t0."PasswordHash", t0."PasswordResetToken", t0."PasswordSalt", t0."PhoneNumber", 
+        //                     t0."UserRegistrationDate", t0."ResetTokenExpires", t0."Username", t0."VerificationToken", t0."VerifiedAt"
+        //                 FROM (
+        //                     SELECT c."Id", c."Budget", c."Description", c."Name", c."PictureLink", c."PictureName", c."RegistrationDate"
+        //                     FROM "Companies" AS c
+        //                     WHERE c."Id" = @id
+        //                     LIMIT 1
+        //                 ) AS t
+        //                 LEFT JOIN "PositionInCompanies" AS p ON t."Id" = p."CompanyId"
+        //                 LEFT JOIN (
+        //                     SELECT e."Id", e."CompanyId", e."PositionInCompanyId", e."Salary", e."UserId", 
+        //                            u."Id" AS "Id0", u."Email", u."PasswordHash", u."PasswordResetToken", 
+        //                            u."PasswordSalt", u."PhoneNumber", u."RegistrationDate" as "UserRegistrationDate", 
+        //                            u."ResetTokenExpires", u."Username", u."VerificationToken", u."VerifiedAt"
+        //                     FROM "Employees" AS e
+        //                     INNER JOIN "Users" AS u ON e."UserId" = u."Id"
+        //                 ) AS t0 ON t."Id" = t0."CompanyId"
+        //                 ORDER BY t."Id", p."Id", t0."Id"
+        //                 
+        //     """,
+        //     connection);
+        // command.Parameters.AddWithValue("id", id);
+        //
+        // await using var reader = await command.ExecuteReaderAsync();
+        //
+        // Company? company = null;
+        // while (await reader.ReadAsync())
+        // {
+        //     company ??= new Company
+        //     {
+        //         Id = reader.GetInt64(reader.GetOrdinal("Id")),
+        //         Budget = reader.GetDouble(reader.GetOrdinal("Budget")),
+        //         Description = (reader.IsDBNull(reader.GetOrdinal("Description"))
+        //             ? null
+        //             : reader.GetString(reader.GetOrdinal("Description")))!,
+        //         Name = reader.GetString(reader.GetOrdinal("Name")),
+        //         RegistrationDate = reader.GetDateTime(reader.GetOrdinal("RegistrationDate")),
+        //         PictureLink = reader.IsDBNull(reader.GetOrdinal("PictureLink")) ? null
+        //             : reader.GetString(reader.GetOrdinal("PictureLink")),
+        //         Users = new List<User>(),
+        //         PositionInCompanies = new List<PositionInCompany>()
+        //     };
+        //
+        //     if (reader.IsDBNull(reader.GetOrdinal("UserId"))) continue;
+        //     var email = reader.GetString(reader.GetOrdinal("Email"));
+        //     if (company.Users!.Any(u => u.Email == email)) continue;
+        //     var user = new User
+        //     {
+        //         Id = reader.GetInt64(reader.GetOrdinal("UserId")),
+        //         Email = email,
+        //         PasswordHash = (reader.IsDBNull(reader.GetOrdinal("PasswordHash")) ? null : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordHash")))!,
+        //         PasswordSalt = (reader.IsDBNull(reader.GetOrdinal("PasswordSalt")) ? null : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordSalt")))!,
+        //         PhoneNumber =  reader.IsDBNull(reader.GetOrdinal("PhoneNumber")) ? null : reader.GetString(reader.GetOrdinal("PhoneNumber")),
+        //         RegistrationDate = reader.GetDateTime(reader.GetOrdinal("UserRegistrationDate")),
+        //         Username = reader.GetString(reader.GetOrdinal("Username")),
+        //         VerifiedAt = reader.GetDateTime(reader.GetOrdinal("VerifiedAt")),
+        //     };
+        //     company.Users!.Add(user);
+        // }
+        //
+        // while (await reader.ReadAsync())
+        // {
+        //     if (reader.IsDBNull(reader.GetOrdinal("PositionInCompanyId"))) continue;
+        //     var position = new PositionInCompany
+        //     {
+        //         CompanyId = company!.Id,
+        //         Name = reader.GetString(reader.GetOrdinal("Name")),
+        //         Priority = reader.GetInt64(reader.GetOrdinal("Priority")),
+        //         Permissions = (PositionPermissions) reader.GetInt64(reader.GetOrdinal("Permissions"))
+        //     };
+        //     
+        //     company.PositionInCompanies!.Add(position);
+        // }
+        // return company ?? throw new EntityNotFoundException(nameof(Company));
     }
 
     public async Task<Company> GetByIdForOperations(long id)
@@ -287,84 +294,19 @@ public class CompanyRepository(AppDbContext dbContext, IConfiguration configurat
     public async Task<Employee> GetEmployeeByUserAndCompanyAsync(User user, Company company)
     {
         return await dbContext.Employees
-            .Include(e => e.PositionInCompany)
-            .Include(e => e.User)
-            .FirstOrDefaultAsync(e => e.CompanyId == company.Id && e.User.Id == user.Id);
+                   .Include(e => e.PositionInCompany)
+                   .Include(e => e.User!.ProfilePhoto)
+                   .FirstOrDefaultAsync(e => e.CompanyId == company.Id && e.User!.Id == user.Id)
+               ?? throw new EntityNotFoundException(nameof(Employee));
     }
     
     public async Task<Employee> GetEmployeeById(long employeeId)
     {
-        await using var connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
-        await connection.OpenAsync();
-
-        await using var command = new NpgsqlCommand(
-            """
-            
-                    SELECT e.*,
-                    u."Id" AS "UserId", u."Username", u."Email", u."PasswordHash", 
-                    u."PasswordResetToken", u."PasswordSalt", u."PhoneNumber", u."RegistrationDate",
-                    p."Id" as "PositionId", p."Name", p."Priority", p."Permissions",
-                    ph."Id" as "PhotoId", ph."PictureLink"
-                    FROM "Employees" e
-                    JOIN "Users" u ON e."UserId" = u."Id"
-                    JOIN "PositionInCompanies" p ON e."PositionInCompanyId" = p."Id"
-                    LEFT JOIN "ProfilePhotos" ph ON ph."UserId" = u."Id"
-                    WHERE e."Id" = @id;
-                
-            """,
-            connection);
-        command.Parameters.AddWithValue("id", employeeId);
-        
-        await using var reader = await command.ExecuteReaderAsync();
-
-        while (await reader.ReadAsync()) 
-        {
-            var user = new User
-            {
-                Id = reader.GetInt64(reader.GetOrdinal("UserId")),
-                Email = reader.GetString(reader.GetOrdinal("Email")),
-                PasswordHash = (reader.IsDBNull(reader.GetOrdinal("PasswordHash"))
-                    ? null
-                    : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordHash")))!,
-                PasswordSalt = (reader.IsDBNull(reader.GetOrdinal("PasswordSalt"))
-                    ? null
-                    : reader.GetFieldValue<byte[]>(reader.GetOrdinal("PasswordSalt")))!,
-                PhoneNumber = reader.IsDBNull(reader.GetOrdinal("PhoneNumber")) ? null : reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                RegistrationDate = reader.GetDateTime(reader.GetOrdinal("RegistrationDate")),
-                Username = reader.GetString(reader.GetOrdinal("Username")),
-            };
-
-            if (!reader.IsDBNull(reader.GetOrdinal("PictureLink")))
-            {
-                var photo = new ProfilePhoto
-                {
-                    Id = reader.GetInt64(reader.GetOrdinal("PhotoId")),
-                    PictureLink = reader.GetString(reader.GetOrdinal("PictureLink")),
-                };
-                user.ProfilePhoto = photo;
-            }
-            
-            var positionInCompany = new PositionInCompany
-            {
-                CompanyId = reader.GetInt64(reader.GetOrdinal("CompanyId")),
-                Name = reader.GetString(reader.GetOrdinal("Name")),
-                Priority = reader.GetInt64(reader.GetOrdinal("Priority"))
-            };
-
-            var employee = new Employee
-            {
-                Id = reader.GetInt64(reader.GetOrdinal("Id")),
-                UserId = user.Id,
-                Salary = reader.GetDouble(reader.GetOrdinal("Salary")),
-                CompanyId = positionInCompany.CompanyId,
-                PositionInCompanyId = reader.GetInt64(reader.GetOrdinal("PositionInCompanyId")),
-                PositionInCompany = positionInCompany,
-                User = user
-            };
-            return employee;
-        }
-
-        throw new EntityNotFoundException(nameof(Employee));
+        var employee = await dbContext.Employees
+            .Include(e => e.PositionInCompany)
+            .Include(e => e.User!.ProfilePhoto)
+            .FirstOrDefaultAsync(e => e.Id == employeeId);
+        return employee ?? throw new EntityNotFoundException(nameof(Employee));
     }
 
     public async Task<List<Employee>> GetAllEmployeesByCompany(Company company)

@@ -15,6 +15,7 @@ public class Project
     public required string Name { get; set; }
     [MaxLength(1200)] public string Description { get; set; } = string.Empty;
     public double Budget { get; set; }
+    public double RemainingBudget { get; set; }
     
     public string? PictureName { get; set; }
     public string? PictureLink { get; set; }

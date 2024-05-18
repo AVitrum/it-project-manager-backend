@@ -3,6 +3,7 @@ using System;
 using DatabaseService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatabaseService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240517155316_added_files_to_assignment")]
+    partial class added_files_to_assignment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,9 +206,6 @@ namespace DatabaseService.Migrations
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<double>("RemainingBudget")
-                        .HasColumnType("double precision");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -336,9 +336,6 @@ namespace DatabaseService.Migrations
 
                     b.Property<string>("PictureName")
                         .HasColumnType("text");
-
-                    b.Property<double>("RemainingBudget")
-                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
