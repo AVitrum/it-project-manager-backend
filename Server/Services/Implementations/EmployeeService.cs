@@ -154,9 +154,11 @@ public class EmployeeService(
         
         if (employee.PositionInCompany.Name == "CEO")
             throw new CompanyException("You can't leave the company");
+
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.DeleteProject) && employee.Id != performer.Id)
+            throw new PermissionException();
         
-        if ((!performer.PositionInCompany.HasPermissions(PositionPermissions.DeleteUser) && performer.Id != employee.Id) 
-            || performer.PositionInCompany.Priority >= employee.PositionInCompany.Priority)
+        if (performer.PositionInCompany.Priority >= employee.PositionInCompany.Priority && employee.Id != performer.Id)
             throw new PermissionException();
         
         await companyRepository.RemoveUserFromCompanyAsync(employee);

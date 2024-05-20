@@ -107,6 +107,21 @@ public class ProjectService(
         await projectRepository.UpdateAsync(project);
     }
 
+    public async Task DeleteAsync(long projectId)
+    {
+        var user = await userRepository.GetByJwtAsync();
+        var project = await projectRepository.GetByIdAsync(projectId);
+        var company = await companyRepository.GetByIdAsync(project.CompanyId);
+        var performer = await companyRepository.GetEmployeeByUserAndCompanyAsync(user, company);
+        
+        if (!performer.PositionInCompany.HasPermissions(PositionPermissions.DeleteProject))
+        {
+            throw new PermissionException();
+        }
+
+        await projectRepository.DeleteAsync(project);
+    }
+
     public async Task ChangeProjectImage(long projectId, IFormFile file)
     {
         var project = await projectRepository.GetByIdAsync(projectId);

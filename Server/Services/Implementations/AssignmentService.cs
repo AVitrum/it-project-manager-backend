@@ -81,7 +81,7 @@ public class AssignmentService(
             throw new PermissionException();
         }
 
-        if (await assignmentRepository.PerformerExistsByEmail(performerDto.Email))
+        if (await assignmentRepository.PerformerExistsByEmail(performerDto.Email, assignmentId))
         {
             throw new ProjectException("Performer already exists!");
         }
@@ -366,11 +366,11 @@ public class AssignmentService(
 
             if (assignment.Type is AssignmentType.COMPLETED or AssignmentType.IN_REVIEW) continue;
             
-            if (assignment.Deadline < DateTime.UtcNow.AddHours(3))
+            if (assignment.Deadline < DateTime.UtcNow)
             {
                 assignment.Type = AssignmentType.OVERDUE;
                 await assignmentRepository.UpdateAsync(assignment);
-            } else if (assignment.Deadline > DateTime.UtcNow.AddHours(3) &&
+            } else if (assignment.Deadline > DateTime.UtcNow &&
                        assignment.Type.Equals(AssignmentType.OVERDUE))
             {
                 assignment.Type = AssignmentType.ASSIGNED;

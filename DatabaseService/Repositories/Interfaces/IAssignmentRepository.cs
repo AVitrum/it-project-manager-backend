@@ -24,5 +24,5 @@ public interface IAssignmentRepository
     Task AddFile(AssignmentFile file);
     Task<List<AssignmentFile>> GetAllFiles(Assignment assignment);
 
-    Task<bool> PerformerExistsByEmail(string email);
+    Task<bool> PerformerExistsByEmail(string email, long assignmentId);
 }

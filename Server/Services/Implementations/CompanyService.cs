@@ -98,12 +98,12 @@ public class CompanyService(
                 throw new PermissionException();
             }
 
-            if (company.RemainingBudget > companyDto.Budget)
+            if (company.RemainingBudget - companyDto.Budget < 0)
             {
                 throw new CompanyException("You will not be able to cover the costs");
             }
 
-            company.RemainingBudget += (double)companyDto.Budget - company.Budget;
+            company.RemainingBudget = company.RemainingBudget + (double)companyDto.Budget - company.Budget;
             company.Budget = (double)companyDto.Budget;
         }
         

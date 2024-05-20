@@ -137,12 +137,12 @@ public class AssignmentRepository(AppDbContext dbContext) : IAssignmentRepositor
             .ToListAsync();
     }
 
-    public async Task<bool> PerformerExistsByEmail(string email)
+    public async Task<bool> PerformerExistsByEmail(string email, long assignmentId)
     {
         return await dbContext.AssignmentPerformers
             .Include(e => e.ProjectPerformer)
             .ThenInclude(e => e.Employee)
             .ThenInclude(e => e.User)
-            .AnyAsync(e => e.ProjectPerformer.Employee.User!.Email == email);
+            .AnyAsync(e => e.ProjectPerformer.Employee.User!.Email == email && e.AssignmentId == assignmentId);
     }
 }

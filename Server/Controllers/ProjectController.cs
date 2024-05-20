@@ -48,12 +48,22 @@ public class ProjectController(IProjectService projectService) : ControllerBase
     }
 
     [HttpPut("{projectId:long}/update")]
-    public async Task<IActionResult> UpdateCompany(long projectId, ProjectDto request)
+    public async Task<IActionResult> UpdateProject(long projectId, ProjectDto request)
     {
         await projectService.UpdateAsync(projectId, request);
         return Ok(new
         {
             message = "Performed"
+        });
+    }
+
+    [HttpDelete("{projectId:long}/delete")]
+    public async Task<IActionResult> DeleteProject(long projectId)
+    {
+        await projectService.DeleteAsync(projectId);
+        return Ok(new
+        {
+            message = "Deleted"
         });
     }
 

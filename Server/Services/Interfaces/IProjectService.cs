@@ -7,6 +7,7 @@ public interface IProjectService
 {
     Task CreateAsync(long companyId, ProjectDto projectDto);
     Task UpdateAsync(long projectId, ProjectDto projectDto);
+    Task DeleteAsync(long projectId);
     Task ChangeProjectImage(long projectId, IFormFile file);
     Task<ProjectResponse> GetProjectInfoAsync(long projectId);
     Task<List<ProjectResponse>> GetAllProjectsAsync(long companyId);
