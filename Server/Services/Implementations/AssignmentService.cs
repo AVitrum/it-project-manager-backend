@@ -4,6 +4,8 @@ using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
 using FileService;
+using Microsoft.IdentityModel.Tokens;
+using OAuthService;
 using Server.Payload.Responses;
 using Server.Services.Interfaces;
 
@@ -96,6 +98,34 @@ public class AssignmentService(
             Assignment = assignment
         };
         await assignmentRepository.AddPerformer(assignmentPerformer);
+    }
+
+    public async Task ImportAllTasksToCalendar(long projectId)
+    {
+        var project = await projectRepository.GetByIdAsync(projectId);
+        var company = await companyRepository.GetByIdForOperations(project.CompanyId);
+        var employee = await companyRepository.GetEmployeeByUserAndCompanyAsync(
+            await userRepository.GetByJwtAsync(), company);
+
+        if (employee.User!.GoogleAccessToken.IsNullOrEmpty())
+        {
+            throw new UserException("You need to log in to your account via Google");
+        }
+        
+        var performer = await projectRepository.GetPerformerByEmployeeAndProjectAsync(employee, project);
+
+        var assignments = await assignmentRepository.GetAllAssignmnetsByProjectPerformer(performer);
+
+        foreach (var assignment in assignments)
+        {
+            await GoogleCalendarService.AddEventToCalendarAsync(
+                employee.User.GoogleAccessToken,
+                assignment.Theme,
+                assignment.Description ?? string.Empty,
+                assignment.CreatedAt.ToString(),
+                assignment.Deadline.ToString(), 
+                "Europe/Kiev");
+        }
     }
 
     public async Task ToReview(long id)

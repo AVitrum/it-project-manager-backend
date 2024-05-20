@@ -16,6 +16,7 @@ public class User
     public required DateTime RegistrationDate { get; init; }
     public required byte[] PasswordHash { get; set; } = new byte[64];
     public required byte[] PasswordSalt { get; set; } = new byte[128];
+    public string GoogleAccessToken { get; set; } = string.Empty;
     [MaxLength(128)] public string? VerificationToken { get; init; }
     public DateTime? VerifiedAt { get; set; }
     [MaxLength(128)] public string? PasswordResetToken { get; set; }

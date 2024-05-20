@@ -15,7 +15,7 @@ public class GoogleOAuthController(IConfiguration configuration, IAuthService au
         HttpContext.Session.SetString(PkceSessionKey, CodeVerifier);
 
         var url = GoogleOAuthService.GenerateOAuthRequestUrl(
-            "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events",
             "https://localhost:8080/GoogleOAuth/Login",
             CodeChallenge);
         return Redirect(url);
@@ -34,7 +34,7 @@ public class GoogleOAuthController(IConfiguration configuration, IAuthService au
 
         if (await authService.ExistsByEmail(response.Email))
         {
-            var tokens = await authService.GoogleOAuthLoginAsync(response.Email);
+            var tokens = await authService.GoogleOAuthLoginAsync(response.Email, tokenResult.AccessToken);
             return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}" + "/OAuth" +
                             $"/?AccessToken={tokens.AccessToken}&RefreshToken={tokens.RefreshToken}");
         }
@@ -42,7 +42,7 @@ public class GoogleOAuthController(IConfiguration configuration, IAuthService au
         {
             await authService.GoogleOAuthRegistrationAsync(response);
 
-            var tokens = await authService.GoogleOAuthLoginAsync(response.Email);
+            var tokens = await authService.GoogleOAuthLoginAsync(response.Email, tokenResult.AccessToken);
             return Redirect($"{configuration.GetSection("AppSettings:FrontendUrl").Value}" + "/OAuth" +
                             $"/?AccessToken={tokens.AccessToken}&RefreshToken={tokens.RefreshToken}");
         }

@@ -24,8 +24,8 @@ public class AuthService(
         if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Username))
             throw new UserException("Email and Username are required!");
 
-        if (await userRepository.ExistsByEmailAsync(request.Email) 
-            || await userRepository.ExistsByUsernameAsync(request.Username)) 
+        if (await userRepository.ExistsByEmailAsync(request.Email)
+            || await userRepository.ExistsByUsernameAsync(request.Username))
             throw new NotUniqueEmailException("User already exists");
 
         GeneratePasswordHash(request.Password, out var passwordHash, out var passwordSalt);
@@ -62,6 +62,9 @@ public class AuthService(
         GenerateRefreshToken(out var refreshToken);
         await SetRefreshToken(user, refreshToken);
 
+        user.GoogleAccessToken = string.Empty;
+        await userRepository.UpdateAsync(user);
+
         return new LoginResponse
         {
             AccessToken = GenerateBearerToken(configuration,
@@ -95,7 +98,7 @@ public class AuthService(
         };
 
         await userRepository.CreateAsync(newUser);
-        
+
         await emailSender.SendEmailAsync(
             googleUserInfoResponse.Email,
             "Change your password!",
@@ -104,9 +107,12 @@ public class AuthService(
         return true;
     }
 
-    public async Task<LoginResponse> GoogleOAuthLoginAsync(string email)
+    public async Task<LoginResponse> GoogleOAuthLoginAsync(string email, string token)
     {
         var user = await userRepository.GetByEmailAsync(email);
+
+        user.GoogleAccessToken = token;
+        await userRepository.UpdateAsync(user);
 
         GenerateRefreshToken(out var refreshToken);
 

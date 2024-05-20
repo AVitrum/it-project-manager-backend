@@ -9,7 +9,7 @@ public interface IAuthService
     Task RegisterAsync(RegistrationRequest request);
     Task<LoginResponse> LoginAsync(UserLoginRequest request);
     Task<bool> GoogleOAuthRegistrationAsync(GoogleUserInfoResponse googleUserInfoResponse);
-    Task<LoginResponse> GoogleOAuthLoginAsync(string email);
+    Task<LoginResponse> GoogleOAuthLoginAsync(string email, string token);
     Task SendVerificationToken(string email);
     Task VerifyAccountAsync(string token);
     Task<LoginResponse> RefreshJwtAsync(string refreshToken);

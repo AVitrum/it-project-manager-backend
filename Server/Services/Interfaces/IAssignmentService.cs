@@ -8,6 +8,7 @@ public interface IAssignmentService
 {
     Task CreateAssignment(long projectId, AssignmentDto assignmentDto);
     Task AddPerformer(long assignmentId, PerformerDto performerDto);
+    Task ImportAllTasksToCalendar(long projectId);
     Task ToReview(long id);
     Task MarkAsCompleted(long id);
     Task ReturnTask(long id);

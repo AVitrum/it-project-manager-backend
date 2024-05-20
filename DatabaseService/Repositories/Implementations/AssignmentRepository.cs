@@ -1,3 +1,4 @@
+using DatabaseService.Data.Enums;
 using DatabaseService.Data.Models;
 using DatabaseService.Exceptions;
 using DatabaseService.Repositories.Interfaces;
@@ -59,6 +60,16 @@ public class AssignmentRepository(AppDbContext dbContext) : IAssignmentRepositor
             .ThenInclude(p => p.Employee.PositionInCompany)
             .AsSplitQuery()
             .Where(a => a.ProjectId == projectId)
+            .ToListAsync();
+    }
+
+    public async Task<List<Assignment>> GetAllAssignmnetsByProjectPerformer(ProjectPerformer performer)
+    {
+        return await dbContext.Assignments
+            .Include(e => e.Performers)
+            .Where(e => e.Deadline > DateTime.UtcNow 
+                        && e.Performers.Any(a => a.ProjectPerformerId == performer.Id)
+                        && e.Type != AssignmentType.COMPLETED)
             .ToListAsync();
     }
 

@@ -30,6 +30,13 @@ public class AssignmentController(IAssignmentService assignmentService) : Contro
         });
     }
 
+    [HttpPost("{projectId:long}/importAllAssignmentsToCalendar")]
+    public async Task<IActionResult> ImportAllAssignmentsToCalendar(long projectId)
+    {
+        await assignmentService.ImportAllTasksToCalendar(projectId);
+        return Ok();
+    }
+
     [HttpPut("{id:long}/toReview")]
     public async Task<IActionResult> ToReview(long id)
     {
